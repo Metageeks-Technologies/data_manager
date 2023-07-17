@@ -25,7 +25,7 @@ app.use(morgan("dev"));
 dotenv.config();
 
 // static->frontend
-
+app.use(express.static(path.resolve(__dirname,'../server/dist')))
 // app.get("/*", function(req, res) {
 //     res.sendFile(path.join(__dirname, '../server/dist/index.html'), function(err) {
 //       if (err) {

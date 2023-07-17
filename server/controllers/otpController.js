@@ -41,16 +41,16 @@ const mailer = async (email, otp, req, res, next) => {
         //   user: 'shiva@sitengine.in',
         //   pass: 'EV~[,^MBAdpK',
         // },
-          host: 'smtp.ethereal.email',
+          host: 'smtp.mailtrap.io',
           port: 587,
           auth: {
-              user: 'alexanne.larson@ethereal.email',
-              pass: 'QyRHwq4T2a2rpgkU5q'
+              user: 'api',
+              pass: 'bb59de3059e4b2210b5a9586f3e78680'
         }
       });
   
       const mailOptions = {
-        from: 'alexanne.larson@ethereal.email',
+        from: 'api',
         to: 'sg2304366@gmail.com',
         subject: 'This is your OTP for Resetting the Password',
         text: otp,
@@ -65,7 +65,7 @@ const mailer = async (email, otp, req, res, next) => {
         message: 'OTP is sent to your email',
       });
     } catch (error) { 
-      console.error('Email sending failed:', error);
+      console.log(error('Email sending failed:', error));
       next(new ErrorHandler('Failed to send the OTP via email', 500));
     }
   };
