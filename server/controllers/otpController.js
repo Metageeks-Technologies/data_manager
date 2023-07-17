@@ -65,7 +65,7 @@ const mailer = async (email, otp, req, res, next) => {
         message: 'OTP is sent to your email',
       });
     } catch (error) { 
-      console.log(error('Email sending failed:', error));
+      console.log('Email sending failed:', error);
       next(new ErrorHandler('Failed to send the OTP via email', 500));
     }
   };

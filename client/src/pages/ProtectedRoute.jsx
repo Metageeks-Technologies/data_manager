@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
       navigate('/auth')
     }
   }, [isAuthenticated]);
-  
+   
  
   return children;
 };

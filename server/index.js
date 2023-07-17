@@ -26,14 +26,7 @@ dotenv.config();
 
 // static->frontend
 app.use(express.static(path.resolve(__dirname,'../server/dist')))
-// app.get("/*", function(req, res) {
-//     res.sendFile(path.join(__dirname, '../server/dist/index.html'), function(err) {
-//       if (err) {
-//         console.error(err);
-//         res.status(500).send(err);
-//       }
-//     });
-//   });
+ 
 // middleware
 app.use(express.json());
 app.use(
@@ -50,8 +43,8 @@ app.use("/api/v1/forgetPassword", forgetPasswordRouter);
  
 app.use("/download",express.static("uploads"));
 
-app.get("*", (req, res) => {
-  res.status(404).send("<h1> Not Found</h2>");
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname,'../server/dist/index.html'));
 });
 // errorMiddleware
 app.use(errorMiddleware);
