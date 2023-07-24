@@ -7,7 +7,7 @@ import { loginImgOption } from "../utils/options";
 const LoginPage = () => {
   const navigate = useNavigate();
   
-  const { loginUser, isAuthenticated, isLoading, isAdmin, user } =
+  const { loginUser, isAuthenticated, userLoading, isAdmin, user } =
     useAppContext();
   const [changePassword, setChangePassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +57,13 @@ const LoginPage = () => {
   const handleForgetPass=()=>{
     setShowForgetPass((prev)=>!prev);
     
+  }
+  if(userLoading){
+    return(
+      <div className="fixed top-0 left-0 right-0 bottom-0  flex items-center justify-center">
+            <Loader />
+      </div>
+    )
   }
 
   return (

@@ -11711,8 +11711,8 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = reactExports.useReducer(reducer$1, initialState$1);
   const instance = axios$1.create({
     //  baseURL: ({}).VITE_SERVER_URL+"/api/v1",
-    // baseURL: "call/api/v1",
-    baseURL: "/api/v1"
+    baseURL: "call/api/v1"
+    // baseURL:"/api/v1",
     // to get cookies in browser during development
     // production
   });
@@ -24052,7 +24052,7 @@ const AdminDash = () => {
 };
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { loginUser, isAuthenticated, isLoading, isAdmin, user } = useAppContext();
+  const { loginUser, isAuthenticated, userLoading, isAdmin, user } = useAppContext();
   const [changePassword, setChangePassword] = reactExports.useState(false);
   const [showPassword, setShowPassword] = reactExports.useState(false);
   const [showForgetPass, setShowForgetPass] = reactExports.useState(false);
@@ -24089,6 +24089,9 @@ const LoginPage = () => {
   const handleForgetPass = () => {
     setShowForgetPass((prev) => !prev);
   };
+  if (userLoading) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0  flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, {}) });
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " h-screen w-full flex flex-col sm:flex-row", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:w-6/12 bg-white sm:w-8/12 px-[2.5rem] py-[6rem]", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto w-full lg:w-7/12 md:w-10/12", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5/12 lg:w-4/12 mt-3 ", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -24255,10 +24258,10 @@ const ProtectedRoute = ({ children }) => {
   const { user, isAuthenticated, userLoading } = useAppContext();
   const navigate = useNavigate();
   reactExports.useEffect(() => {
-    if (!isAuthenticated) {
+    if (!user) {
       navigate("/auth");
     }
-  }, [isAuthenticated]);
+  }, [user]);
   if (userLoading) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0  flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, {}) });
   }

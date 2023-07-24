@@ -147,8 +147,8 @@ const AppProvider = ({ children }) => {
   // axios --base url
   const instance = axios.create({
     //  baseURL: import.meta.env.VITE_SERVER_URL+"/api/v1",
-    // baseURL: "call/api/v1",
-    baseURL:"/api/v1",
+    baseURL: "call/api/v1",
+    // baseURL:"/api/v1",
 
     // to get cookies in browser during development
     // production

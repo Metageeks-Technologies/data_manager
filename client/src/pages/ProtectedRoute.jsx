@@ -11,11 +11,11 @@ const ProtectedRoute = ({ children }) => {
   
   useEffect(() => {
 
-    if (!isAuthenticated) {
+    if (!user) {
       
       navigate('/auth')
     }
-  }, [isAuthenticated]);
+  }, [user]);
    
  
   if(userLoading){
