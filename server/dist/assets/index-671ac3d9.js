@@ -11711,8 +11711,8 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = reactExports.useReducer(reducer$1, initialState$1);
   const instance = axios$1.create({
     //  baseURL: ({}).VITE_SERVER_URL+"/api/v1",
-    baseURL: "call/api/v1"
-    // baseURL:"/api/v1",
+    // baseURL: "call/api/v1"
+    baseURL:"/api/v1",
     // to get cookies in browser during development
     // production
   });
