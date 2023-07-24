@@ -4,7 +4,7 @@ import { Dashboard } from '../../components'
 
 const ExecutiveDash = () => {
  
-  return <Dashboard links={Links} hideSideBar={true}></Dashboard>
+  return <Dashboard links={Links} hideSideBar={true} role={'executive'} ></Dashboard>
  
 }
  

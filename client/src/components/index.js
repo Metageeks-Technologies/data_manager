@@ -8,8 +8,15 @@ import ChangePassForm from "./ChangePassForm";
 import Alert from "./Alert";
 import DeleteAdminData from "./DeleteAdminData";
 import ForgetpassForm from "./ForgetpassForm";
-import YearPicker from "./yearPicker";
+import LoginSwiper from "./LoginSwiper";
+import TableHeaders from "./TableHeaders";
+import TableContent from "./TableContent";
+import PaginationAndExport from "./PaginationAndExport";
+import EditExeData from "./EditExeData";
+import TimeLiner from './TimeLIner'
+import IP from './IP'
 export {
+  IP,
   FormField,
   Alert,
   SearchContainer,
@@ -20,5 +27,11 @@ export {
   ChangePassForm,
   DeleteAdminData,
   ForgetpassForm,
-  YearPicker
+  
+  LoginSwiper,
+  TableHeaders,
+  TableContent,
+  PaginationAndExport,
+  EditExeData,
+  TimeLiner  
 };

@@ -1,65 +1,94 @@
 import React, { useEffect, useState } from "react";
-import { Loader } from "../../components";
+import { Loader,SearchContainer, TableHeaders ,PaginationAndExport} from "../../components";
 import { useAppContext } from "../../context/appContext";
-import PaginationContainer from "../../components/PaginationContainer";
+import { toolTipClass } from "../../utils/tooltip";
+
 
 const Data = () => {
   const {
     editRequestData,
-    getAllEditRequest,
-    getAllData,
-    mainData,
+    varData,
+    getAllVarData,
     isLoading,
-    editDataStatusChange,
     approveEditRequest,
     rejectEditRequest,
-    pageInfo,
+    toggleAction,
+    openSearchBar,
+    setPage,
+      isSearchedHandler,
+    user,
+    page,
+    makeActivity,
+    getAllEditRequest
   } = useAppContext();
 
+  const [form, setForm] = useState({
+    status: "All",
+    place: "All",
+    dri_id: "",
+    date: "All",
+    customerName: "",
+    
+    appNumber: "",
+    company: 'All',
+    membership_type: 'All',
+    acceptance: 'accepted',
+    editStatus:"pending",
+    page:1
+  });
+  useEffect(()=>{
+    return()=>{
+      setPage(1);
+      isSearchedHandler(false);
+    }
+  },[]);
   useEffect(() => {
-    getAllData({
-      status: "All",
-      place: "All",
-      yearOfPurchase: "",
-      customerName: "",
-      editStatus: "All",
-    });
     getAllEditRequest();
-  }, [editDataStatusChange]);
+    getAllVarData({acceptance:"accepted", editStatus: "pending", page:page}); 
+  }, [toggleAction]);
+  const handleApprove=(dataId,driId)=>{
+    approveEditRequest(dataId)
+    const obj={
+      userName:user.name,
+      userRole:user.role,
+      dataId:driId, 
+      actionType:"approved"
+    }
+    makeActivity(obj);
 
-  const DataToShow = mainData.filter((data) =>
-    editRequestData.some((editData) => {
-      return (
-        String(editData.dataId) === String(data._id) &&
-        editData.status === "pending"
-      );
-    })
-  );
+  }
+  const handleReject=(dataId,driId)=>{
+    rejectEditRequest(dataId)
+    const obj={
+      userName:user.name,
+      userRole:user.role,
+      dataId:driId,
+      actionType:"rejected"
+    }
+    makeActivity(obj);
+  }
 
-  // making all entries of data in DataToShow array for [lastValue,editedValue]
+
+  let DataToShow = JSON.parse(JSON.stringify(varData));
+
   for (let i = 0; i < DataToShow.length; i++) {
     const data = DataToShow[i];
 
-    for (let j = 0; j < editRequestData.length; j++) {
-      const editData = editRequestData[j];
+    const editData = editRequestData.find((ed) => ed.dataId === data._id);
+    console.log(editData);
+    data.editStatus = editData?.status;
 
-      if (String(data._id) === String(editData.dataId)) {
-        for (let key in data) {
-          if (
-            editData?.dataToUpdate?.hasOwnProperty(key) &&
-            data[key] !== editData?.dataToUpdate[key]
-          ) {
-            if (typeof data[key] !== "object") {
-              let lastValue = data[key];
-              let editedValue = editData.dataToUpdate[key];
-              data[key] = [lastValue, editedValue];
-            }
-          } else {
-            if (typeof data[key] !== "object") {
-              let lastValue = data[key];
-              data[key] = [lastValue];
-            }
-          }
+    for (let key in data) {
+      let lastValue = data[key];
+      data[key] = [lastValue];
+
+      if (editData) {
+        if (
+          editData.dataToUpdate?.hasOwnProperty(key) &&
+          data[key].length <= 2 &&
+          editData.status !== "approved"
+        ) {
+          data[key].push(editData.dataToUpdate[key]);
         }
       }
     }
@@ -68,82 +97,35 @@ const Data = () => {
   console.log(DataToShow);
   return (
     <>
-      <div className="bg-[#f0f4f8] h-screen py-10 px-[3rem] border-t border-l border-gray-300">
-        {isLoading ? (
-          <div className="w-full flex justify-center items-center">
-            <Loader></Loader>
+      {(isLoading && varData.length !== 0) && (
+          <div className="z-10 fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+            <Loader />
           </div>
+        )}
+      <div  
+      style={{ height: "calc(100vh - 5.5rem)" }}
+      className="bg-[#f0f4f8] py-5 px-[3rem] border-t border-l border-gray-300">
+       
+      <div className="sticky top-0 z-10 w-full  bg-[#F0F4F8] shadow ">
+          {openSearchBar && (
+            <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+              <SearchContainer role={"verifier"} form={form} setForm={setForm} />
+            </div>
+          )}
+         
+        </div>
+        { varData.length === 0 && isLoading ? (
+           <div 
+           style={{ height: "calc(100vh - 7.5rem)" }}
+           className="w-full flex justify-center items-center">
+           <Loader></Loader>
+           </div>
+          
         ) : (
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            {DataToShow.length > 0 ? (
-              <table className="w-full text-sm text-left text-center">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      DRI-ID
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      PLACE
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      APP NO
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      COMPANY
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      MEMBERSHIP TYPE
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      DATE OF PURCHASE
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      AMC
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      CUSTOMER NAME
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      ADDRESS
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      RES PHONE
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      OFFICE PHONE{" "}
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      PROFESSION
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      GSV
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      CSV
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      DEPOSIT
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      STATUS
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      OUTSTANDING
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      YEAR TILL NOW
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      AFTER DEDUCTING LICENSE FEE
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      REMARKS
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
+          <><PaginationAndExport form={form} fun={getAllVarData} />
+          <div className="custom-scrollbar relative overflow-x-auto shadow-md sm:rounded-lg">
+              <table className="w-full text-sm text-center">
+                <TableHeaders role={"verifier"} dataType={"accepted"}/>
                 <tbody>
                   {DataToShow.map((obj) => {
                     const yearsCountTillNow =
@@ -155,7 +137,7 @@ const Data = () => {
                         parseInt(obj.date[1].split("-")[0]);
 
                     const afterFeesDeduction = Math.round(
-                      obj.deposit[0] - (obj.deposit[0] / 99) * yearsCountTillNow
+                      obj.deposit[0] - (obj.deposit[0] / 99) * yearsCountTillNow 
                     );
                     const afterFeesDeduction2 =
                       (obj.deposit[1] || obj.date[1]) &&
@@ -171,7 +153,7 @@ const Data = () => {
                       >
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2 font-medium text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -188,7 +170,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -205,7 +187,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -222,7 +204,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -239,7 +221,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -258,7 +240,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -274,7 +256,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -290,7 +272,7 @@ const Data = () => {
                         </td>{" "}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 text-left whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -309,7 +291,7 @@ const Data = () => {
                         </td>
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -328,7 +310,7 @@ const Data = () => {
                         </td>
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -347,7 +329,7 @@ const Data = () => {
                         </td>
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -364,9 +346,9 @@ const Data = () => {
                             </p>
                           )}
                         </td>
-                        <td
+                        {/* <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -382,10 +364,10 @@ const Data = () => {
                               {obj.profession[1]}
                             </p>
                           )}
-                        </td>
+                        </td> */}
                         <td
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                          className="px-6  py-2   text-gray-900 whitespace-nowrap dark:text-black"
                         >
                           <p
                             className={`${
@@ -399,7 +381,7 @@ const Data = () => {
                             <p className="text-blue-600">{obj.GSV[1]}</p>
                           )}
                         </td>
-                        <td className="px-6 py-4">
+                        {/* <td className="px-6  py-2">
                           <p
                             className={`${
                               obj.CSV.length > 1 && "line-through"
@@ -410,8 +392,8 @@ const Data = () => {
                           {obj.CSV[1] && (
                             <p className="text-blue-600">{obj.CSV[1]}</p>
                           )}
-                        </td>
-                        <td className="px-6 py-4">
+                        </td> */}
+                        <td className="px-6  py-2">
                           <p
                             className={`${
                               obj.deposit.length > 1 && "line-through"
@@ -423,7 +405,7 @@ const Data = () => {
                             <p className="text-blue-600">{obj.deposit[1]}</p>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6  py-2 text-center">
                           <p
                             className={`${
                               obj.status.length > 1 && "line-through"
@@ -435,23 +417,23 @@ const Data = () => {
                             <p className="text-blue-600">{obj.status[1]}</p>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-center">
-                          <p
+                        <td className="px-6  py-2 text-center">
+                          {/* <p
                             className={`${
                               (obj.GSV.length > 1 || obj.deposit.length > 1) &&
                               "line-through"
                             }`}
                           >
                             {obj.CSV[0] - obj.deposit[0]}
-                          </p>
-                          {(obj.GSV.length>1 || obj.deposit.length>1) && (
+                          </p> */}
+                          {/* {(obj.GSV.length>1 || obj.deposit.length>1) && (
                             <p className="text-blue-600">
                               {(obj.CSV[1] || obj.CSV[0]) -
                                 (obj.deposit[1] || obj.deposit[0])}
                             </p>
-                          )}
+                          )} */}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6  py-2 text-center">
                           <p
                             className={`${
                               obj.date.length > 1 && "line-through"
@@ -465,7 +447,7 @@ const Data = () => {
                             </p>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6  py-2 text-center">
                           <p
                             className={`${
                               afterFeesDeduction2 && "line-through"
@@ -473,7 +455,7 @@ const Data = () => {
                           >
                             {afterFeesDeduction}
                           </p>
-                          {afterFeesDeduction2 && (
+                          {obj.afterFeesDeduction2 && (
                             <p className="text-blue-600">
                               {afterFeesDeduction2}
                             </p>
@@ -482,25 +464,47 @@ const Data = () => {
                         <td className="px-6 py-4">
                           <p
                             className={`${
+                              obj.lastCommunication.length > 1 && "line-through"
+                            }`}
+                          >
+                            {obj.lastCommunication[0]}
+                          </p>
+                          {obj.lastCommunication[1] && (
+                            <p className="text-blue-600">{obj.lastCommunication[1]}</p>
+                          )}
+                        </td>
+                        <td className="px-6  py-2 whitespace-nowrap">
+                          <p
+                            className={`${
                               obj.remarks.length > 1 && "line-through"
                             }`}
                           >
-                            {obj.remarks[0]}
+                                <div
+                            data-tip={`${obj.remarks[0]}`}
+                            className={`${toolTipClass}`}
+                            >
+                            <p>{`${obj.remarks[0].slice(0,10)}...`}</p>
+                          </div>
                           </p>
                           {obj.remarks[1] && (
-                            <p className="text-blue-600">{obj.remarks[1]}</p>
+                             <div
+                             data-tip={`${obj.remarks[1]}`}
+                             className={`text-blue-600 ${toolTipClass}`}
+                             >
+                             <p>{`${obj.remarks[1].slice(0,10)}...`}</p>
+                           </div>
                           )}
                         </td>
-                        <td className="px-6 py-4 flex justify-center flex-col relative">
+                        <td className="px-6  py-2 flex justify-center flex-col">
                           <button
-                            onClick={() => approveEditRequest(obj._id)}
-                            className="block mb-1 font-medium text-green-400 dark:text-green-500 hover:underline"
+                            onClick={()=>handleApprove(obj._id,obj.dri_id[0])}
+                            className="block mb-1   text-green-400 dark:text-green-500 hover:underline"
                           >
                             Approve
                           </button>
                           <button
-                            onClick={() => rejectEditRequest(obj._id)}
-                            className="block font-medium text-red-400 dark:text-red-500 hover:underline"
+                            onClick={()=>handleReject(obj._id,obj.dri_id[0])}
+                            className="block   text-red-400 dark:text-red-500 hover:underline"
                           >
                             Reject
                           </button>
@@ -510,12 +514,9 @@ const Data = () => {
                   })}
                 </tbody>
               </table>
-            ) : (
-              <div className="flex items-center justify-center  text-[3rem]">
-                No changes made
-              </div>
-            )}
+          
           </div>
+          </>
         )}
       </div>
     </>

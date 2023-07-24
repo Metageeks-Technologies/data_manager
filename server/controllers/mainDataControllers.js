@@ -2,18 +2,19 @@ import catchAsyncError from "../middleware/catchAsyncError.js";
 import MainData from "../models/MainData.js";
 import XLSX from "xlsx";
 import fs from "fs";
-import UpdateData from "../models/UpdateData.js";
+
 import writeXlsxFile from "write-excel-file/node";
+import UpdateData from "../models/UpdateData.js";
 
 const upload = catchAsyncError(async (req, res) => {
   try {
-    console.log("hi");
+    
     const file = req.file;
     let fileArr=file.originalname.split(".");
     // if (file.originalname.split(".")[file.originalname.split(".").length - 1]) {
     //   return uploadText(req, res);
     // }
-    if(fileArr[fileArr.length-1]=='txt'){
+    if(fileArr[fileArr.length-1]==='txt'){
       return uploadText(req, res);
     }
     
@@ -32,8 +33,13 @@ const upload = catchAsyncError(async (req, res) => {
     let temp = 0;
     if (jsonData ) {
       for (const row of jsonData) {
-        console.log(row);
+       
+        
         if(row.hasOwnProperty('DRI-ID')){
+          row['DRI-ID'] = row['DRI-ID'].replace(/\s/g, "");
+          row['APP No.'] = row['APP No.'].replace(/\s/g, "");
+
+          console.log(row);
           temp += 1;
           // if (temp > 105) {
           //   break;
@@ -59,7 +65,8 @@ const upload = catchAsyncError(async (req, res) => {
             date: row["Year Of Purchase"],
   
           };
-  
+          
+
           batchData.push(documentData);
   
           if (batchData.length === batchSize) {
@@ -236,230 +243,19 @@ const changeAcceptance=catchAsyncError(async (req,res,next)=>{
 
 })
 
-const getDataList = catchAsyncError(async (req, res, next) => {
-  console.log(req.query);
-  try {
-    const {
-      status,
-      place,
-      date,
-      customerName,
-      editStatus,
-      dri_id,
-      appNumber,
-      amc,
-      acceptance,
-      company,
-      membership_type
-    } = req.query;
-
-    const page = parseInt(req.query.page) || 1; // Get the requested page number
-    const limit = parseInt(req.query.limit) || 25; // Get the requested limit per page
-    
-    // Calculate the skip value based on the page number and limit
-    const skip = (page - 1) * limit;
-    const queryObject = {};
-    
-    if (status && status !== "All") {
-      queryObject.status = status;
-    }
-    if (place && place !== "All") {
-      queryObject.place = place;
-    }
-    if(company && company !=='All'){
-      queryObject.company=company;
-    }
-    if(membership_type && membership_type !=="All"){
-      queryObject.membership_type=membership_type;
-    }
-    if (date) {
-      queryObject.date = { $regex: year + "-", $options: "i" };
-    }
-    if (customerName) {
-      queryObject.customerName = { $regex: customerName, $options: "i" };
-    }
-    if (appNumber) {
-      queryObject.appNumber =  { $regex: customerName, $options: "i" };
-    }
-    if (dri_id) {
-      queryObject.dri_id =  { $regex: dri_id, $options: "i" };
-    }
-    // if (amc) {
-    //   queryObject.amc = amc;
-    // }
-    
-    console.log("this is query",queryObject);l
-    // Fetch the data from the database using skip and limit
-    let result = await MainData.find().skip(skip).limit(limit);
-
-    // Get the total count of documents
-    const totalCount = await MainData.find(queryObject).countDocuments();
-    let pageInfo = {
-      page,
-      pageLimit: limit,
-      totalCount,
-    };
-    if (editStatus && editStatus !== "All") {
-      const editDataRequest = await UpdateData.find();
-      result = data.filter((data) =>
-        editDataRequest.some((editData) => {
-          return (
-            String(editData.dataId) === String(data._id) &&
-            editData.status === editStatus
-          );
-        }) 
-      );
-    }
-    console.log(acceptance)
-    //filtering based on acceptance
-    // console.log(result);
-   if(acceptance==="deleted") result=result.filter(obj=>obj.acceptance==="accepted")
-   else result=result.filter(obj=>obj.acceptance==="deleted");
-   console.log(result);
-    res.status(200).json({
-      success: true,
-      count: result.length,
-      pageInfo,
-      result,
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: " failed",
-      message: "Internal Server Error",
-    });
-  }
-});
-
 const exportFile = catchAsyncError(async (req, res, next) => {
-  try {
-    const {
-      status,
-      place,
-      year,
-      customerName,
-      editStatus,
-      dri_id,
-      appNumber,
-      amc,
-    } = req.query;
-    const queryObject = {};
-    if (appNumber) {
-      queryObject.appNumber = appNumber;
-    }
-    if (dri_id) {
-      queryObject.dri_id = dri_id;
-    }
-    if (status && status !== "All") {
-      queryObject.status = status;
-    }
-    if (place && place !== "All") {
-      queryObject.place = place;
-    }
-    if (year) {
-      queryObject.date = { $regex: year + "-", $options: "i" };
-    }
-    if (customerName) {
-      queryObject.customerName = { $regex: customerName, $options: "i" };
-    }
-    if (amc) {
-      queryObject.amc = amc;
-    }
-
-    // Fetch the data from the database using skip and limit
-    const result = await MainData.find(queryObject);
-    const fileData = [[
-      {fontWeight:"bold", value: "S No." },
-      {fontWeight:"bold", value: "DRI-ID" },
-      {fontWeight:"bold", value: "Place" },
-      {fontWeight:"bold", value: "APP No." },
-      {fontWeight:"bold", value: "Company" },
-      {fontWeight:"bold", value: "Membership Type" },
-      {fontWeight:"bold", value: "A" },
-      {fontWeight:"bold", value: "PP D" },
-      {fontWeight:"bold", value: "Year of purchase" },
-      {fontWeight:"bold", value: "AMC" },
-      {fontWeight:"bold", value: "CUSTOMER NAME" },
-      {fontWeight:"bold", value: " GSV " },
-      {fontWeight:"bold", value: " CSV " },
-      {fontWeight:"bold", value: " Deposit " },
-      {fontWeight:"bold", value: "Status" },
-      {fontWeight:"bold", value: "Outstanding" },
-      {fontWeight:"bold", value: "Year Till Now" },
-      {fontWeight:"bold", value: "After Deducting License Fees" },
-      {fontWeight:"bold", value: "Remarks" },
-    ]];
-    result.forEach((doc,i)=>{
-
-      const {dri_id,
-        place="",
-        appNumber="",
-        company="",
-        membership_type="",
-        amc="",
-        customerName="",
-        GSV="",
-        CSV="",
-        deposit="",
-        status="",
-        remarks="",
-        date} = doc;
-        if(!dri_id)return;
-        const dateArr = date.split("-")
-        const yearsTillNow =new Date().getFullYear()-dateArr[0]
-        const afterDeductingFee = deposit-(deposit/99)*yearsTillNow
-        fileData.push([
-          { value: i+1},
-          { value:dri_id },
-          { value:place },
-          { value:appNumber },
-          { value:company },
-          { value:membership_type },
-          { value:dateArr[2] },
-          { value:dateArr[1] },
-          { value:dateArr[0] },
-          { value:amc },
-          { value:customerName },
-          { value:GSV },
-          { value:CSV },
-          { value:deposit },
-          { value:status },
-          { value:CSV-deposit },
-          { value: yearsTillNow },
-          { value: afterDeductingFee},
-          { value:remarks },
-        ])
-    })
-
-    const fileName = "Export" +new Date().getTime() + ".xlsx"
-await writeXlsxFile(fileData, {
-  filePath: `uploads/${fileName}`,
-  fileName: fileName
-})
-    res.status(200).json({
-      success: true,
-      fileName
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      status: " failed",
-      message: "Internal Server Error",
-    });
-  }
-});
-
-const getData = catchAsyncError(async (req, res, next) => {
+  console.log("called")
   const {
     status,
     place,
     date,
     customerName,
-    editStatus,
     dri_id,
     appNumber,
-    amc,
+    amc="",
     acceptance,
     company,
+    editStatus,
     membership_type
   } = req.query;
   console.log(req.query);
@@ -483,52 +279,173 @@ const getData = catchAsyncError(async (req, res, next) => {
   if(membership_type && membership_type !=="All"){
     queryObject.membership_type=membership_type;
   }
-  if (date) {
+  if (date && date !=='All') {
     // queryObject.date = { $regex: date + "-", $options: "i" };
     queryObject.date = date;
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };
   }
-  console.log(queryObject);
+  if(acceptance){
+    queryObject.acceptance=acceptance;
+  }
+  if(editStatus && editStatus!="All"){
+    if(editStatus==="!unchanged"){
+      queryObject.editStatus={ $ne: "unchanged" }
+    }
+    else queryObject.editStatus=editStatus
+  }
+  
   let result = await MainData.find(queryObject);
-  // console.log(result);
-  // if (editStatus && editStatus !== "All") {
-  //   const editDataRequest = await UpdateData.find();
-  //   result = result.filter((data) =>
-  //     editDataRequest.some((editData) => {
-  //       // if(editStatus==='Not Seen'){
-  //       //   console.log(String(data._id)!==String(editData.dataId));
-  //       //   return String(data._id)!==String(editData.dataId)
-  //       // }
-  //       return (
-  //         String(editData.dataId) === String(data._id) &&
-  //         editData.status === editStatus
-  //       );
-  //     })
-  //   );
-  // }
   if(acceptance){
     if(acceptance==="accepted") result=result.filter(obj=>obj.acceptance==="accepted")
       else result=result.filter(obj=>obj.acceptance==="deleted");
       // console.log(result);
   }
+    const fileData = [[
+      {fontWeight:"bold", value: "S No." },
+      {fontWeight:"bold", value: "DRI-ID" },
+      {fontWeight:"bold", value: "Place" },
+      {fontWeight:"bold", value: "APP No." },
+      {fontWeight:"bold", value: "Company" },
+      {fontWeight:"bold", value: "Membership Type" },
+      // {fontWeight:"bold", value: "Date of Purchase" },
+      // {fontWeight:"bold", value: "PP D" },
+      {fontWeight:"bold", value: "Year of purchase" },
+      {fontWeight:"bold", value: "AMC" },
+      {fontWeight:"bold", value: "CUSTOMER NAME" },
+      {fontWeight:"bold", value: " GSV " },
+      // {fontWeight:"bold", value: " CSV " },
+      {fontWeight:"bold", value: " Deposit " },
+      {fontWeight:"bold", value: "Status" },
+      {fontWeight:"bold", value: "Outstanding" },
+      {fontWeight:"bold", value: "Year Till Now" },
+      {fontWeight:"bold", value: "After Deducting License Fees" },
+      {fontWeight:"bold", value: "LAST COMMUNICATION" },
+      {fontWeight:"bold", value: "REMARKS" },
+    ]];
+    result.forEach((doc,i)=>{
 
+      const {dri_id,
+        place="",
+        appNumber="",
+        company="",
+        membership_type="",
+        amc="",
+        customerName="",
+        GSV="",
+        CSV="",
+        deposit="",
+        status="",
+        lastCommunication="",
+        remarks="",
+        date} = doc;
+        if(!dri_id)return;
+        const dateArr = date.split("-")
+        const yearsTillNow =new Date().getFullYear()-dateArr[0]
+        const afterDeductingFee = deposit-(deposit/99)*yearsTillNow
+        fileData.push([
+          { value: i+1},
+          { value:dri_id },
+          { value:place },
+          { value:appNumber },
+          { value:company },
+          { value:membership_type },
+          { value:date},
+         
+          { value:amc },
+          { value:customerName },
+          { value:GSV },
+          // { value:CSV },
+          { value:deposit },
+          { value:status },
+          { value:GSV-deposit },
+          { value: yearsTillNow },
+          { value: afterDeductingFee},
+          { value: lastCommunication},
+          { value:remarks },
+        ])
+    })
+
+    const fileName = "Export" +new Date().getTime() + ".xlsx"
+   
+   const buffer = await writeXlsxFile(fileData, { buffer: true })
+   
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.send(buffer);
+});
+
+const getData = catchAsyncError(async (req, res, next) => {
+  const {
+    status,
+    place,
+    date,
+    customerName,
+    editStatus,
+    dri_id,
+    appNumber,
+    amc,
+    acceptance,
+    company,
+    membership_type,
+    page,
+  } = req.query;
+  // console.log(req.query);
+  const queryObject = {};
+  if (appNumber) {
+    queryObject.appNumber = appNumber;
+  }
+  if (dri_id) {
+    queryObject.dri_id = dri_id;
+
+  }
+  if (status && status !== "All") {
+    queryObject.status = status;
+  }
+  if (place && place !== "All") {
+    queryObject.place = place;
+  }
+  if(company && company !=='All'){
+    queryObject.company=company;
+  }
+  if(membership_type && membership_type !=="All"){
+    queryObject.membership_type=membership_type;
+  }
+  if (date && date!=='All') {
+    // queryObject.date = { $regex: date + "-", $options: "i" };
+    queryObject.date = date;
+  }
+  if (customerName) {
+    queryObject.customerName = { $regex: customerName, $options: "i" };
+  }
+  if(acceptance){
+    queryObject.acceptance=acceptance;
+  }
+  if(editStatus && editStatus!="All"){
+    if(editStatus==="!unchanged"){
+      queryObject.editStatus={ $ne: "unchanged" }
+    }
+    else queryObject.editStatus=editStatus
+  }
+  console.log(queryObject,page);
+  const p=Number(page) ||1;
+  const limit =8;
+  const skip=(p-1)*limit;
+
+  let result = await MainData.find(queryObject).skip(skip).limit(limit);
+  const totalData= await MainData.countDocuments(queryObject);
+  const numOfPages=Math.ceil(totalData/limit);
+  console.log(totalData);
+ 
   res.status(200).json({
     success: true,
-    count:result.length,
+    numOfPages,
+    totalData,
     result,
   });
 });
 
-// exports.readExcelFile = async (req, res) => {
-//   try {
-//   } catch (err) {
-//     res.status(500).json({
-//       message: "Internal Server Error",
-//       err: err,
-//     });
-//   }
-// };
 
-export { upload, getData, getDataList, uploadText,exportFile,changeAcceptance };
+
+export { upload, getData, uploadText,exportFile,changeAcceptance };

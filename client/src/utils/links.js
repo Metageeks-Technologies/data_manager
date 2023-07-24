@@ -2,7 +2,7 @@
 const AdminLinks=[
     {
       to:"/",
-      text:"Data"
+      text:"Dashboard"
   
     },
     {
@@ -19,26 +19,20 @@ const AdminLinks=[
       to:"trash",
       text:"Trash"
   
-    }  
+    }   
   ]
 
   const Links=[
     {
       to:"",
-      text:"Data"
-  
-    },
-    {
-      to:"editedData",
-      text:"My Work"
-  
+      text:""
     },
      
   ]
   const verLinks=[
     {
       to:"",
-      text:"Data"
+      text:""
   
     },
      

@@ -14,12 +14,14 @@ const mainDataSchema = new mongoose.Schema({
   deposit: { type: Number, default: "" },
   status: { type: String, default: "" },
   currentValue: { type: String },
-  remarks: { type: String, default: "" },
-  address: { type: String, default: "" },
+  remarks: { type: String, default: "",trim: true },
+  lastCommunication :{ type: String, default: "" },
+  address: { type: String, default: "" ,trim: true},
   profession: { type: String, default: "" },
   residentialPhone: { type: String, default: "" },
   officePhone: { type: String, default: "" },
-  acceptance: { type: String, enum: ['accepted', 'deleted'], default:"accepted",required:true}
+  acceptance: { type: String, enum: ['accepted', 'deleted'], default:"accepted",required:true},
+  editStatus: { type: String, enum: ['approved', 'rejected','pending','unchanged'], default:"unchanged",required:true}
 });
 
 export default mongoose.model("MainData", mainDataSchema);

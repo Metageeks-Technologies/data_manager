@@ -100,7 +100,9 @@ const Team = () => {
   }
   
   return (
-    <div className='flex items-center justify-start flex-col bg-[#f0f4f8] w-full h-screen border-t border-l border-gray-300 '>
+    <div 
+    style={{ height: "calc(100vh - 5.5rem)" }}
+    className='flex items-center justify-start flex-col bg-[#f0f4f8] w-full border-t border-l border-gray-300 '>
       {/* loading */}
       {/* {isLoading && (<div className='fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center'>
         <Loader />
@@ -195,20 +197,20 @@ const Team = () => {
         )}
       </div>
       {/* table */}
-    <div className='w-10/12  shadow-md rounded-md '>
+    <div className='w-10/12  shadow-md rounded-md sm:rounded-lg '>
       <table className="w-full text-sm text-center">
                   <thead className="text-xs rounded-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-6 py-3">
+                      <th scope="col" className="px-6 py-3 rounded-tl-lg text-gray-200">
                       NAME
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th scope="col" className="px-6 py-3 text-gray-200">
                         EMAIL
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th scope="col" className="px-6 py-3 text-gray-200">
                         ROLE
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th scope="col" className="px-6 py-3 rounded-tr-lg text-gray-200">
                         DELETE USER
                       </th>
                     </tr>
@@ -230,7 +232,7 @@ const Team = () => {
                           </td>
                           <td
                             scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
+                            className="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap dark:text-black"
                           >
                             <p>{user?.email}</p>
                             

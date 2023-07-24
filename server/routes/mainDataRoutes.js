@@ -11,6 +11,7 @@ import {
 import MainData from "../models/MainData.js";
 import UpdateData from "../models/UpdateData.js";
 import SecondaryData from "../models/SecondaryData.js";
+import { isAuthenticatedUser } from "../middleware/auth.js";
 const router = express.Router();
 
 // upload file middleware || multer
@@ -69,7 +70,7 @@ const test=(req,res,next)=>{
   next();
 }
 router.route("/upload").post(test,upload.single("file"), uploadMainData);
-router.route("/getData").get(getData);
+router.route("/getData").get(isAuthenticatedUser, getData);
 router.route("/deleteData").patch(changeAcceptance);
 // router.route("/getDataList").get(getDataList);
 router.route("/export").get(exportFile);

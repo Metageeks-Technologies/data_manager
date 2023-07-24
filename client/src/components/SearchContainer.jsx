@@ -1,30 +1,32 @@
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
-import  YearPicker from "./yearPicker";
 
-import { placeOptions,statusOptions,companyOptions,memberOptions, yearsOption} from "../utils/options";
-const SearchContainer = ({ form, setForm }) => {
-  const { getAllData,getAllDeletedData, setPage,isSearchedHandler, page,exportData,user,isAdmin,openSearchBar,searchBar } = useAppContext();
-const [exporting,setExporting] = useState(false)
+
+import { placeOptions,statusOptions,editStatusOption,companyOptions,memberOptions, yearsOption} from "../utils/options";
+const SearchContainer = ({ form, setForm,role }) => {
+  const { getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler, page,exportData,setShowTable,isAdmin,openSearchBar,searchBar } = useAppContext();
+  const [exporting,setExporting] = useState(false)
   const handleSubmit = (e) => {
     e.preventDefault();
     isSearchedHandler(true);
     searchBar(false)
-    console.log(form);
+   
     // if (page === 1) return getAllData({ ...form });
     if(form.acceptance==="deleted"){
-      getAllDeletedData({...form})
-    }else getAllData({ ...form })
+      getAllDeletedData({...form,page:1})
+    }else if(role==='verifier'){
+      getAllVarData({...form,page:1})
+    }else if(role==='VarEX'){
+      getAllVarData({...form,page:1})
+    }
+
+     getAllData({ ...form,page:1})
     
     setPage(1);
+    setShowTable(true);
   };
 
-  const handleExport = async()=>{
-    setExporting(true)
-
-    await exportData(form)
-    setExporting(false)
-  }
+  
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setForm((prevState) => ({
@@ -42,10 +44,6 @@ const [exporting,setExporting] = useState(false)
         <div className="flex w-full items-center justify-between  mb-5">
           <h1 className="text-2xl ">Search </h1>
           <div className="flex items-center gap-4" >
-            <div>
-            { isAdmin &&  <button className="bg-[#3b82f6] rounded py-2 px-5 text-white" onClick={handleExport} type="button">{exporting ?"Exporting..." :"Export"}</button>
-            }
-          </div>
             <button onClick={()=>searchBar(false)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -181,7 +179,7 @@ const [exporting,setExporting] = useState(false)
               onChange={handleInputChange}
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {yearsOption.map((data) => {
+              {['All',...yearsOption].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -189,10 +187,52 @@ const [exporting,setExporting] = useState(false)
                 );
               })}
             </select>
-            {/* <div className="h-[2rem]">
-            <YearPicker/>
-            </div> */}
           </div>
+          {/* edit Status */}
+          {(role && (role==='executive')) && (
+            <div className="flex flex-col mb-4 flex-1">
+            <label htmlFor="editStatus" className="text-xs">
+            editStatus:
+            </label>
+            <select
+              id="editStatus"
+              name="editStatus"
+              value={form.editStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {editStatusOption.map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          ) }
+           {(role && (role==='VarEX')) && (
+            <div className="flex flex-col mb-4 flex-1">
+            <label htmlFor="editStatus" className="text-xs">
+            editStatus:
+            </label>
+            <select
+              id="editStatus"
+              name="editStatus"
+              value={form.editStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {editStatusOption.map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          ) }
           {/* Customer Name */}
           <div className="flex flex-col mb-4 flex-1">
             <label htmlFor="customerName" className="text-xs">

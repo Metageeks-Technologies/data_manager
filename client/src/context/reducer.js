@@ -31,26 +31,73 @@ import {
     DELETE_DATA_SUCCESS,
     GET_ALL_DELETED_DATA_SUCCESS,
     YEAR_PICKER,
-    IS_SEARCHED
-    
-    
-   
+    IS_SEARCHED,
+    DRI_ID,
+    LAST_FILTER_QUERY,
+    GET_ALL_ACTIVITY_SUCCESS,
+    MAKE_ACTIVITY_SUCCESS,
+    INCREASE_PAGE,
+    DECREASE_PAGE,  
+    GET_ALL_VAR_DATA_SUCCESS,
+    SET_PAGE,
+    INITIAL_PAGINATION,
+    SET_SHOW_TABLE,
+    GET_ALL_IPS,
+  DELETE_IP,
+  ADD_IP,
+    TOGGLE_EXE_DATA
 } from './action'
 
 const reducer =(state,action)=>{
-    
+    if(action.type=== INITIAL_PAGINATION){
+        return{   
+            ...state,           
+            page:1         
+        }
+    }
+    if(action.type===TOGGLE_EXE_DATA ){
+        return{   
+            ...state,           
+            toggleExeData:!state.toggleExeData      
+        }
+    }
+    if(action.type===GET_ALL_IPS ){
+        return{   
+            ...state,           
+            allowedIPs:action.payload.ips,
+            isLoading:false      
+        }
+    }
+    if(action.type===DELETE_IP || action.type===ADD_IP ){
+        return{   
+            ...state,           
+            toggleAction:!state.toggleAction ,
+            isLoading:false      
+        }
+    }
+    if(action.type=== INCREASE_PAGE){
+        return{   
+            ...state,           
+            page:state.page+1         
+        }
+    }
+    if(action.type=== DECREASE_PAGE){
+        return{   
+            ...state,      
+            page:state.page-1        
+        }
+    } 
     if( action.type===API_CALL_BEGIN ||action.type=== EDIT_DATA_BEGIN){
         return{
             ...state,
             isLoading:true         
         }
     }
-    if( action.type===DELETE_DATA_SUCCESS){
-        return{
+    if( action.type===DELETE_DATA_SUCCESS || action.type ===MAKE_ACTIVITY_SUCCESS){
+        return {
             ...state,
-            toggleAction:!state.toggleAction,
-            isLoading:false ,
-
+            isLoading:true,
+            toggleAction:!state.toggleAction  
         }
     }
     if(action.type=== EDIT_DATA_BEGIN){
@@ -59,6 +106,14 @@ const reducer =(state,action)=>{
             ...state,
             
             isLoading:true         
+        }
+    }
+    if(action.type===GET_ALL_ACTIVITY_SUCCESS){
+        return {
+            ...state,
+            isLoading:false,
+            allActivityByExe:action.payload.activities?.activitiesByExe,
+            allActivityByVar:action.payload.activities?.activitiesByVar
         }
     }
     if(action.type===GET_USER_SUCCESS){
@@ -112,10 +167,28 @@ const reducer =(state,action)=>{
             yearPicker:action.payload
         }
     }
+    if(action.type===SET_PAGE){
+        return {
+            ...state,
+            page:action.payload
+        }
+    }
+    if(action.type===DRI_ID){
+        return {
+            ...state,
+            dri_idOnWhichActionPerformed:action.payload
+        }
+    }
     if(action.type===IS_SEARCHED){
         return {
             ...state,
             isSearched:action.payload
+        }
+    }
+    if(action.type===SET_SHOW_TABLE){
+        return {
+            ...state,
+            showTable:action.payload
         }
     }
 
@@ -145,19 +218,33 @@ const reducer =(state,action)=>{
     if(action.type===GET_ALL_DATA_SUCCESS){
         return {
             ...state,
+            numOfPages:action.payload.data.numOfPages,
+            totalData:action.payload.data.totalData,
+            lastFilterQuery:action.payload.queryObject,
             isLoading:false,
-           mainData:action.payload.result,
-           pageInfo:action.payload.pageInfo,
+           mainData:action.payload.data.result,
            
-            
+        }
+    }
+    if(action.type===GET_ALL_VAR_DATA_SUCCESS){
+        return {
+            ...state,
+            numOfPages:action.payload.data.numOfPages,
+            totalData:action.payload.data.totalData,
+            lastFilterQuery:action.payload.queryObject,
+            isLoading:false,
+            varData:action.payload.data.result,
         }
     }
     if(action.type===GET_ALL_DELETED_DATA_SUCCESS){
         return {
             ...state,
+            numOfPages:action.payload.data.numOfPages,
+            totalData:action.payload.data.totalData,
+            lastFilterQuery:action.payload.queryObject,
             isLoading:false,
-           deletedData:action.payload.result,
-           pageInfo:action.payload.pageInfo,
+           deletedData:action.payload.data.result,
+           
           
             
         }
@@ -197,7 +284,7 @@ const reducer =(state,action)=>{
     if(action.type===APPROVE_EDIT_SUCCESS ||action.type=== REJECT_EDIT_SUCCESS ){
         return {
             ...state,
-            editDataStatusChange:!state.editDataStatusChange,
+            toggleAction:!state.toggleAction,
             isLoading:false,
              
         }

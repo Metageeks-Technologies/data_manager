@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Alert, ChangePassForm, ForgetpassForm, FormField, Loader } from "../components";
+import { Alert, ChangePassForm, ForgetpassForm, FormField, Loader, LoginSwiper } from "../components";
 import { showAlert, useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
+import { loginImgOption } from "../utils/options";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -20,15 +21,19 @@ const LoginPage = () => {
     haveAccount: true,
   });
   // id user is authenticated then there is no need of login page
-  useEffect(() => {
-    if (isAuthenticated && isAdmin) {
-      navigate("/");
-    } else if (isAuthenticated && user?.role === "executive") {
-      navigate("/executive");
-    } else if (isAuthenticated && user?.role === "verifier") {
-      navigate("/verifier");
-    }
-  }, [user]);
+  
+   
+    useEffect(() => {
+      if (isAuthenticated && isAdmin) {
+        navigate("/");
+      } else if (isAuthenticated && user?.role === "executive") {
+        navigate("/executive");
+      } else if (isAuthenticated && user?.role === "verifier") {
+        navigate("/verifier");
+      }
+    }, [isAuthenticated, isAdmin, user]);
+   
+  
   // onSubmit
   const onSubmit = (e) => {
     e.preventDefault();
@@ -142,13 +147,13 @@ const LoginPage = () => {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="white"
                       viewBox="0 0 24 24"
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       stroke="#b8c5d7"
-                      class="w-6 h-6"
+                      className="w-6 h-6"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
                       />
                     </svg>
@@ -200,19 +205,18 @@ const LoginPage = () => {
         </div>
       </div>
       {/* image section */}
-      <div className="h-full lg:w-6/12 w-full sm:w-8/12 mt-[6rem] sm:mt-0">
-        {/* <img src='/loginImg.jpg' alt="loginShow" className='h-full rounded-[4rem] object-fill '  /> */}
-        <div className="bg-[#3b82f6] rounded-l-[1rem] w-full h-full"></div>
+      <div className="h-full  lg:w-6/12 w-full sm:w-8/12 mt-[6rem] sm:mt-0">
+        <LoginSwiper />
       </div>
       {/* change password form */}
       {changePassword && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div className="fixed top-0 left-0 right-0 bottom-0 z-10 bg-gray-800 bg-opacity-50 flex items-center justify-center">
           <ChangePassForm setChangePassword={setChangePassword} />
         </div>
       )}
       {/* showForgetPassWord form */}
       {showForgetPass && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div className="fixed top-0 left-0 z-10 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
           <ForgetpassForm setShowForgetPass={setShowForgetPass}/>
       </div>
       )}

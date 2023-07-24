@@ -8,7 +8,7 @@ import { placeOptions,statusOptions,companyOptions,memberOptions, yearsOption} f
 
 
 function EditForm({ setShow, dataId }) {
-  const { mainData, editData } = useAppContext();
+  const { mainData, editData,makeActivity,user,dri_idOnWhichActionPerformed } = useAppContext();
   const data = mainData.find((obj) => obj._id === dataId);
   const [changed,setChanged] = useState(false)
   const [form, setFormData] = useState({
@@ -20,7 +20,7 @@ function EditForm({ setShow, dataId }) {
     amc: data.amc || "",
     customerName: data.customerName || "",
     GSV: data.GSV || "",
-    CSV: data.CSV || "",
+    lastCommunication: "",
     deposit: data.deposit || "",
     status: data.status || "",
     dri_id: data.dri_id || "",
@@ -29,6 +29,7 @@ function EditForm({ setShow, dataId }) {
     residentialPhone: data.residentialPhone || "",
     officePhone: data.officePhone || "",
     profession: data.profession || "",
+    
     
   });
 
@@ -57,7 +58,13 @@ function EditForm({ setShow, dataId }) {
     }
 
     editData(dataId, changedData);
-    console.log(changedData);
+    const obj={
+      userName:user?.name,
+      userRole:user?.role,
+      dataId:dri_idOnWhichActionPerformed,
+      actionType:"edited"
+    }
+    makeActivity(obj);  
   };
 
   
@@ -105,7 +112,7 @@ function EditForm({ setShow, dataId }) {
             />
           </div>
           {/* driid */}
-          <div className="flex flex-col mb-4">
+          {/* <div className="flex flex-col mb-4">
             <label htmlFor="dri_id" className="text-xs mb-1">
               DRI ID:
             </label>
@@ -117,9 +124,9 @@ function EditForm({ setShow, dataId }) {
               onChange={handleInputChange}
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </div> */}
           {/* appNumber */}
-          <div className="flex flex-col mb-4">
+          {/* <div className="flex flex-col mb-4">
             <label htmlFor="appNumber" className="text-xs mb-1">
               App Number:
             </label>
@@ -131,7 +138,7 @@ function EditForm({ setShow, dataId }) {
               onChange={handleInputChange}
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </div> */}
           {/* residentialPhone */}
           <div className="flex flex-col mb-4">
             <label htmlFor="residentialPhone" className="text-xs mb-1">
@@ -250,20 +257,7 @@ function EditForm({ setShow, dataId }) {
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          {/* CSV */}
-          <div className="flex flex-col mb-4">
-            <label htmlFor="CSV" className="text-xs mb-1">
-              CSV:
-            </label>
-            <input
-              id="CSV"
-              type="text"
-              name="CSV"
-              value={form.CSV}
-              onChange={handleInputChange}
-              className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          
           
           {/* deposit */}
           <div className="flex flex-col mb-4">
@@ -334,6 +328,28 @@ function EditForm({ setShow, dataId }) {
               onChange={handleInputChange}
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
+          {/*lastCommunication date */}
+          <div className="flex flex-col mb-4">
+          <label htmlFor="lastCommunication" className="text-xs">
+          Last Communication
+            </label>
+            <select
+              size={1}
+              id="lastCommunication"
+              name="lastCommunication"
+              value={form.lastCommunication}
+              onChange={handleInputChange}
+              className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {yearsOption.map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
           </div>
           {/* remarks */}
           <div className="flex flex-col mb-4 ">

@@ -4,9 +4,9 @@ import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 
-const Dashboard = ({ links, admin }) => {
+const Dashboard = ({ links, admin,role }) => {
   const navigate = useNavigate();
-  const { isAuthenticated, logoutUser, user, openSearchBar, searchBar } =
+  const { toggleExeData,toggleExeDataF, logoutUser, user,setShowTable,showTable, searchBar } =
     useAppContext();
 
   const handleLogout = () => {
@@ -38,7 +38,7 @@ const Dashboard = ({ links, admin }) => {
                       end={true}
                       className={({ isActive }) =>
                         isActive
-                          ? " text-[#fd79a8] transform translate-x-20"
+                          ? " text-[#2196f3] transform font-bold translate-x-20"
                           : ""
                       }
                       to={obj.to}
@@ -51,6 +51,46 @@ const Dashboard = ({ links, admin }) => {
             </ul>
           </div>
           <div className="flex gap-5">
+            {role==='executive' && (
+              <span>
+                {
+              !toggleExeData?(
+                <button
+                onClick={() => toggleExeDataF()}
+                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+              >
+                MyWork
+              </button>
+              ):(
+                <button
+                onClick={() => toggleExeDataF()}
+                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+              >
+                Edit
+              </button>
+              )
+            }
+              </span>
+            )}
+            {admin && (
+              <span>
+                {showTable ?(
+              <button
+              onClick={() => setShowTable(false)}
+              className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+            >
+              Activity
+            </button>
+            ):(
+              <button
+              onClick={() => setShowTable(true)}
+              className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+            >
+              Show Data
+            </button>
+            )}
+              </span>
+            )}
             <button
               onClick={() => searchBar(true)}
               className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"

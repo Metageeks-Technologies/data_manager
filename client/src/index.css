@@ -114,3 +114,63 @@ select-selected.select-arrow-active:after {
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+/* time liner */
+.vertical-timeline-element-content p {
+  margin: 0 0;
+  
+}
+.vertical-timeline--animate .vertical-timeline-element-content.bounce-in{
+  padding: 0.4rem 0.6rem;
+}
+.vertical-timeline-element-content .vertical-timeline-element-date {
+  padding: 0;;
+}
+.vertical-timeline::before {
+  /* background-color: #d6d4d4;
+  width: 1px; */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: calc(100% - 50px); /* Adjust the height to leave space at the bottom */
+  background-color: #ccc; /* Replace with your desired color */
+  transform: translateX(-50%);
+  z-index: -1; 
+}
+.vertical-timeline-element-content .vertical-timeline-element-date, .vertical-timeline-element-content p {
+  
+  font-size: .8125rem;
+  
+}
+/* scroll bar */
+.custom-scrollbar {
+ 
+  /* Set scrollbar color */
+  
+  scrollbar-color: #3B82F6 lightblue;
+}
+
+/* For WebKit based browsers (like Chrome, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  background-color: lightblue; /* Background color of the scrollbar track */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  
+  background-color: #3B82F6; /* Color of the scrollbar thumb */
+  border-radius: 8px; /* Rounded corners */
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3B82F6; /* Color of the scrollbar thumb */
+  border-radius: 8px; /* Rounded corners */
+}
