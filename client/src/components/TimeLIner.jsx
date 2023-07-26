@@ -6,15 +6,26 @@ import {
 } from "react-vertical-timeline-component";
 import { useAppContext } from "../context/appContext";
 import dateStr from "../utils/dateStr";
+import AdminPop from "./AdminPop";
 const UserActivityTimeline = ({data}) => {
-  const { getAllActivity } = useAppContext();
-  // const [allActivityState, setAllActivity] = useState(allActivity);
+  const { getAllActivity,adminPopup,setAdminPopup } = useAppContext();
+  const [dri_Id,setId]=useState("");
+  const handleClick =(id)=>{
+    setId(id);
+    setAdminPopup(true)
+  }
+  
   useEffect(() => {
     getAllActivity;
   }, []);
   return (
     <>
-    
+    {adminPopup && (
+      <div className="fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center">
+      <AdminPop id={dri_Id}/>
+      
+    </div>
+    )}
     <div
     style={{ height: "calc(100vh - 5.5rem)" }}
       className="flex w-full items-center justify-start flex-col px-5 bg-[#f0f4f8] p-4  border-t border-gray-300 "
@@ -66,7 +77,7 @@ const UserActivityTimeline = ({data}) => {
                     }
                   >{`${obj.actionType}`}</span>{" "}
                   data with DRI-Id{" "}
-                  <span className="text-[#3B82F6]">{`${obj.dataId}`}</span>
+                  <span onClick={()=>handleClick(obj.dataId)} className="cursor-pointer text-[#3B82F6]">{`${obj.dataId}`}</span>
                 </p>
               </VerticalTimelineElement>
             );

@@ -19,12 +19,12 @@ const TableContent = ({data,role,dataType,showForm}) => {
   return (
     <tbody>
             {data && data.map((obj) => {
-              const yearsCountTillNow =new Date().getFullYear() - parseInt(obj.date.split("-")[0]);    
+              const yearsCountTillNow =new Date().getFullYear() - parseInt(obj?.date?.split("-")[0]);    
               const afterFeesDeduction_99 = Math.round(
-                obj.deposit - (obj.deposit / 99) * yearsCountTillNow
+                obj?.deposit - (obj?.deposit / 99) * yearsCountTillNow
               );
               const afterFeesDeduction_33 = Math.round(
-                obj.deposit - (obj.deposit / 33) * yearsCountTillNow
+                obj?.deposit - (obj?.deposit / 33) * yearsCountTillNow
               );
               return (
                 <tr

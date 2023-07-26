@@ -6,16 +6,18 @@ import fs from "fs";
 import writeXlsxFile from "write-excel-file/node";
 
 
-const upload = catchAsyncError(async (req, res) => {
+const upload = catchAsyncError(async (req, res,next) => {
   try {
     
     const file = req.file;
     let fileArr=file.originalname.split(".");
+    console.log(fileArr);
     // if (file.originalname.split(".")[file.originalname.split(".").length - 1]) {
     //   return uploadText(req, res);
     // }
-    if(fileArr[fileArr.length-1]==='txt'){
-      return uploadText(req, res);
+    if(fileArr[fileArr.length-1]==='TXT'){
+      console.log("yes txt");
+      return uploadText(req, res,next);
     }
     
     // console.log("Converting to json!", req.file);
@@ -114,17 +116,22 @@ const upload = catchAsyncError(async (req, res) => {
 const uploadText = catchAsyncError(async (req, res) => {
   try {
     const file = req.file;
+    console.log("upload text Called");
     let str = fs.readFileSync(file.path);
+    
     str = str.toString("utf8");
+    
     str = str.replaceAll("\x1BH\n", "").replaceAll("\f", "");
     let arr = str.split(
       "------------------------------------------------------------------------------------------"
     );
+    let temp=arr.slice(1,3);
     arr = arr.map((e) => e.trim());
-
-    arr = arr.filter((e) => {
-      return Number.isInteger(parseInt(e.substring(0, 1)));
-    });
+    // console.log(arr[0]);
+    // arr = arr.filter((e) => {
+    //   return Number.isInteger(parseInt(e.substring(0, 1)));
+    // });
+    // console.log(arr);
     arr = arr.map((ele) => ele.replaceAll("\r\n", "\n"));
     arr = arr.map((ele) => ele.replaceAll("\n \n", "\n\n"));
     arr = arr
@@ -134,11 +141,13 @@ const uploadText = catchAsyncError(async (req, res) => {
     arr = arr.filter((e) => {
       return Number.isInteger(parseInt(e.substring(0, 1)));
     });
+    // console.log(arr);
     const data = [];
     arr.forEach((s, i) => {
       data[i] = { address: "", index: i };
 
       let lineArr = s.split("\n").map((e) => e.trim());
+      // console.log(lineArr[0])
       let addressArr = [];
       lineArr.forEach((l, lineIndex) => {
         if (lineIndex === 0) {
@@ -151,10 +160,13 @@ const uploadText = catchAsyncError(async (req, res) => {
             .replaceAll("  ", " ")
             .replaceAll("  ", " ")
             .split(" ");
-          const dri_id = tempArr[1] + " " + tempArr[2] + " " + tempArr[3];
+          // const dri_id = tempArr[1] + " " + tempArr[2] + " " + tempArr[3];
+           const dri_id = tempArr[1] + tempArr[2] + tempArr[3];
+
           data[i].dri_id = dri_id;
           return;
         }
+
         if (l.includes("PROFESSION")) {
           const temp = l.trim().replace("PROFESSION:", "").trim();
           data[i].profession = temp;
@@ -196,13 +208,21 @@ const uploadText = catchAsyncError(async (req, res) => {
         .replaceAll("  ", " ")
         .replace(":", "Pin:");
     });
-    // console.log(data)
+    // console.log(data.slice(1,3));
     data.forEach(async (doc, i) => {
+      // console.log("here");.
       try {
         const update = await MainData.findOneAndUpdate(
           { dri_id: doc.dri_id },
           doc
-        );
+        )
+        // ;0604A002419
+        // const data=await MainData.findOne({dri_id:doc.dri_id})
+        
+        if(update) {
+          console.log(update);
+          throw new Error('BreakLoop');
+        }
         console.log("Updated", i);
       } catch (e) {
         console.log("Error occurred for", i);
@@ -445,7 +465,19 @@ const getData = catchAsyncError(async (req, res, next) => {
     result,
   });
 });
+const getSingleData = catchAsyncError(async (req, res, next) => {
+  console.log("single data");
+  const {id}=req.params;
+ 
+  const data = await MainData.findOne({dri_id:id});
+  
+ 
+  res.status(200).json({
+    success: true,
+    data
+  });
+});
 
 
 
-export { upload, getData, uploadText,exportFile,changeAcceptance };
+export { upload,getSingleData, getData, uploadText,exportFile,changeAcceptance };

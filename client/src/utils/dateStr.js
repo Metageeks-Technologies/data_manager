@@ -1,7 +1,7 @@
 
 
 const dateStr = (date) => {
-    console.log(date)
+    // console.log(date)
     const createdAtDate = new Date(date);
             const today=new Date().getDate();
             let day =createdAtDate.getDate();

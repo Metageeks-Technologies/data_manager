@@ -46,7 +46,10 @@ import {
     DELETE_IP,
     ADD_IP,
     TOGGLE_EXE_DATA,
-    GET_OPTION,ADD_OPTION
+    GET_OPTION,ADD_OPTION, ADMIN_POPUP,
+    GET_SINGLE_DATA_SUCCESS,
+    DELETE_OPTION
+    
 } from './action'
 
 const reducer =(state,action)=>{
@@ -54,6 +57,13 @@ const reducer =(state,action)=>{
         return{   
             ...state,           
             page:1         
+        }
+    }
+    if(action.type=== GET_SINGLE_DATA_SUCCESS){
+        return{   
+            ...state,           
+           isLoading:false,
+           singleData:action.payload.data     
         }
     }
     if(action.type===TOGGLE_EXE_DATA ){
@@ -74,6 +84,16 @@ const reducer =(state,action)=>{
         }
     }
     if(action.type===ADD_OPTION ){
+        return{   
+            ...state,  
+            isLoading:false,
+            statusOptions:action.payload.data.status,
+            placeOptions:action.payload.data.place,
+            memberOptions:action.payload.data.membership_type
+            // toggleExeData:!state.toggleExeData      
+        }
+    }
+    if(action.type===DELETE_OPTION ){
         return{   
             ...state,  
             isLoading:false,
@@ -159,6 +179,12 @@ const reducer =(state,action)=>{
         return {
             ...state,
             userLoading:true,
+        }
+    }
+    if(action.type===ADMIN_POPUP){
+        return {
+            ...state,
+            adminPopup:action.payload,
         }
     }
     if(action.type===API_CALL_FAIL){
@@ -282,7 +308,7 @@ const reducer =(state,action)=>{
     if(action.type===UPLOAD_DATA_SUCCESS || action.type===UPLOAD_DATA_FAIL ){
         return {
             ...state,
-            file:null,
+            // file:null,
             isLoading:false,
            message:action.payload    
         }

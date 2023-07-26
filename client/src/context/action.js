@@ -51,6 +51,11 @@ export const DELETE_IP='DELETE_IP';
 export const ADD_IP='ADD_IP'
 export const GET_OPTION='GET_OPTION';
 export const ADD_OPTION='ADD_OPTION';
+export const DELETE_OPTION='DELETE_OPTION';
+
+export const ADMIN_POPUP='ADMIN_POPUP';
+export const GET_SINGLE_DATA_SUCCESS='GET_SINGLE_DATA_SUCCESS';
+
 
 
 

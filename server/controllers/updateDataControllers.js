@@ -87,7 +87,7 @@ import MainData from "../models/MainData.js";
         return next(new ErrorHandler("Data not found",404))
       }
      data.editStatus="rejected";
-     data.dataToUpdate={}
+     
      await data.save();
       
     res.status(200).json({
@@ -113,15 +113,11 @@ import MainData from "../models/MainData.js";
       new:true,
       runValidators:true
     })
-    updatedData.dataToUpdate={};
-    await updatedData.save();
+    
     
     res.status(200).json({
         success:true,
-        updatedData,
-        
-
-       
+        updatedData,  
     })
   })
 

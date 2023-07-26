@@ -14,7 +14,9 @@ import TableContent from "./TableContent";
 import PaginationAndExport from "./PaginationAndExport";
 import EditExeData from "./EditExeData";
 import TimeLiner from './TimeLIner'
-import IP from './IP'
+import IP from './IP';
+import AdminPop from "./AdminPop";
+import accordian from "./Accordian"
 export {
   IP,
   FormField,
@@ -27,11 +29,12 @@ export {
   ChangePassForm,
   DeleteAdminData,
   ForgetpassForm,
-  
+  AdminPop,
   LoginSwiper,
   TableHeaders,
   TableContent,
   PaginationAndExport,
   EditExeData,
-  TimeLiner  
+  TimeLiner,
+  accordian  
 };

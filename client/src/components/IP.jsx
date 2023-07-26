@@ -1,12 +1,127 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
+import { Accordion } from "flowbite-react";
+import { deleteIP } from "../../../server/controllers/ipController";
+
+const OptionList=({items,fun,isForIP,submitFun,forOption})=>{
+  console.log(isForIP);
+
+
+  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+   if(isForIP){
+    if(inputValue) submitFun({ip:inputValue});
+   }else if(forOption==="Place") submitFun({place:inputValue})
+   else if(forOption==="Status") submitFun({status:inputValue})
+  else if(forOption==="Membership Type") submitFun({membership_type:inputValue})
+
+
+   setInputValue("");
+  
+  };
+  
+
+  return (
+    <div>
+      <h1  className="m-4 ml-0 text-md font-semibold">{forOption} Options</h1>
+      <ul className="overflow-auto">
+                {isForIP ?(
+                  <div>
+                    {items && items.map((item) => (
+                  <li
+                    key={item._id}
+                    className="mb-2 w-full flex overflow-y-auto justify-between bg-blue-500 p-2 text-white rounded-md"
+                  >
+                    <p>{item.ip}</p>
+                    <button onClick={()=>fun(item._id,)} >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+                  </div>
+                ):(
+                  <div>
+                    {items && items.map((item,index) => (
+                  <li
+                    key={index}
+                    className="mb-2 w-full flex overflow-y-auto justify-between bg-blue-500 p-2 text-white rounded-md"
+                  >
+                    <p>{item}</p>
+                    <button onClick={()=>fun(item)} >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                        />
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+                  </div>
+                )
+                }
+                
+                
+      </ul>
+
+              <form onSubmit={handleSubmit}>
+                <div className="w-full">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder={`Add new ${forOption}`}
+                    className="p-2 border w-full rounded-md  border-gray-300 focus:outline-none"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+    </div>
+  )
+}
+
+
 const Sidebar = () => {
-   const {getAllIPs,AddIP,deleteIP, addOption,allowedIPs,toggleAction}=useAppContext();
+   const {getAllIPs,AddIP,deleteIP,deleteOption, addOption,allowedIPs,toggleAction ,statusOptions,
+    placeOptions,
+    memberOptions,}=useAppContext();
    useEffect(()=>{
     getAllIPs();
    },[toggleAction]); 
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+ 
   const [formData, setFormData] = useState({
     status: '',
     membership_type: '',
@@ -17,9 +132,7 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
+ 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -27,14 +140,7 @@ const Sidebar = () => {
       [name]: value,
     });
   };
-  const handleSubmit = (e) => {
-
-    e.preventDefault();
-    
-   if(inputValue) AddIP({ip:inputValue});
-   setInputValue("");
-   setIsOpen(!isOpen);
-  };
+  
   const handleOptionSubmit = (event) => {
     event.preventDefault();
     // Handle form submission here using the formData state
@@ -46,7 +152,45 @@ const Sidebar = () => {
     })
     setIsOpen(!isOpen);
   };
+  const options =  ['Select Option','Ip', 'Place', 'Status', 'Membership Type'];
+  const [selectedOption, setSelectedOption] = useState(options[0]);
 
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const PropsForOption={}
+  if(selectedOption!==options[0]){
+    if(selectedOption===options[1]){
+      PropsForOption.items=allowedIPs;
+      PropsForOption.isForIP=true;
+      PropsForOption.fun=deleteIP
+      PropsForOption.submitFun=AddIP
+      PropsForOption.forOption=options[1]
+    }
+    else if(selectedOption===options[2]){
+      PropsForOption.items=placeOptions;
+      PropsForOption.isForIP=false;
+      PropsForOption.fun=deleteOption
+      PropsForOption.submitFun=addOption
+      PropsForOption.forOption=options[2]
+    }
+    else if(selectedOption===options[3]){
+      PropsForOption.items=statusOptions;
+      PropsForOption.isForIP=false;
+      PropsForOption.fun=deleteOption
+      PropsForOption.submitFun=addOption
+      PropsForOption.forOption=options[3]
+    }
+    else if(selectedOption===options[4]){
+      PropsForOption.items=memberOptions;
+      PropsForOption.isForIP=false;
+      PropsForOption.fun=deleteOption;
+      PropsForOption.submitFun=addOption
+      PropsForOption.forOption=options[4]
+    }
+  }
+  
   return (
     <div>
       {/* Button to toggle the sidebar */}
@@ -74,19 +218,19 @@ const Sidebar = () => {
           />
         </svg>
       </button>
-
+    
       {/* Sidebar */}
       <div className={`fixed top-0 left-0 right-0 bottom-0 flex justify-end bg-gray-800 bg-opacity-50 z-20 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}>
       <div
-        className={` h-screen py-[3rem] flex px-2 w-1/2 rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${
+        className={` h-screen py-[3rem] flex px-2 w-[23%] rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Sidebar content */}
-       <div className="w-1/2">
-        {/* ip */}
+       <div className="w-[80%]">
+       
         <button
               onClick={toggleSidebar}
               className="text-gray-500 ml-3 focus:outline-none"
@@ -105,59 +249,36 @@ const Sidebar = () => {
                   d="M6 18L18 6M6 6l12 12"
                 ></path>
               </svg>
-            </button>
-       <div className="p-4 h-full">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-semibold">Allowed IPs</h3>
-          </div>
-          <ul className="overflow-auto">
-            {allowedIPs && allowedIPs.map((item) => (
-              <li
-                key={item._id}
-                className="mb-2 w-8/12 flex overflow-y-auto justify-between bg-blue-500 p-2 text-white rounded-md"
-              >
-                <p>{item.ip}</p>
-                <button onClick={()=>deleteIP(item._id)} >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                    />
-                  </svg>
-                </button>
-              </li>
-            ))}
-          </ul>
-          <form onSubmit={handleSubmit}>
-            <div className="w-8/12">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder="Add New Ip"
-                className="p-2 border w-full rounded-md  border-gray-300 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md"
-              >
-                Submit
-              </button>
+        </button>
+          <div className="p-4 h-full">
+            <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-semibold">Setting</h3>
             </div>
-          </form>
-        </div>
+            <div className="relative">
+                <select
+                  value={selectedOption}
+                  onChange={handleOptionChange}
+                  className="block appearance-none w-full bg-white text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:ring-2 focus:ring-blue-500 focus:outline-none focus:bg-white focus:border-gray-400"
+                >
+                  {options.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+            </div>
+             {(selectedOption !==options[0]) && (
+              <div className="w-full">
+              <OptionList {...PropsForOption} />
+              </div>
+             )}
+            
+          </div>
        </div>
-       <div className="mt-11">
+
+       {/* <div className="mt-11">
        <h3 className="text-xl font-semibold mb-[2rem]">Add Options</h3>
-        {/* add options */}
+       
         <div className="flex fle-row justify-center ">
         
       <form onSubmit={handleOptionSubmit} className="w-64 p-4 border bg-gray-50 border-gray-300 rounded">
@@ -207,13 +328,12 @@ const Sidebar = () => {
           Add
         </button>
       </form>
-    </div>
-       </div>
+        </div>
+       </div> */}
 
-        {/* Text form */}
+       
       </div>
-          </div>
-      
+      </div>  
     </div>
   );
 };

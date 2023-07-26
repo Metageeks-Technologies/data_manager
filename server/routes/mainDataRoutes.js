@@ -5,6 +5,7 @@ import {
   getData,
   // getDataList,
   uploadText,
+  getSingleData,
   changeAcceptance,
   exportFile,
 } from "../controllers/mainDataControllers.js";
@@ -74,5 +75,7 @@ router.route("/getData").get(isAuthenticatedUser, getData);
 router.route("/deleteData").patch(changeAcceptance);
 // router.route("/getDataList").get(getDataList);
 router.route("/export").get(exportFile);
+router.route("/getSingleData/:id").get(getSingleData);
+
 
 export default router;

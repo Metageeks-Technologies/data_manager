@@ -27,7 +27,7 @@ const __dirname = dirname(__filename);
 // app
 const app = express();
 app.use(cors()); 
-app.use(checkAllowedIP);
+// app.use(checkAllowedIP);
 
 // const server = http.createServer(app);
 // const io = new Server(server,{

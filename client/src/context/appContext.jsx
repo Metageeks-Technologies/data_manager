@@ -52,6 +52,9 @@ import {
   ADD_IP,
   GET_OPTION,
   ADD_OPTION,
+  ADMIN_POPUP,
+  GET_SINGLE_DATA_SUCCESS,
+  DELETE_OPTION
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -83,7 +86,7 @@ export const initialState = {
   lastFilterQuery: "",
   allActivityByExe: [],
   allActivityByVar: [],
-
+  singleData:null,
   dri_idOnWhichActionPerformed: "",
   page: 1,
   varPage: 1,
@@ -94,7 +97,8 @@ export const initialState = {
   allowedIPs:[],
   statusOptions:[],
   placeOptions:[],
-  memberOptions:[]
+  memberOptions:[],
+  adminPopup:false
 };
 export const showAlert = (type, text) => {
   if (type === "warn") {
@@ -168,6 +172,9 @@ const AppProvider = ({ children }) => {
   const setInitialPag = () => {
     dispatch({ type: INITIAL_PAGINATION});
   };
+  const setAdminPopup = (val) => {
+    dispatch({ type: ADMIN_POPUP,payload:val});
+  };
   const toggleExeDataF = () => {
     dispatch({ type: TOGGLE_EXE_DATA});
   };
@@ -219,10 +226,27 @@ const AppProvider = ({ children }) => {
         type: ADD_OPTION,
         payload: data,
       });
-      
+      showAlert("succ", "Option Added successfully");
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
       console.log(error);
+    }
+  };
+  const deleteOption = async (value) => {
+    dispatch({ type: API_CALL_BEGIN });
+    // console.log(obj);
+    
+    try {
+      const { data } = await instance.delete(`/option/deleteOption/${value}`);
+
+      dispatch({
+        type: DELETE_OPTION,
+        payload: data,
+      });
+      showAlert("succ", "Option deleted successfully");
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+      // console.log(error);
     }
   };
   const AddIP = async (obj) => {
@@ -407,6 +431,19 @@ const AppProvider = ({ children }) => {
       console.log(error);
     }
   };
+  const getSingleData=async (id)=>{
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance(`/getSingleData/${id}`);
+
+      dispatch({
+        type: GET_SINGLE_DATA_SUCCESS,
+        payload: data,
+      });
+    } catch (err) {
+      dispatch({type:API_CALL_FAIL});
+    }
+  }
   const getAllVarData = async (queryObject) => {
     // let {status,place,date,customerName,editStatus,dri_id,appNumber,amc,company,membership_type,acceptance,page}=queryObject;
     let {
@@ -727,7 +764,10 @@ const AppProvider = ({ children }) => {
         toggleExeDataF,
         getAllIPs,AddIP,deleteIP,
         getOption,
-        addOption
+        addOption,
+        setAdminPopup,
+        getSingleData,
+        deleteOption
       }}
     >
       {children}

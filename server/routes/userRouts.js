@@ -19,7 +19,7 @@ router.route("/changePassword").patch(ChangePassword);
 
 // admin routes
 router.route("/admin/getAllUser").get(isAuthenticatedUser,isAdmin("admin"),getAllUser);
-router.route("/admin/addUser").post(isAuthenticatedUser,isAdmin("admin"),signupUser);
+router.route("/admin/addUser").post(signupUser);
 router.route("/admin/updateRole").post(isAuthenticatedUser,isAdmin("admin"),updateUserRole);
 router.route("/admin/:id").delete(isAuthenticatedUser,isAdmin("admin"),deleteUser);
 
