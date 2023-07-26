@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 
 
-import { placeOptions,statusOptions,editStatusOption,companyOptions,memberOptions, yearsOption} from "../utils/options";
+import { editStatusOption,yearsOption} from "../utils/options";
 const SearchContainer = ({ form, setForm,role }) => {
-  const { getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler, page,exportData,setShowTable,isAdmin,openSearchBar,searchBar } = useAppContext();
+  const { getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler,placeOptions,statusOptions,memberOptions,setShowTable,searchBar } = useAppContext();
   const [exporting,setExporting] = useState(false)
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ const SearchContainer = ({ form, setForm,role }) => {
     if(form.acceptance==="deleted"){
       getAllDeletedData({...form,page:1})
     }else if(role==='verifier'){
-      getAllVarData({...form,page:1})
+      getAllVarData({...form,page:1}) 
     }else if(role==='VarEX'){
       getAllVarData({...form,page:1})
     }
@@ -78,6 +78,19 @@ const SearchContainer = ({ form, setForm,role }) => {
               type="text"
               name="appNumber"
               value={form.appNumber}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex flex-col mb-4 flex-1">
+            <label htmlFor="customerName" className="text-xs">
+              CUSTOMER NAME:
+            </label>
+            <input
+              id="customerName"
+              type="text"
+              name="customerName"
+              value={form.customerName}
               onChange={handleInputChange}
               className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -146,7 +159,7 @@ const SearchContainer = ({ form, setForm,role }) => {
             </select>
           </div>
           {/* company */}
-          <div className="flex flex-col mb-4 flex-1">
+          {/* <div className="flex flex-col mb-4 flex-1">
             <label htmlFor="company" className="text-xs">
             company:
             </label>
@@ -165,7 +178,7 @@ const SearchContainer = ({ form, setForm,role }) => {
                 );
               })}
             </select>
-          </div>
+          </div> */}
           {/* Date */}
           <div className="text-bold flex flex-col mb-4 flex-1">
             <label htmlFor="date" className="text-xs">
@@ -234,33 +247,29 @@ const SearchContainer = ({ form, setForm,role }) => {
           </div>
           ) }
           {/* Customer Name */}
-          <div className="flex flex-col mb-4 flex-1">
-            <label htmlFor="customerName" className="text-xs">
-              CUSTOMER NAME:
+          
+          <div className="flex flex-col mb-4">
+          <label htmlFor="lastCommunication" className="text-xs">
+          Amc
             </label>
-            <input
-              id="customerName"
-              type="text"
-              name="customerName"
-              value={form.customerName}
-              onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          {/* AMC */}
-          <div className="flex flex-col mb-4 flex-1">
-            <label htmlFor="amc" className="text-xs">
-              AMC:
-            </label>
-            <input
+            <select
+              size={1}
               id="amc"
-              type="text"
               name="amc"
               value={form.amc}
               onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {[ "Never",...yearsOption.slice(27)].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
           </div>
+          
         </div>
 
         <button

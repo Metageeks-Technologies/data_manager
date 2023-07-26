@@ -21,7 +21,8 @@ const mainDataSchema = new mongoose.Schema({
   residentialPhone: { type: String, default: "" },
   officePhone: { type: String, default: "" },
   acceptance: { type: String, enum: ['accepted', 'deleted'], default:"accepted",required:true},
-  editStatus: { type: String, enum: ['approved', 'rejected','pending','unchanged'], default:"unchanged",required:true}
+  editStatus: { type: String, enum: ['approved', 'rejected','pending','unchanged'], default:"unchanged",required:true},
+  dataToUpdate: { type: Object },
 });
 
 export default mongoose.model("MainData", mainDataSchema);

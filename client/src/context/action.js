@@ -49,6 +49,9 @@ export const TOGGLE_EXE_DATA='TOGGLE_EXE_DATA';
 export const GET_ALL_IPS='GET_ALL_IPS';
 export const DELETE_IP='DELETE_IP';
 export const ADD_IP='ADD_IP'
+export const GET_OPTION='GET_OPTION';
+export const ADD_OPTION='ADD_OPTION';
+
 
 
 

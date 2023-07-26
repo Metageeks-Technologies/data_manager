@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 const Sidebar = () => {
-   const {getAllIPs,AddIP,deleteIP,allowedIPs,toggleAction}=useAppContext();
+   const {getAllIPs,AddIP,deleteIP, addOption,allowedIPs,toggleAction}=useAppContext();
    useEffect(()=>{
     getAllIPs();
    },[toggleAction]); 
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-
+  const [formData, setFormData] = useState({
+    status: '',
+    membership_type: '',
+    place:''
+  });
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -16,12 +20,31 @@ const Sidebar = () => {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
   const handleSubmit = (e) => {
 
     e.preventDefault();
     
    if(inputValue) AddIP({ip:inputValue});
    setInputValue("");
+   setIsOpen(!isOpen);
+  };
+  const handleOptionSubmit = (event) => {
+    event.preventDefault();
+    // Handle form submission here using the formData state
+    addOption(formData);
+    setFormData({
+      status: '',
+      membership_type: '',
+      place:''
+    })
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -57,17 +80,16 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}>
       <div
-        className={` h-screen py-[3rem] px-2 w-80 rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${
+        className={` h-screen py-[3rem] flex px-2 w-1/2 rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Sidebar content */}
-        <div className="p-4 h-full">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-semibold">Allowed IPs</h3>
-            <button
+       <div className="w-1/2">
+        {/* ip */}
+        <button
               onClick={toggleSidebar}
-              className="text-gray-500 focus:outline-none"
+              className="text-gray-500 ml-3 focus:outline-none"
             >
               <svg
                 className="w-6 h-6"
@@ -84,12 +106,15 @@ const Sidebar = () => {
                 ></path>
               </svg>
             </button>
+       <div className="p-4 h-full">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-semibold">Allowed IPs</h3>
           </div>
           <ul className="overflow-auto">
             {allowedIPs && allowedIPs.map((item) => (
               <li
                 key={item._id}
-                className="mb-2 flex justify-between bg-blue-500 p-2 text-white rounded-md"
+                className="mb-2 w-8/12 flex overflow-y-auto justify-between bg-blue-500 p-2 text-white rounded-md"
               >
                 <p>{item.ip}</p>
                 <button onClick={()=>deleteIP(item._id)} >
@@ -112,7 +137,7 @@ const Sidebar = () => {
             ))}
           </ul>
           <form onSubmit={handleSubmit}>
-            <div className="w-full">
+            <div className="w-8/12">
               <input
                 type="text"
                 value={inputValue}
@@ -129,6 +154,61 @@ const Sidebar = () => {
             </div>
           </form>
         </div>
+       </div>
+       <div className="mt-11">
+       <h3 className="text-xl font-semibold mb-[2rem]">Add Options</h3>
+        {/* add options */}
+        <div className="flex fle-row justify-center ">
+        
+      <form onSubmit={handleOptionSubmit} className="w-64 p-4 border bg-gray-50 border-gray-300 rounded">
+        <div className="mb-4">
+          <label htmlFor="status" className="block mb-1">
+            Status:
+          </label>
+          <input
+            type="text"
+            id="status"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-400"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="place" className="block mb-1">
+            Place:
+          </label>
+          <input
+            type="text"
+            id="place"
+            name="place"
+            value={formData.place}
+            onChange={handleChange}
+            className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-400"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="membership_type" className="block  mb-1">
+            Membership Type:
+          </label>
+          <input
+            type="text"
+            id="membership_type"
+            name="membership_type"
+            value={formData.membership_type}
+            onChange={handleChange}
+            className="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-400"
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+        >
+          Add
+        </button>
+      </form>
+    </div>
+       </div>
 
         {/* Text form */}
       </div>

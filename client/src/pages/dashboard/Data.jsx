@@ -52,6 +52,7 @@ const Data = () => {
     company: "All",
     membership_type: "All",
     acceptance: "accepted",
+    amc:"Never"
   });
   useEffect(()=>{
     return()=>{

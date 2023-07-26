@@ -49,7 +49,9 @@ import {
   TOGGLE_EXE_DATA,
   GET_ALL_IPS,
   DELETE_IP,
-  ADD_IP
+  ADD_IP,
+  GET_OPTION,
+  ADD_OPTION,
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -89,7 +91,10 @@ export const initialState = {
   numOfPages:1,
   showTable:false,
   toggleExeData:true,
-  allowedIPs:[]
+  allowedIPs:[],
+  statusOptions:[],
+  placeOptions:[],
+  memberOptions:[]
 };
 export const showAlert = (type, text) => {
   if (type === "warn") {
@@ -147,8 +152,8 @@ const AppProvider = ({ children }) => {
   // axios --base url
   const instance = axios.create({
     //  baseURL: import.meta.env.VITE_SERVER_URL+"/api/v1",
-    // baseURL: "call/api/v1",
-    baseURL:"/api/v1",
+    baseURL: "call/api/v1",
+    // baseURL:"/api/v1",
 
     // to get cookies in browser during development
     // production
@@ -186,6 +191,40 @@ const AppProvider = ({ children }) => {
   const setPage=(num=>{
     dispatch({type:SET_PAGE,payload:num});
   })
+  const getOption = async () => {
+    dispatch({ type: API_CALL_BEGIN });
+    
+    
+    try {
+      const { data } = await instance.get(`/option/getOption`);
+
+      dispatch({
+        type: GET_OPTION,
+        payload: data,
+      });
+      
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+      console.log(error);
+    }
+  };
+  const addOption = async (obj) => {
+    dispatch({ type: API_CALL_BEGIN });
+    console.log(obj);
+    
+    try {
+      const { data } = await instance.post(`/option/addOption`,obj);
+
+      dispatch({
+        type: ADD_OPTION,
+        payload: data,
+      });
+      
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+      console.log(error);
+    }
+  };
   const AddIP = async (obj) => {
     dispatch({ type: API_CALL_BEGIN });
     console.log(obj);
@@ -649,6 +688,7 @@ const AppProvider = ({ children }) => {
     
     getAllActivity();
     getCurrUser();
+    getOption();
     
   }, []);
   return (
@@ -685,7 +725,9 @@ const AppProvider = ({ children }) => {
         setPage,
         setInitialPag,
         toggleExeDataF,
-        getAllIPs,AddIP,deleteIP
+        getAllIPs,AddIP,deleteIP,
+        getOption,
+        addOption
       }}
     >
       {children}

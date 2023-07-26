@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 
-import { placeOptions,statusOptions,companyOptions,memberOptions, yearsOption} from "../utils/options";
+import {  yearsOption} from "../utils/options";
 
 
 
 
 
 function EditForm({ setShow, dataId }) {
-  const { mainData, editData,makeActivity,user,dri_idOnWhichActionPerformed } = useAppContext();
+  const { mainData,placeOptions,statusOptions,memberOptions, editData,makeActivity,user,dri_idOnWhichActionPerformed } = useAppContext();
   const data = mainData.find((obj) => obj._id === dataId);
   const [changed,setChanged] = useState(false)
   const [form, setFormData] = useState({
@@ -180,7 +180,7 @@ function EditForm({ setShow, dataId }) {
             />
           </div>
            {/* company */}
-           <div className="flex flex-col mb-4">
+           {/* <div className="flex flex-col mb-4">
           <label htmlFor="company" className="text-xs">
             company:
             </label>
@@ -199,7 +199,7 @@ function EditForm({ setShow, dataId }) {
                 );
               })}
             </select>
-          </div>
+          </div> */}
           {/* membership_type */}
           <div className="flex flex-col mb-4">
           <label htmlFor="place" className="text-xs">
@@ -342,7 +342,7 @@ function EditForm({ setShow, dataId }) {
               onChange={handleInputChange}
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {yearsOption.map((data) => {
+              {[ "Never",...yearsOption].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -351,6 +351,28 @@ function EditForm({ setShow, dataId }) {
               })}
             </select>
           </div>
+          <div className="flex flex-col mb-4">
+          <label htmlFor="lastCommunication" className="text-xs">
+          Amc
+            </label>
+            <select
+              size={1}
+              id="amc"
+              name="amc"
+              value={form.amc}
+              onChange={handleInputChange}
+              className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {[ "Never",...yearsOption.slice(27)].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          
           {/* remarks */}
           <div className="flex flex-col mb-4 ">
             <label htmlFor="remarks" className="text-xs mb-1">

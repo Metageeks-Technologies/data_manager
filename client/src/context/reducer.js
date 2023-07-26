@@ -43,9 +43,10 @@ import {
     INITIAL_PAGINATION,
     SET_SHOW_TABLE,
     GET_ALL_IPS,
-  DELETE_IP,
-  ADD_IP,
-    TOGGLE_EXE_DATA
+    DELETE_IP,
+    ADD_IP,
+    TOGGLE_EXE_DATA,
+    GET_OPTION,ADD_OPTION
 } from './action'
 
 const reducer =(state,action)=>{
@@ -57,8 +58,29 @@ const reducer =(state,action)=>{
     }
     if(action.type===TOGGLE_EXE_DATA ){
         return{   
-            ...state,           
+            ...state,
+            isLoading:false,           
             toggleExeData:!state.toggleExeData      
+        }
+    }
+    if(action.type===GET_OPTION ){
+        return{   
+            ...state,  
+            isLoading:false,
+            statusOptions:action.payload.data.status,
+            placeOptions:action.payload.data.place,
+            memberOptions:action.payload.data.membership_type
+            // toggleExeData:!state.toggleExeData      
+        }
+    }
+    if(action.type===ADD_OPTION ){
+        return{   
+            ...state,  
+            isLoading:false,
+            statusOptions:action.payload.data.status,
+            placeOptions:action.payload.data.place,
+            memberOptions:action.payload.data.membership_type
+            // toggleExeData:!state.toggleExeData      
         }
     }
     if(action.type===GET_ALL_IPS ){

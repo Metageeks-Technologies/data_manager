@@ -1,5 +1,4 @@
 import catchAsyncError from "../middleware/catchAsyncError.js";
-import UpdateData from "../models/UpdateData.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import MainData from "../models/MainData.js";
 
@@ -8,27 +7,16 @@ import MainData from "../models/MainData.js";
   const editData=catchAsyncError(async(req,res,next)=>{
     const {id}=req.params;
    
-    let data=await UpdateData.findOne({dataId:id});
-    if(req.body.status && req.body.status==="deleted"){
-      let dataToUpdate={}
-      data=await UpdateData.create({dataId:id,dataToUpdate,status:"deleted"});
+    let data=await MainData.findOne({_id:id});
+    if(!data){
+      return next(new ErrorHandler("Data not found",404))
     }
-    else{
-      const mData= await MainData.findOne({_id:id});
-      console.log(mData);
-        mData.editStatus="pending";
-        await mData.save();
-      if(!data){
-        
-        data=await UpdateData.create({dataId:id,dataToUpdate:req.body,status:"pending"});
-      }
-      else{
-       
-        data.dataToUpdate={...data.dataToUpdate,...req.body};
-        data.status="pending"
-       await data.save();
-      }  
+    if(data.acceptance==='deleted'){
+      return next(new ErrorHandler("This Data is deleted, You can not Edit it",404))
     }
+    data.dataToUpdate=req.body;
+    data.editStatus="pending";
+    await data.save()
   
     res.status(200).json({
         success:true,
@@ -36,6 +24,37 @@ import MainData from "../models/MainData.js";
        
     })
   })
+  // const editData=catchAsyncError(async(req,res,next)=>{
+  //   const {id}=req.params;
+   
+  //   let data=await UpdateData.findOne({dataId:id});
+  //   if(req.body.status && req.body.status==="deleted"){
+  //     let dataToUpdate={}
+  //     data=await UpdateData.create({dataId:id,dataToUpdate,status:"deleted"});
+  //   }
+  //   else{
+  //     const mData= await MainData.findOne({_id:id});
+  //     console.log(mData);
+  //       mData.editStatus="pending";
+  //       await mData.save();
+  //     if(!data){
+        
+  //       data=await UpdateData.create({dataId:id,dataToUpdate:req.body,status:"pending"});
+  //     }
+  //     else{
+       
+  //       data.dataToUpdate={...data.dataToUpdate,...req.body};
+  //       data.status="pending"
+  //      await data.save();
+  //     }  
+  //   }
+  
+  //   res.status(200).json({
+  //       success:true,
+  //       data, 
+       
+  //   })
+  // })
 //   verifier
   const allEditedData=catchAsyncError(async(req,res,next)=>{
 
@@ -59,59 +78,53 @@ import MainData from "../models/MainData.js";
     })
   })
   const rejectEdit=catchAsyncError(async(req,res,next)=>{
-    console.log("hello");
+    
     
     const {id}=req.params;
-    const data=await UpdateData.findOne({dataId:id});
+    const data=await MainData.findOne({_id:id});
 
     if(!data){
         return next(new ErrorHandler("Data not found",404))
-      } 
-    
-      const rejectedData=await UpdateData.findOneAndUpdate({dataId:id},{status:"rejected"},{
-        new:true,
-        runValidators:true
-      })
-      await MainData.findOneAndUpdate({_id:id},{editStatus:"rejected"},{
-        new:true,
-        runValidators:true
-      })
+      }
+     data.editStatus="rejected";
+     data.dataToUpdate={}
+     await data.save();
       
     res.status(200).json({
         success:true,
-        rejectedData,
-       
+        data
     })
   })
   const approveEdit=catchAsyncError(async(req,res,next)=>{
-    const {id:editId}=req.params;
+    const {id}=req.params;
    
-    const editData= await UpdateData.findOne({dataId:editId});
+    const data= await MainData.findOne({_id:id});
 
-    if(!editData){
-        return next(new ErrorHandler("Data not found",404))
-      }
-      const data=await MainData.findOne({_id:editId});
     if(!data){
-      return next(new ErrorHandler("Data not found",404))
-    }else{
-      data.editStatus="approved";
-      await data.save();
+        return next(new ErrorHandler("Data not found",404))
     }
-    const updatedData=await MainData.findOneAndUpdate({_id:editId},editData.dataToUpdate,{
+    if(!data.dataToUpdate){
+      return next(new ErrorHandler("Nothing to Update",204))
+    }
+    const dataToUpdate=data.dataToUpdate;
+    dataToUpdate.editStatus="approved";
+    
+    const updatedData=await MainData.findOneAndUpdate({_id:id},dataToUpdate,{
       new:true,
       runValidators:true
     })
-    editData.status="approved"
-    await editData.save();
+    updatedData.dataToUpdate={};
+    await updatedData.save();
+    
     res.status(200).json({
         success:true,
         updatedData,
+        
+
        
     })
   })
-  
-// delete data after 30 days
+
 
 
   

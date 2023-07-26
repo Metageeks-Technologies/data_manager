@@ -8,7 +8,9 @@ import userRouter from "./routes/userRouts.js";
 import UpdateDataRouter from "./routes/updateDataRoute.js";
 import IPRouter from "./routes/ipRoutes.js"
 import forgetPasswordRouter from "./routes/otpRoute.js";
-import activityRouter from "./routes/activityRoutes.js"
+import activityRouter from "./routes/activityRoutes.js";
+
+import optionRouter from "./routes/optionRoutes.js"
 // import http from 'http';
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -56,6 +58,8 @@ app.use("/api/v1/edit", UpdateDataRouter);
 app.use("/api/v1/forgetPassword", forgetPasswordRouter);
 app.use("/api/v1/activity",activityRouter );
 app.use("/api/v1/ip",IPRouter);
+app.use("/api/v1/option",optionRouter);
+
 
  
 app.use("/download",express.static("uploads"));

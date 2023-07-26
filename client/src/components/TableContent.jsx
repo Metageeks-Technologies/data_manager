@@ -20,8 +20,11 @@ const TableContent = ({data,role,dataType,showForm}) => {
     <tbody>
             {data && data.map((obj) => {
               const yearsCountTillNow =new Date().getFullYear() - parseInt(obj.date.split("-")[0]);    
-              const afterFeesDeduction = Math.round(
+              const afterFeesDeduction_99 = Math.round(
                 obj.deposit - (obj.deposit / 99) * yearsCountTillNow
+              );
+              const afterFeesDeduction_33 = Math.round(
+                obj.deposit - (obj.deposit / 33) * yearsCountTillNow
               );
               return (
                 <tr
@@ -37,9 +40,9 @@ const TableContent = ({data,role,dataType,showForm}) => {
 
                   <td className="px-6 py-2">{obj.place}</td>
                   <td className="px-6 py-2  ">{obj.appNumber}</td>
-                  <td className="px-6 py-2 text-center">
+                  {/* <td className="px-6 py-2 text-center">
                     {obj.company || "-"}
-                  </td>
+                  </td> */}
                   <td className="px-6 py-2">{obj.membership_type || "-"}</td>
                   <td className="px-6 py-2">{obj.date || "-"}</td>
                   {/* <td className="px-6 py-2">{dayjs(obj.date,"YYYY-MM-DD").format("LL")}</td> */}
@@ -49,14 +52,15 @@ const TableContent = ({data,role,dataType,showForm}) => {
                   <td className="px-6 py-2">{obj.residentialPhone || "-"}</td>
                   <td className="px-6 py-2">{obj.officePhone || "-"}</td>
                   {/* <td className="px-6 py-2">{obj.profession || "-"}</td> */}
-                  <td className="px-6 py-2">{obj.GSV}</td>
-                  {/* <td className="px-6 py-2">{obj.CSV}</td> */}
+                  {/* <td className="px-6 py-2">{obj.GSV}</td> */}
+                  <td className="px-6 py-2">{obj.CSV}</td>
                   <td className="px-6 py-2">{obj.deposit || "-"}</td>
                   <td className="px-6 py-2">{obj.status || "-"}</td>
 
                   <td className="px-6 py-2">{obj.GSV - obj.deposit}</td>
                   <td className="px-6 py-2">{yearsCountTillNow || "-"}</td>
-                  <td className="px-6 py-2">{afterFeesDeduction || "-"}</td>
+                  <td className="px-6 py-2">{afterFeesDeduction_99 || "-"}</td>
+                  <td className="px-6 py-2">{afterFeesDeduction_33 || "-"}</td>
                   <td className="px-6 py-2">{"-"}</td>
 
                   {/* <td className="px-6 py-2">{obj.remarks || "-"}</td> */}

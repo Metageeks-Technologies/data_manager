@@ -4,7 +4,7 @@ import XLSX from "xlsx";
 import fs from "fs";
 
 import writeXlsxFile from "write-excel-file/node";
-import UpdateData from "../models/UpdateData.js";
+
 
 const upload = catchAsyncError(async (req, res) => {
   try {
@@ -56,7 +56,7 @@ const upload = catchAsyncError(async (req, res) => {
             amc: row["AMC"],
             customerName: row["CUSTOMER NAME"],
             GSV: row[' GSV '],
-            
+            CSV: row[' CSV '],
             deposit: row[' Deposit '],
             status: row[' Status '],
             currentValue: row["Current Value"],

@@ -7,6 +7,7 @@ import IP from "../models/IP.js";
 const checkAllowedIP=catchAsyncError(
     async (req, res, next) => {
         const clientIP = req.ip; 
+        console.log(clientIP);
         
             
        const foundIP =await IP.findOne({ip:clientIP});
@@ -18,5 +19,5 @@ const checkAllowedIP=catchAsyncError(
           return next(new ErrorHandler("Access forbidden",403));
         }
       }
-    ) 
+    )
 export default checkAllowedIP
