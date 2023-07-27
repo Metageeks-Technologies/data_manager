@@ -7,6 +7,8 @@ import {
 import { useAppContext } from "../context/appContext";
 import dateStr from "../utils/dateStr";
 import AdminPop from "./AdminPop";
+
+
 const UserActivityTimeline = ({data}) => {
   const { getAllActivity,adminPopup,setAdminPopup } = useAppContext();
   const [dri_Id,setId]=useState("");
@@ -26,18 +28,12 @@ const UserActivityTimeline = ({data}) => {
       
     </div>
     )}
-    <div
-    style={{ height: "calc(100vh - 5.5rem)" }}
-      className="flex w-full items-center justify-start flex-col px-5 bg-[#f0f4f8] p-4  border-t border-gray-300 "
-      
-    >
-       
-      <div className=" bg- w-9/12 p-3 bg-white flex flex-col items-center justify-center rounded-md">
+    <div className=" w-10/12 p-3  bg-blue-100  flex flex-col items-center justify-center rounded-md">
       <div className="w-10/12"> 
-      <h1 className="w-fit border-b-2 text-bl -ml-[1%]  text-[2rem] capitalize" >{data && data[0]?.userRole}</h1>
+      <h1 className="w-fit border-b-2 text-bl -ml-[2%]  text-[2rem] capitalize" >{data && data[0]?.userRole}</h1>
       </div>
         <VerticalTimeline
-          className="w-full flex-col -m-5 justify-start border-none"
+          className="w-full custom-scrollbar flex-col overflow-y-scroll justify-start border-none"
           layout="1-column"
         >
           {data.map((obj, index) => {
@@ -84,7 +80,6 @@ const UserActivityTimeline = ({data}) => {
           })}
         </VerticalTimeline>
       </div>
-    </div>
     </>
   );
 };

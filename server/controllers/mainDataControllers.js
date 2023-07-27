@@ -288,20 +288,26 @@ const exportFile = catchAsyncError(async (req, res, next) => {
 
   }
   if (status && status !== "All") {
-    queryObject.status = status;
+    // queryObject.status = status;
+    queryObject.status = { $regex: status, $options: "i" };
   }
   if (place && place !== "All") {
-    queryObject.place = place;
+    // queryObject.place = place;
+    queryObject.place = { $regex: place, $options: "i" };
   }
   if(company && company !=='All'){
     queryObject.company=company;
   }
   if(membership_type && membership_type !=="All"){
-    queryObject.membership_type=membership_type;
+    queryObject.membership_type={ $regex: membership_type, $options: "i" };;
   }
   if (date && date !=='All') {
     // queryObject.date = { $regex: date + "-", $options: "i" };
     queryObject.date = date;
+  }
+  if (amc && amc!=='All') {
+    // queryObject.date = { $regex: date + "-", $options: "i" };
+    queryObject.amc = amc;
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };
@@ -421,20 +427,26 @@ const getData = catchAsyncError(async (req, res, next) => {
 
   }
   if (status && status !== "All") {
-    queryObject.status = status;
+    // queryObject.status = status;
+    queryObject.status = { $regex: status, $options: "i" };
   }
   if (place && place !== "All") {
-    queryObject.place = place;
+    // queryObject.place = place;
+    queryObject.place = { $regex: place, $options: "i" };
   }
   if(company && company !=='All'){
     queryObject.company=company;
   }
   if(membership_type && membership_type !=="All"){
-    queryObject.membership_type=membership_type;
+    queryObject.membership_type={ $regex: membership_type, $options: "i" };;
   }
   if (date && date!=='All') {
     // queryObject.date = { $regex: date + "-", $options: "i" };
     queryObject.date = date;
+  }
+  if (amc && amc!=='All') {
+    // queryObject.date = { $regex: date + "-", $options: "i" };
+    queryObject.amc = amc;
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };

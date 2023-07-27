@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
-import { Accordion } from "flowbite-react";
-import { deleteIP } from "../../../server/controllers/ipController";
 
 const OptionList=({items,fun,isForIP,submitFun,forOption})=>{
   console.log(isForIP);

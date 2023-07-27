@@ -54,7 +54,9 @@ import {
   ADD_OPTION,
   ADMIN_POPUP,
   GET_SINGLE_DATA_SUCCESS,
-  DELETE_OPTION
+  DELETE_OPTION,
+  DECREASE_ACTIVITY_PAGE,
+  INCREASE_ACTIVITY_PAGE
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -98,7 +100,11 @@ export const initialState = {
   statusOptions:[],
   placeOptions:[],
   memberOptions:[],
-  adminPopup:false
+  adminPopup:false,
+  activityPage:1,
+activityNumOfPage:1
+
+  
 };
 export const showAlert = (type, text) => {
   if (type === "warn") {
@@ -193,6 +199,11 @@ const AppProvider = ({ children }) => {
   const setPageNumber = (increase) => {
     if (increase) dispatch({ type: INCREASE_PAGE });
     else dispatch({ type: DECREASE_PAGE });
+
+  };
+  const setPageActivityNumber = (increase) => {
+    if (increase) dispatch({ type: INCREASE_ACTIVITY_PAGE });
+    else dispatch({ type: DECREASE_ACTIVITY_PAGE });
 
   };
   const setPage=(num=>{
@@ -307,10 +318,10 @@ const AppProvider = ({ children }) => {
       showAlert("error", error.message || "something went wrong try again");
     }
   };
-  const getAllActivity = async () => {
+  const getAllActivity = async (userRole,page) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
-      const { data } = await instance(`/activity/getAllActivity`);
+      const { data } = await instance(`/activity/getAllActivity?userRole=${userRole}&page=${page}`);
       dispatch({
         type: GET_ALL_ACTIVITY_SUCCESS,
         payload: data,
@@ -411,7 +422,7 @@ const AppProvider = ({ children }) => {
       appNumber = "",
       company = "All",
       membership_type = "All",
-      amc = "",
+      amc = "All",
       acceptance = "accepted",
       editStatus = "All",
       page = 1,
@@ -723,7 +734,7 @@ const AppProvider = ({ children }) => {
   // initial app load
   useEffect(() => {
     
-    getAllActivity();
+    getAllActivity("executive",1);
     getCurrUser();
     getOption();
     
@@ -767,7 +778,8 @@ const AppProvider = ({ children }) => {
         addOption,
         setAdminPopup,
         getSingleData,
-        deleteOption
+        deleteOption,
+        setPageActivityNumber
       }}
     >
       {children}

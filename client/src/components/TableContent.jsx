@@ -48,7 +48,16 @@ const TableContent = ({data,role,dataType,showForm}) => {
                   {/* <td className="px-6 py-2">{dayjs(obj.date,"YYYY-MM-DD").format("LL")}</td> */}
                   <td className="px-6 py-2">{obj.amc || "-"}</td>
                   <td  className="px-6 py-2 text-left whitespace-nowrap">{obj.customerName}</td>
-                  <td className="px-6 py-2 whitespace-nowrap">{obj.address || "-"}</td>
+                  <td className="px-6 py-2 whitespace-nowrap">
+                    
+                  <div
+                      data-tip={`${obj.address}`}
+                      className={`${toolTipClass}`}
+                      >
+                      <p>{`${obj.address.slice(0,20)}...`}</p>
+                    </div>
+                    {/* {obj.address || "-"} */}
+                    </td>
                   <td className="px-6 py-2">{obj.residentialPhone || "-"}</td>
                   <td className="px-6 py-2">{obj.officePhone || "-"}</td>
                   {/* <td className="px-6 py-2">{obj.profession || "-"}</td> */}
@@ -57,7 +66,7 @@ const TableContent = ({data,role,dataType,showForm}) => {
                   <td className="px-6 py-2">{obj.deposit || "-"}</td>
                   <td className="px-6 py-2">{obj.status || "-"}</td>
 
-                  <td className="px-6 py-2">{obj.GSV - obj.deposit}</td>
+                  <td className="px-6 py-2">{obj.CSV - obj.deposit}</td>
                   <td className="px-6 py-2">{yearsCountTillNow || "-"}</td>
                   <td className="px-6 py-2">{afterFeesDeduction_99 || "-"}</td>
                   <td className="px-6 py-2">{afterFeesDeduction_33 || "-"}</td>

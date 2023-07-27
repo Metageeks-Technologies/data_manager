@@ -48,7 +48,9 @@ import {
     TOGGLE_EXE_DATA,
     GET_OPTION,ADD_OPTION, ADMIN_POPUP,
     GET_SINGLE_DATA_SUCCESS,
-    DELETE_OPTION
+    DELETE_OPTION,
+    DECREASE_ACTIVITY_PAGE,
+  INCREASE_ACTIVITY_PAGE
     
 } from './action'
 
@@ -128,6 +130,18 @@ const reducer =(state,action)=>{
             ...state,      
             page:state.page-1        
         }
+    }
+    if(action.type=== INCREASE_ACTIVITY_PAGE){
+        return{   
+            ...state,           
+            activityPage:state.activityPage+1         
+        }
+    }
+    if(action.type=== DECREASE_ACTIVITY_PAGE){
+        return{   
+            ...state,      
+            activityPage:state.activityPage-1        
+        }
     } 
     if( action.type===API_CALL_BEGIN ||action.type=== EDIT_DATA_BEGIN){
         return{
@@ -154,8 +168,9 @@ const reducer =(state,action)=>{
         return {
             ...state,
             isLoading:false,
-            allActivityByExe:action.payload.activities?.activitiesByExe,
-            allActivityByVar:action.payload.activities?.activitiesByVar
+            activityNumOfPage:action.payload.numOfPages,
+            allActivityByExe:action.payload.activities
+            // allActivityByVar:action.payload.activities
         }
     }
     if(action.type===GET_USER_SUCCESS){
@@ -308,7 +323,7 @@ const reducer =(state,action)=>{
     if(action.type===UPLOAD_DATA_SUCCESS || action.type===UPLOAD_DATA_FAIL ){
         return {
             ...state,
-            // file:null,
+            file:null,
             isLoading:false,
            message:action.payload    
         }

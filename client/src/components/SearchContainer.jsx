@@ -105,7 +105,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               name="status"
               value={form.status}
               onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {["All", ...statusOptions].map((data) => {
                 return (
@@ -126,7 +126,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               name="place"
               value={form.place}
               onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {["All", ...placeOptions].map((data) => {
                 return (
@@ -147,7 +147,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               name="membership_type"
               value={form.membership_type}
               onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {["All", ...memberOptions].map((data) => {
                 return (

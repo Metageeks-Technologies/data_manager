@@ -23,13 +23,23 @@ const makeActivity = catchAsyncError(async (req, res, next) => {
 
 const getAllActivity = catchAsyncError(async (req, res, next) => {
 
-    const activitiesByExe = await Activity.find({userRole:"executive"}).sort('-createdAt').limit(8);
-    const activitiesByVar = await Activity.find({userRole:"verifier"}).sort('-createdAt').limit(8);
 
+    const {userRole,page}=req.query;
+    console.log(req.query);
+    const p=Number(page) ||1;
+    const limit =8;
+    const skip=(p-1)*limit;
+    const activities = await Activity.find({userRole}).sort('-createdAt').skip(skip).limit(limit);
+    const totalData= await Activity.countDocuments({userRole});
+    const numOfPages=Math.ceil(totalData/limit);
   
     res.status(200).json({
       success: true,
-      activities:{activitiesByVar,activitiesByExe}
+      totalData,
+      numOfPages,
+      activities
+      
+
     });
   });
   

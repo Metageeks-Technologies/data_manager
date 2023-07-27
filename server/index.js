@@ -11,7 +11,7 @@ import forgetPasswordRouter from "./routes/otpRoute.js";
 import activityRouter from "./routes/activityRoutes.js";
 
 import optionRouter from "./routes/optionRoutes.js"
-// import http from 'http';
+// import { createServer } from 'http';
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
@@ -27,22 +27,17 @@ const __dirname = dirname(__filename);
 // app
 const app = express();
 app.use(cors()); 
-// app.use(checkAllowedIP);
+app.use(checkAllowedIP);
 
-// const server = http.createServer(app);
+// const server = createServer(app);
 // const io = new Server(server,{
 //   cors:{
 //     origin: "http://localhost:5173",
-//     methods:["GET","POST"]
 //   }
 // });
 
 app.use(morgan("dev"));
 dotenv.config();
-// app.use((req, res, next) => {
-//   req.io = io;
-//   next();
-// });
 // static->frontend
 app.use(express.static(path.resolve(__dirname,'../server/dist')))
  
@@ -70,10 +65,12 @@ app.get('/*', (req, res) => {
 // errorMiddleware
 app.use(errorMiddleware);
 
- 
+
 // io.on('connection', (socket) => {
 //   console.log(`⚡: ${socket.id} user just connected!`);
-
+//   socket.on('message',(data)=>{
+//     // console.log(data);
+//   })
 //   // Handle disconnection
 //   socket.on('disconnect', () => {
 //     console.log('A user disconnected');

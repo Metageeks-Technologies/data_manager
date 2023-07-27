@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import TableContent from "./TableContent";
 import TableHeaders from "./TableHeaders";
+import TableContentWithChange from "./TableContentWithChange";
 
 const AdminPop = ({ id }) => {
   const { getSingleData, setAdminPopup, singleData } = useAppContext();
@@ -32,12 +33,13 @@ const AdminPop = ({ id }) => {
       </div>
       <div className="custom-scrollbar  h-fit relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full  text-sm text-center ">
-          <TableHeaders role={"admin"} dataType={"accepted"} />
-          <TableContent
-            data={singleData ?[singleData]:[]}
+          <TableHeaders role={"popup"} dataType={"accepted"} />
+          <TableContentWithChange data={singleData ?[singleData]:[]} />
+          {/* <TableContent data={singleData ?[singleData]:[]}
+            
             role={"admin"}
             dataType={"accepted"}
-          />
+          /> */}
         </table>
       </div>
     </div>

@@ -16,7 +16,8 @@ import EditExeData from "./EditExeData";
 import TimeLiner from './TimeLIner'
 import IP from './IP';
 import AdminPop from "./AdminPop";
-import accordian from "./Accordian"
+import TableContentWithChange from "./TableContentWithChange";
+
 export {
   IP,
   FormField,
@@ -33,8 +34,9 @@ export {
   LoginSwiper,
   TableHeaders,
   TableContent,
+  TableContentWithChange,
   PaginationAndExport,
   EditExeData,
-  TimeLiner,
-  accordian  
+  TimeLiner,  
+
 };

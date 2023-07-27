@@ -110,7 +110,8 @@ const LoginPage = () => {
                 </span>
 
                 <input
-                  className="border-none w-full rounded-sm bg-sky-50 py-1 px-1 placeholder-[#b8c5d7] appearance-none focus:outline-none"
+                  
+                  className="border-none focus:border-none w-full rounded-sm bg-sky-50 py-1 px-1 placeholder-[#b8c5d7] appearance-none focus:outline-none"
                   type="email"
                   name="email"
                   placeholder="Email"
@@ -187,10 +188,10 @@ const LoginPage = () => {
                   )}
                 </span>
               </div>
-              <div onClick={handleForgetPass} className=" text-[#3b82f6] cursor-pointer w-full mt-3 flex justify-end text-sm py-2.5  font-medium rounded-md ">
+              {/* <div onClick={handleForgetPass} className=" text-[#3b82f6] cursor-pointer w-full mt-3 flex justify-end text-sm py-2.5  font-medium rounded-md ">
                
                 Forget Password ?
-              </div>
+              </div> */}
 
               {/* btn */}
               <div className="text-white w-full mx-auto mt-5 cursor-pointer bg-[#3b82f6] my-4 font-medium rounded-md text-sm  px-5 text-center">

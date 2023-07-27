@@ -57,6 +57,7 @@ const EData = () => {
     date: "All",
     customerName: "",
     appNumber: "",
+    amc:"All",
     company: "All",
     membership_type: "All",
     acceptance: "accepted",

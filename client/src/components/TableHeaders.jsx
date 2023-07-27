@@ -1,7 +1,7 @@
 import React from "react";
 import { toolTipClass } from "../utils/tooltip";
 
-const TableHeaders = ({role, dataType,action}) => {
+const TableHeaders = ({ role, dataType, action }) => {
   return (
     <thead className="text-xs sticky  top-0  uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
       <tr>
@@ -45,8 +45,8 @@ const TableHeaders = ({role, dataType,action}) => {
           GSV
         </th> */}
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
-              CSV
-            </th>
+          CSV
+        </th>
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
           DEPOSIT
         </th>
@@ -56,28 +56,35 @@ const TableHeaders = ({role, dataType,action}) => {
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
           OUTSTANDING
         </th>
-        <th scope="col" className="px-6 py-3 text-gray-200 whitespace-nowrap font-semibold">
+        <th
+          scope="col"
+          className="px-6 py-3 text-gray-200 whitespace-nowrap font-semibold"
+        >
           YEAR TILL NOW
         </th>
-        <th scope="col" className="px-6 py-3 text-gray-200 whitespace-nowrap  font-semibold">
+        <th
+          scope="col"
+          className="px-6 py-3 text-gray-200 whitespace-nowrap  font-semibold"
+        >
           {/* AFTER DEDUCTING LICENSE FEE (99 based) */}
-          
+
           <div
-                      data-tip={"AFTER DEDUCTING LICENSE FEE"}
-                      className={`${toolTipClass}`}
-                      >
-                      <div>ADLF (99 based)</div>
-                    </div>
+            data-tip={"AFTER DEDUCTING LICENSE FEE"}
+            className={`${toolTipClass}`}
+          >
+            <div>ADLF (99 based)</div>
+          </div>
         </th>
-        <th scope="col" className="px-6 py-3 text-gray-200 whitespace-nowrap font-semibold">
-         
-         <div
-                      data-tip={"AFTER DEDUCTING LICENSE FEE"}
-                      className={`${toolTipClass}`}
-                      >
-                      <div>ADLF(33 based)</div>
-                    </div>
-         
+        <th
+          scope="col"
+          className="px-6 py-3 text-gray-200 whitespace-nowrap font-semibold"
+        >
+          <div
+            data-tip={"AFTER DEDUCTING LICENSE FEE"}
+            className={`${toolTipClass}`}
+          >
+            <div>ADLF(33 based)</div>
+          </div>
         </th>
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
           Last Communication
@@ -85,21 +92,20 @@ const TableHeaders = ({role, dataType,action}) => {
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
           REMARKS
         </th>
-        <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
-        {role === "admin" ? (
-          dataType === "accepted" ? (
-            "DELETE"
-          ) : (
-            "RESTORE"
-          )
-        ) : (
-          "ACTION"
-        )}
+        
+        {role!=="popup" && (
+          <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
+          {role === "admin"
+            ? dataType === "accepted"
+              ? "DELETE"
+              : "RESTORE"
+            : "ACTION"}
         </th>
-        {role==="executive" && (
+        )}
+        {role === "executive" && (
           <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
             ACTION {!action && "STATUS"}
-        </th>
+          </th>
         )}
       </tr>
     </thead>

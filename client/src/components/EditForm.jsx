@@ -19,7 +19,7 @@ function EditForm({ setShow, dataId }) {
     date: data.date || "",
     amc: data.amc || "",
     customerName: data.customerName || "",
-    GSV: data.GSV || "",
+    CSV: data.CSV || "",
     lastCommunication: "",
     deposit: data.deposit || "",
     status: data.status || "",
@@ -56,6 +56,7 @@ function EditForm({ setShow, dataId }) {
         changedData[key] = form[key];
       }
     }
+    
 
     editData(dataId, changedData);
     const obj={
@@ -166,7 +167,7 @@ function EditForm({ setShow, dataId }) {
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>{/* profession */}
-          <div className="flex flex-col mb-4">
+          {/* <div className="flex flex-col mb-4">
             <label htmlFor="profession" className="text-xs mb-1">
               Profession:
             </label>
@@ -178,7 +179,7 @@ function EditForm({ setShow, dataId }) {
               onChange={handleInputChange}
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </div> */}
            {/* company */}
            {/* <div className="flex flex-col mb-4">
           <label htmlFor="company" className="text-xs">
@@ -202,7 +203,7 @@ function EditForm({ setShow, dataId }) {
           </div> */}
           {/* membership_type */}
           <div className="flex flex-col mb-4">
-          <label htmlFor="place" className="text-xs">
+          <label htmlFor="membership_type" className="text-xs capitalize">
               Member Type:
             </label>
             <select
@@ -210,9 +211,9 @@ function EditForm({ setShow, dataId }) {
               name="membership_type"
               value={form.membership_type}
               onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {memberOptions.map((data) => {
+              {[data.membership_type,...memberOptions.filter(option => option.toLowerCase() !== data.membership_type.toLowerCase())].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -243,16 +244,16 @@ function EditForm({ setShow, dataId }) {
               })}
             </select>
           </div>
-          {/* GSV */}
+          {/*  CSV */}
           <div className="flex flex-col mb-4">
-            <label htmlFor="GSV" className="text-xs mb-1">
-              GSV:
+            <label htmlFor=" CSV" className="text-xs mb-1">
+               CSV:
             </label>
             <input
-              id="GSV"
+              id="CSV"
               type="text"
-              name="GSV"
-              value={form.GSV}
+              name="CSV"
+              value={form.CSV}
               onChange={handleInputChange}
               className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -275,7 +276,7 @@ function EditForm({ setShow, dataId }) {
           </div>
           {/* place */}
           <div className="flex flex-col mb-4">
-            <label htmlFor="place" className="text-xs mb-1">
+            <label htmlFor="place" className="text-xs mb-1 capitalize">
               Place:
             </label>
             <select
@@ -283,9 +284,9 @@ function EditForm({ setShow, dataId }) {
               name="place"
               value={form.place}
               onChange={handleInputChange}
-              className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-400 p-1 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {placeOptions.map((data) => {
+              {[data.place,...placeOptions.filter(option => option.toLowerCase() !== data.place.toLowerCase())].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -296,7 +297,7 @@ function EditForm({ setShow, dataId }) {
           </div>
           {/* status */}
           <div className="flex flex-col mb-4">
-            <label htmlFor="status" className="text-xs mb-1">
+            <label htmlFor="status" className="text-xs mb-1 ">
               Status:
             </label>
             <select
@@ -304,9 +305,9 @@ function EditForm({ setShow, dataId }) {
               name="status"
               value={form.status}
               onChange={handleInputChange}
-              className="border border-gray-400 p-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-400 p-1 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {["All", ...statusOptions].map((data) => {
+              {[data.status,...statusOptions.filter(option => option.toLowerCase() !== data.status.toLowerCase())].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -363,7 +364,7 @@ function EditForm({ setShow, dataId }) {
               onChange={handleInputChange}
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {[ "Never",...yearsOption.slice(27)].map((data) => {
+              {["Never",...yearsOption.slice(27)].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
