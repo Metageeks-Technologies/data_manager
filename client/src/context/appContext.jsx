@@ -160,10 +160,10 @@ const AppProvider = ({ children }) => {
   const instance = axios.create({
     // to get cookies in browser during development
     
-    // baseURL: "call/api/v1",
+    baseURL: "call/api/v1",
 
     // production
-    baseURL:"/api/v1",
+    // baseURL:"/api/v1",
 
     
   });

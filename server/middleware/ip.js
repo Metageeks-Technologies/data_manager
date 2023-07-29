@@ -16,7 +16,7 @@ const checkAllowedIP=catchAsyncError(
           next();
         } else {
          
-          return next(new ErrorHandler("Access forbidden",403));
+          return next(new ErrorHandler("Ip is Not whiteListed, Access forbidden",403));
         }
       }
     )
