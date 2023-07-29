@@ -10,10 +10,13 @@ const checkAllowedIP=catchAsyncError(
         const clientIP = req.ip;
 
         console.log("current ip",clientIP);
+        const allowedIp=await IP.find();
+        const isAllowed = allowedIp.some((allowed) => allowed.ip === clientIP);
+      
         
             
-       const foundIP =await IP.findOne({ip:clientIP});
-        if (foundIP) {
+      //  const foundIP =await IP.findOne({ip:clientIP});
+        if (isAllowed) {
           
           next();
         } else {
