@@ -6,7 +6,7 @@ import { toolTipClass } from "../../utils/tooltip";
 
 const Data = () => {
   const {
-    editRequestData,
+    
     varData,
     getAllVarData,
     isLoading,
@@ -28,7 +28,7 @@ const Data = () => {
     dri_id: "",
     date: "All",
     customerName: "",
-    
+    amc:"All",
     appNumber: "",
     company: 'All',
     membership_type: 'All',
@@ -43,7 +43,6 @@ const Data = () => {
     }
   },[]);
   useEffect(() => {
-    getAllEditRequest();
     getAllVarData({acceptance:"accepted", editStatus: "pending", page:page}); 
   }, [toggleAction]);
   const handleApprove=(dataId,driId)=>{
@@ -68,31 +67,6 @@ const Data = () => {
     makeActivity(obj);
   }
 
-
-  // let DataToShow = JSON.parse(JSON.stringify(varData));
-
-  // for (let i = 0; i < DataToShow.length; i++) {
-  //   const data = DataToShow[i];
-
-  //   const editData = editRequestData.find((ed) => ed.dataId === data._id);
-  //   console.log(editData);
-  //   data.editStatus = editData?.status;
-
-  //   for (let key in data) {
-  //     let lastValue = data[key];
-  //     data[key] = [lastValue];
-
-  //     if (editData) {
-  //       if (
-  //         editData.dataToUpdate?.hasOwnProperty(key) &&
-  //         data[key].length <= 2 &&
-  //         editData.status !== "approved"
-  //       ) {
-  //         data[key].push(editData.dataToUpdate[key]);
-  //       }
-  //     }
-  //   }
-  // }
 
   return (
     <>

@@ -49,8 +49,7 @@ import {
     GET_OPTION,ADD_OPTION, ADMIN_POPUP,
     GET_SINGLE_DATA_SUCCESS,
     DELETE_OPTION,
-    DECREASE_ACTIVITY_PAGE,
-  INCREASE_ACTIVITY_PAGE
+    GET_ALL_ACTIVITY_SUCCESS_VAR
     
 } from './action'
 
@@ -131,18 +130,6 @@ const reducer =(state,action)=>{
             page:state.page-1        
         }
     }
-    if(action.type=== INCREASE_ACTIVITY_PAGE){
-        return{   
-            ...state,           
-            activityPage:state.activityPage+1         
-        }
-    }
-    if(action.type=== DECREASE_ACTIVITY_PAGE){
-        return{   
-            ...state,      
-            activityPage:state.activityPage-1        
-        }
-    } 
     if( action.type===API_CALL_BEGIN ||action.type=== EDIT_DATA_BEGIN){
         return{
             ...state,
@@ -169,8 +156,15 @@ const reducer =(state,action)=>{
             ...state,
             isLoading:false,
             activityNumOfPage:action.payload.numOfPages,
-            allActivityByExe:action.payload.activities
-            // allActivityByVar:action.payload.activities
+            allActivityByExe:[...state.allActivityByExe,...action.payload.activities]
+        }
+    }
+    if(action.type===GET_ALL_ACTIVITY_SUCCESS_VAR){
+        return {
+            ...state,
+            isLoading:false,
+            activityNumOfPageVar:action.payload.numOfPages,
+            allActivityByVar:[...state.allActivityByVar,...action.payload.activities]
         }
     }
     if(action.type===GET_USER_SUCCESS){

@@ -55,8 +55,7 @@ import {
   ADMIN_POPUP,
   GET_SINGLE_DATA_SUCCESS,
   DELETE_OPTION,
-  DECREASE_ACTIVITY_PAGE,
-  INCREASE_ACTIVITY_PAGE
+  GET_ALL_ACTIVITY_SUCCESS_VAR,
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -101,8 +100,8 @@ export const initialState = {
   placeOptions:[],
   memberOptions:[],
   adminPopup:false,
-  activityPage:1,
-activityNumOfPage:1
+  activityNumOfPageVar:1,
+  activityNumOfPage:1
 
   
 };
@@ -158,15 +157,15 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  // const [pages,setPage]= useState(1)
-  // axios --base url
   const instance = axios.create({
-    //  baseURL: import.meta.env.VITE_SERVER_URL+"/api/v1",
-    baseURL: "call/api/v1",
-    // baseURL:"/api/v1",
-
     // to get cookies in browser during development
+    
+    // baseURL: "call/api/v1",
+
     // production
+    baseURL:"/api/v1",
+
+    
   });
   useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
@@ -201,11 +200,8 @@ const AppProvider = ({ children }) => {
     else dispatch({ type: DECREASE_PAGE });
 
   };
-  const setPageActivityNumber = (increase) => {
-    if (increase) dispatch({ type: INCREASE_ACTIVITY_PAGE });
-    else dispatch({ type: DECREASE_ACTIVITY_PAGE });
+  
 
-  };
   const setPage=(num=>{
     dispatch({type:SET_PAGE,payload:num});
   })
@@ -324,6 +320,19 @@ const AppProvider = ({ children }) => {
       const { data } = await instance(`/activity/getAllActivity?userRole=${userRole}&page=${page}`);
       dispatch({
         type: GET_ALL_ACTIVITY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+      showAlert("error", error.message || "something went wrong try again");
+    }
+  };
+  const getAllActivityVar = async (userRole,page) => {
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance(`/activity/getAllActivity?userRole=${userRole}&page=${page}`);
+      dispatch({
+        type: GET_ALL_ACTIVITY_SUCCESS_VAR,
         payload: data,
       });
     } catch (error) {
@@ -466,7 +475,7 @@ const AppProvider = ({ children }) => {
       appNumber = "",
       company = "All",
       membership_type = "All",
-      amc = "",
+      amc = "All",
       acceptance = "accepted",
       editStatus = "pending",
       page=1,
@@ -495,7 +504,7 @@ const AppProvider = ({ children }) => {
       editStatus = "All",
       appNumber = "",
       company = "All",
-      amc = "",
+      amc = "All",
       membership_type = "All",
       acceptance = "deleted",
       page=1,
@@ -526,7 +535,7 @@ const AppProvider = ({ children }) => {
       editStatus = "All",
       appNumber = "",
       company = "All",
-      amc = "",
+      amc = "All",
       membership_type = "All",
       acceptance,
     } = queryObject;
@@ -703,13 +712,7 @@ const AppProvider = ({ children }) => {
    
     dispatch({ type: API_CALL_BEGIN });
 
-    try {
-      const { data } = await instance.get(`/edit/allData`);
-      // ?status=${status}&page=${page}
-      dispatch({ type: GET_ALL_EDIT_REQUEST_SUCCESS, payload: data.data });
-    } catch (error) {
-      dispatch({ type: API_CALL_FAIL });
-    }
+    
   };
   const approveEditRequest = async (id) => {
     dispatch({ type: API_CALL_BEGIN });
@@ -734,7 +737,7 @@ const AppProvider = ({ children }) => {
   // initial app load
   useEffect(() => {
     
-    getAllActivity("executive",1);
+    // getAllActivity("executive",1);
     getCurrUser();
     getOption();
     
@@ -779,7 +782,7 @@ const AppProvider = ({ children }) => {
         setAdminPopup,
         getSingleData,
         deleteOption,
-        setPageActivityNumber
+        getAllActivityVar,
       }}
     >
       {children}

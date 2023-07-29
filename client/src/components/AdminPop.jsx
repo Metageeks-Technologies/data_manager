@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
-import TableContent from "./TableContent";
 import TableHeaders from "./TableHeaders";
 import TableContentWithChange from "./TableContentWithChange";
 
-const AdminPop = ({ id }) => {
+const AdminPop = ({ id,role }) => {
   const { getSingleData, setAdminPopup, singleData } = useAppContext();
 
   useEffect(() => {
     getSingleData(id);
   }, []);
   return (
-    <div className="bg-white rounded-md shadow-md px-2 py-6 w-[95%]">
+    <div className="bg-white rounded-md shadow-md px-8 py-6 w-[97%]">
       <div className="flex justify-between mb-4 items-center">
-        <h1 className="">Activity Details</h1>
+        <h1 className="">Activity Details <span>
+            {/* {role} */}
+          </span> </h1>
         <button onClick={() => setAdminPopup(false)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,11 +36,7 @@ const AdminPop = ({ id }) => {
         <table className="w-full  text-sm text-center ">
           <TableHeaders role={"popup"} dataType={"accepted"} />
           <TableContentWithChange data={singleData ?[singleData]:[]} />
-          {/* <TableContent data={singleData ?[singleData]:[]}
-            
-            role={"admin"}
-            dataType={"accepted"}
-          /> */}
+          
         </table>
       </div>
     </div>

@@ -47,11 +47,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 // routes
+app.use("/api/v1/activity",activityRouter );
 app.use("/api/v1/auth", userRouter);
 app.use("/api/v1", mainDataRouter);
 app.use("/api/v1/edit", UpdateDataRouter);
 app.use("/api/v1/forgetPassword", forgetPasswordRouter);
-app.use("/api/v1/activity",activityRouter );
+
 app.use("/api/v1/ip",IPRouter);
 app.use("/api/v1/option",optionRouter);
 

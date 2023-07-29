@@ -51,6 +51,7 @@ const Trash = () => {
     company: "All",
     membership_type: "All",
     acceptance: "deleted",
+    amc:"All",
     // page:1
   });
   useEffect(()=>{

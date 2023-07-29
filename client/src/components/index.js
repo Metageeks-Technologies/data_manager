@@ -13,10 +13,11 @@ import TableHeaders from "./TableHeaders";
 import TableContent from "./TableContent";
 import PaginationAndExport from "./PaginationAndExport";
 import EditExeData from "./EditExeData";
-import TimeLiner from './TimeLIner'
 import IP from './IP';
 import AdminPop from "./AdminPop";
 import TableContentWithChange from "./TableContentWithChange";
+import VarTimeLiner from './VarTimeLiner'
+import ExeTimeLiner from './ExeTime'
 
 export {
   IP,
@@ -37,6 +38,9 @@ export {
   TableContentWithChange,
   PaginationAndExport,
   EditExeData,
-  TimeLiner,  
+  VarTimeLiner,
+  ExeTimeLiner,
+
+
 
 };

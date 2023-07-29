@@ -1,5 +1,6 @@
 import { useAppContext } from "../../context/appContext";
-import { TimeLiner } from "../../components"
+import { VarTimeLiner,ExeTimeLiner } from "../../components"
+
 
 const TimeLine = () => {
     const {
@@ -11,10 +12,11 @@ const TimeLine = () => {
     <div>
       <div
         style={{ height: "calc(100vh - 5.5rem)" }}
-          className="flex gap-[12rem] bg-[#f0f4f8] py-4 px-[4rem] border-t border-gray-300"  
+          className="flex gap-[14rem] bg-[#f0f4f8] py-4 px-[5rem] border-t border-gray-300"  
         >
-          <TimeLiner data={allActivityByExe}/>
-          {/* <TimeLiner data={allActivityByVar}/> */}
+          <ExeTimeLiner data={allActivityByExe}/>
+          <VarTimeLiner data={allActivityByVar}/>
+          
       </div>
     </div>
   )

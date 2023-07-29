@@ -306,8 +306,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     queryObject.date = date;
   }
   if (amc && amc!=='All') {
-    // queryObject.date = { $regex: date + "-", $options: "i" };
-    queryObject.amc = amc;
+    queryObject.amc = { $regex: amc, $options: "i" };
+    
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };
@@ -445,8 +445,8 @@ const getData = catchAsyncError(async (req, res, next) => {
     queryObject.date = date;
   }
   if (amc && amc!=='All') {
-    // queryObject.date = { $regex: date + "-", $options: "i" };
-    queryObject.amc = amc;
+    queryObject.amc = { $regex: amc, $options: "i" };
+    
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };

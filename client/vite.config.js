@@ -12,7 +12,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/call/, '')
       }
   }},
-  build: {
-    minify: false,
-  },
+  // build: {
+  //   minify: false,
+  // },
 })
