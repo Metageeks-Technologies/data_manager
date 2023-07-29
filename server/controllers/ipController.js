@@ -5,7 +5,7 @@ import catchAsyncError from "../middleware/catchAsyncError.js";
 
 const addIP =catchAsyncError(async (req,res,next)=>{
     const {ip}=req.body;
-    console.log(req.body)
+    // console.log(req.body)
     if(!ip){
         return next(new ErrorHandler("please provide IP",400))
     }

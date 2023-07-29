@@ -6,8 +6,10 @@ import IP from "../models/IP.js";
 
 const checkAllowedIP=catchAsyncError(
     async (req, res, next) => {
-        const clientIP = req.ip; 
-        console.log(clientIP);
+        // const clientIP = req.header('X-Forwarded-For');
+        const clientIP = req.ip;
+
+        console.log("current ip",clientIP);
         
             
        const foundIP =await IP.findOne({ip:clientIP});

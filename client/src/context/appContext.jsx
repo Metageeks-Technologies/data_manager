@@ -156,16 +156,35 @@ export const showAlert = (type, text) => {
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
+  // const [clientIP,setClient,ip]
+
   const [state, dispatch] = useReducer(reducer, initialState);
+  const getClientIP = async () => {
+    try {
+      const response = await axios.get('https://api64.ipify.org?format=json');
+       console.log(response.data.ip)
+      //  return response.data.ip;
+    } catch (error) {
+      console.error('Error fetching client IP:', error);
+      return ''; // Handle the error case appropriately
+    }
+  };
   const instance = axios.create({
     // to get cookies in browser during development
     
-    // baseURL: "call/api/v1",
+    baseURL: "call/api/v1",
 
     // production
-    baseURL:"/api/v1",
-
+    // baseURL:"/api/v1",
+  });
+  instance.interceptors.request.use(async (config) => {
+    const clientIP = await getClientIP();
     
+    if (clientIP) {
+      console.log(clientIP);
+      config.headers['X-Forwarded-For'] = clientIP;
+    }
+    return config;
   });
   useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
@@ -201,7 +220,7 @@ const AppProvider = ({ children }) => {
 
   };
   
-
+  
   const setPage=(num=>{
     dispatch({type:SET_PAGE,payload:num});
   })

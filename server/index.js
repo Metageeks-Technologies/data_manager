@@ -26,15 +26,10 @@ const __dirname = dirname(__filename);
 
 // app
 const app = express();
+app.set('trust proxy', true);
 app.use(cors()); 
 app.use(checkAllowedIP);
 
-// const server = createServer(app);
-// const io = new Server(server,{
-//   cors:{
-//     origin: "http://localhost:5173",
-//   }
-// });
 
 app.use(morgan("dev"));
 dotenv.config();
@@ -43,7 +38,6 @@ app.use(express.static(path.resolve(__dirname,'../server/dist')))
  
 // middleware
 app.use(express.json());
-
 app.use(cookieParser());
 
 // routes
@@ -66,18 +60,6 @@ app.get('/*', (req, res) => {
 // errorMiddleware
 app.use(errorMiddleware);
 
-
-// io.on('connection', (socket) => {
-//   console.log(`⚡: ${socket.id} user just connected!`);
-//   socket.on('message',(data)=>{
-//     // console.log(data);
-//   })
-//   // Handle disconnection
-//   socket.on('disconnect', () => {
-//     console.log('A user disconnected');
-//   });
-// });
-// port and listing
 const port = process.env.PORT || 5000;
 const start = async () => {
   try {
