@@ -3,7 +3,7 @@ import { toolTipClass } from "../utils/tooltip";
 
 const TableHeaders = ({ role, dataType, action }) => {
   return (
-    <thead className="text-xs sticky  top-0  uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <thead className="text-xs sticky  top-0  uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
       <tr>
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
           DRI-ID
