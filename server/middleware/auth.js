@@ -6,8 +6,7 @@ import jwt from "jsonwebtoken";
 const isAuthenticatedUser =catchAsyncError(async(req,res,next)=>{
     
     const {token} =req.cookies;
-    const Ip=req.ip;
-    console.log( "ip in auth",Ip)
+    
    
     if(!token){
         return next(new ErrorHandler("Please Login to access this resource",401));
