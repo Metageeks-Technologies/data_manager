@@ -112,6 +112,7 @@ const Team = () => {
         <Loader />
       </div>)} */}
       {/* btn */}
+      {/* heelo */}
       <div className='flex justify-start w-10/12 mt-[5rem] mb-[1rem] '>  
         <button onClick={openFormPopup}
         disabled={isLoading}  
@@ -199,7 +200,7 @@ const Team = () => {
            </form>
          </div>
         )}
-      </div>
+      </div>  
       {/* table */}
     <div className='w-10/12  shadow-md rounded-md sm:rounded-lg '>
       <table className="w-full text-sm text-center">
