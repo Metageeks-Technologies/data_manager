@@ -203,7 +203,7 @@ const Team = () => {
       {/* table */}
     <div className='w-10/12  shadow-md rounded-md sm:rounded-lg '>
       <table className="w-full text-sm text-center">
-                  <thead className="text-xs rounded-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <thead className="text-xs rounded-md text-gray-700 uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="px-6 py-3 rounded-tl-lg text-gray-200">
                       NAME

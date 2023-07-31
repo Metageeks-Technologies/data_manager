@@ -18,8 +18,9 @@ const checkAllowedIP=catchAsyncError(
         
             
         const foundIP = await IP.findOne({ ip: { $regex: regexPattern } });
+        
         console.log("found Ip", foundIP);
-        if (foundIP) {
+        if (foundIP || clientIP==="::1") {
           
           next();
         } else {

@@ -12,9 +12,7 @@ const upload = catchAsyncError(async (req, res,next) => {
     const file = req.file;
     let fileArr=file.originalname.split(".");
     console.log(fileArr);
-    // if (file.originalname.split(".")[file.originalname.split(".").length - 1]) {
-    //   return uploadText(req, res);
-    // }
+    
     if(fileArr[fileArr.length-1]==='TXT'){
       console.log("yes txt");
       return uploadText(req, res,next);
@@ -27,26 +25,26 @@ const upload = catchAsyncError(async (req, res,next) => {
 
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
     
-    // console.log(jsonData);
-    // Insert the data in batches
     const batchSize = 500;
     let batchData = [];
     let insertedCount = 0;
     let temp = 0;
     if (jsonData ) {
       for (const row of jsonData) {
-       
-        
-        if(row.hasOwnProperty('DRI-ID')){
-          row['DRI-ID'] = row['DRI-ID'].replace(/\s/g, "");
-          row['APP No.'] = row['APP No.'].replace(/\s/g, "");
 
-          console.log(row);
+        
+        
+        if(row.hasOwnProperty('APP No.')){
+          row['DRI-ID'] = row['DRI-ID'].replace(/\s/g, "");
+          (row['APP No.'])
+         if( (row['APP No.'])) row['APP No.'] = row['APP No.'].toString().replace(/\s/g, "");
+
+          // console.log(row);
           temp += 1;
           // if (temp > 105) {
           //   break;
           // }
-          console.log(temp);
+          // console.log(temp);
           // const date =
           // row["Year Of Purchase"] + "-" + row["PP D"] + "-" + row["A"];
           const documentData = {
@@ -62,7 +60,7 @@ const upload = catchAsyncError(async (req, res,next) => {
             deposit: row[' Deposit '],
             status: row[' Status '],
             currentValue: row["Current Value"],
-            remarks: row["Remarks"],
+            remarks: row[" Remarks "],
             // date: date.replaceAll("/", ""),
             date: row["Year Of Purchase"],
   
@@ -80,22 +78,14 @@ const upload = catchAsyncError(async (req, res,next) => {
           }
         }
       }
-
+      
       // Insert any remaining documents in the batch
       if (batchData.length > 0) {
         await MainData.insertMany(batchData);
         insertedCount += batchData.length;
       }
     }
-    // await MainData.updateMany({}, [
-    //   {
-    //     $set: {
-    //       date: {
-    //         $concat: ["$a", "$pp_d", "$year"],
-    //       },
-    //     },
-    //   }
-    // ]);
+    
 
     res.status(200).json({
       success: true,
@@ -219,10 +209,7 @@ const uploadText = catchAsyncError(async (req, res) => {
         // ;0604A002419
         // const data=await MainData.findOne({dri_id:doc.dri_id})
         
-        if(update) {
-          console.log(update);
-          throw new Error('BreakLoop');
-        }
+       
         console.log("Updated", i);
       } catch (e) {
         console.log("Error occurred for", i);

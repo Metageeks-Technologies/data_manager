@@ -23,6 +23,7 @@ const TableContent = ({data,role,dataType,showForm}) => {
               const afterFeesDeduction_99 = Math.round(
                 obj?.deposit - (obj?.deposit / 99) * yearsCountTillNow
               );
+              ((M5-(M5/99)*P5))
               const afterFeesDeduction_33 = Math.round(
                 obj?.deposit - (obj?.deposit / 33) * yearsCountTillNow
               );
