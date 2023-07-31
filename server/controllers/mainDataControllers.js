@@ -105,12 +105,14 @@ const upload = catchAsyncError(async (req, res,next) => {
 
 const uploadText = catchAsyncError(async (req, res) => {
   try {
+    // temp
+   await MainData.deleteMany({place:"Delhi"});
     const file = req.file;
     console.log("upload text Called");
     let str = fs.readFileSync(file.path);
     
     str = str.toString("utf8");
-    
+    console.log(typeof str);
     str = str.replaceAll("\x1BH\n", "").replaceAll("\f", "");
     let arr = str.split(
       "------------------------------------------------------------------------------------------"
