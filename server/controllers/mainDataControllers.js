@@ -126,8 +126,10 @@ const uploadText = catchAsyncError(async (req, res) => {
     //   return Number.isInteger(parseInt(e.substring(0, 1)));
     // });
     // console.log(arr);
-    arr = arr.map((ele) => ele.replaceAll("\r\n", "\n"));
-    arr = arr.map((ele) => ele.replaceAll("\n \n", "\n\n"));
+    // arr = arr.map((ele) => ele.replaceAll("\r\n", "\n"));
+    arr = arr.map((ele) => ele.split("\r\n").join("\n"));
+
+    arr = arr.map((ele) => ele.split("\n \n").join("\n\n"));
     arr = arr
       .join("\n\n")
       .split("\n\n")
@@ -146,13 +148,13 @@ const uploadText = catchAsyncError(async (req, res) => {
       lineArr.forEach((l, lineIndex) => {
         if (lineIndex === 0) {
           const tempArr = l
-            .replaceAll("  ", " ")
-            .replaceAll("  ", " ")
-            .replaceAll("  ", " ")
-            .replaceAll("  ", " ")
-            .replaceAll("  ", " ")
-            .replaceAll("  ", " ")
-            .replaceAll("  ", " ")
+            .split("  ").join(" ")
+            .split("  ").join(" ")
+            .split("  ").join(" ")
+            .split("  ").join(" ")
+            .split("  ").join(" ")
+            .split("  ").join(" ")
+            .split("  ").join(" ")
             .split(" ");
           // const dri_id = tempArr[1] + " " + tempArr[2] + " " + tempArr[3];
            const dri_id = tempArr[1] + tempArr[2] + tempArr[3];
@@ -168,8 +170,8 @@ const uploadText = catchAsyncError(async (req, res) => {
         }
         if (l.includes("RES :")) {
           const tempArr = l
-            .replaceAll(" ", "")
-            .replaceAll("RES:", "")
+            .split(" ").join("")
+            .split("RES:").join("")
             .split("OFF:");
           data[i].residentialPhone = tempArr[0] || "";
           data[i].officePhone = tempArr[1] || "";
@@ -196,14 +198,14 @@ const uploadText = catchAsyncError(async (req, res) => {
       });
       data[i].address = data[i].address
         .toString()
-        .replaceAll("  ", " ")
-        .replaceAll("  ", " ")
-        .replaceAll("  ", " ")
-        .replaceAll("  ", " ")
-        .replace(":", "Pin:");
+        .split("  ").join(" ")
+        .split("  ").join(" ")
+        .split("  ").join(" ")
+        .split("  ").join(" ")
+        .split(":").join("Pin:");
     });
-    console.log(data.slice(1,3));
-    return;
+    // console.log(data.slice(1,3));
+    // return;
     data.forEach(async (doc, i) => {
       // console.log("here");.
       try {
