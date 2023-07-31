@@ -113,7 +113,9 @@ const uploadText = catchAsyncError(async (req, res) => {
     
     str = str.toString("utf8");
     console.log(typeof str);
-    str = str.replaceAll("\x1BH\n", "").replaceAll("\f", "");
+    // str = str.replaceAll("\x1BH\n", "").replaceAll("\f", "");
+    str = str.split("\x1BH\n").join("").split("\f").join("");
+
     let arr = str.split(
       "------------------------------------------------------------------------------------------"
     );
@@ -200,7 +202,8 @@ const uploadText = catchAsyncError(async (req, res) => {
         .replaceAll("  ", " ")
         .replace(":", "Pin:");
     });
-    // console.log(data.slice(1,3));
+    console.log(data.slice(1,3));
+    return;
     data.forEach(async (doc, i) => {
       // console.log("here");.
       try {
