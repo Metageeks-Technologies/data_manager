@@ -4,6 +4,7 @@ import XLSX from "xlsx";
 import fs from "fs";
 
 import writeXlsxFile from "write-excel-file/node";
+import { type } from "os";
 
 
 const upload = catchAsyncError(async (req, res,next) => {
@@ -38,8 +39,20 @@ const upload = catchAsyncError(async (req, res,next) => {
           row['DRI-ID'] = row['DRI-ID'].replace(/\s/g, "");
           (row['APP No.'])
          if( (row['APP No.'])) row['APP No.'] = row['APP No.'].toString().replace(/\s/g, "");
-
-          // console.log(row);
+         if(typeof row[' Deposit ']==='string'){
+          row[' Deposit ']=row[' Deposit '].split(',').join('');
+          row[' Deposit ']=Number(row[' Deposit ']);
+         }
+         if(typeof row[' CSV ']==='string'){
+          row[' CSV ']=row[' CSV '].split(',').join('');
+          row[' CSV ']=Number(row[' CSV ']);
+         } 
+         if(typeof row[' GSV ']==='string'){
+          row[' GSV ']=row[' GSV '].split(',').join('');
+          row[' GSV ']=Number(row[' GSV ']);
+         } 
+          console.log(typeof row[' CSV ']);
+          console.log();
           temp += 1;
           // if (temp > 105) {
           //   break;
