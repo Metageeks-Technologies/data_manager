@@ -1,9 +1,10 @@
 import React from 'react'
 import { useAppContext } from '../context/appContext';
 import { toolTipClass } from '../utils/tooltip';
-
-const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
-    const {mainData}=useAppContext();
+import EditExeData from './EditExeData';
+// EditExeData
+const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,hideEdit}) => {
+    const {user}=useAppContext();
     function hasKey(obj, key) {
         return obj && Object.prototype.hasOwnProperty.call(obj, key);
       }
@@ -44,8 +45,10 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"place") &&
-                "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"place") &&
+                // "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"place") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"place") && "text-red-500 line-through")
+
               }`}
             >
               {" "}
@@ -63,7 +66,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
             <p
               className={`${
                 obj.company.length > 1 &&
-                "text-red-500 line-through"
+                "text-red-500 text-red-500 line-through"
               }`}
             >
               {" "}
@@ -79,8 +82,10 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"membership_type") &&
-                "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"membership_type") &&
+                // "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"membership_type") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"membership_type") && "text-red-500 line-through")
+
               }`}
             >
               {" "}
@@ -98,7 +103,9 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"date") && "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"date") && "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"date") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"date") && "text-red-500 line-through")
+
               }`}
             >
               {" "}
@@ -114,11 +121,13 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"amc") && "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"amc") && "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"amc") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"amc") && "text-red-500 line-through")
+
               }`}
             >
               {" "}
-              {obj.amc }
+              {obj.amc || "-"}
             </p>
             {hasKey(obj.dataToUpdate,"amc") && (
               <p className="text-blue-600">{obj.dataToUpdate.amc}</p>
@@ -130,8 +139,10 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"customerName") &&
-                "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"customerName") &&
+                // "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"customerName") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"customerName") && "text-red-500 line-through")
+
               }`}
             >
               {" "}
@@ -149,8 +160,10 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"address") &&
-                "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"address") &&
+                // "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"address") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"address") && "text-red-500 line-through")
+
               }`}
             >
               <div
@@ -176,12 +189,14 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"residentialPhone") &&
-                "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"residentialPhone") &&
+                // "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"residentialPhone") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"residentialPhone") && "text-red-500 line-through")
+
               }`}
             >
               {" "}
-              {obj.residentialPhone }
+              {obj.residentialPhone || "-" }
             </p>
             {hasKey(obj.dataToUpdate,"residentialPhone") && (
               <p className="text-blue-600">
@@ -195,12 +210,13 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"officePhone") &&
-                "text-red-500 line-through"
+                // hasKey(obj.dataToUpdate,"officePhone") &&
+                // "text-red-500 text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"officePhone") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"officePhone") && "text-red-500 line-through")
               }`}
             >
               {" "}
-              {obj.officePhone }
+              {obj.officePhone || "-"}
             </p>
             {hasKey(obj.dataToUpdate,"officePhone") && (
               <p className="text-blue-600">
@@ -215,7 +231,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
             <p
               className={`${
                 obj.profession.length > 1 &&
-                "text-red-500 line-through"
+                "text-red-500 text-red-500 line-through"
               }`}
             >
               {" "}
@@ -233,7 +249,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           >
             <p
               className={`${
-                obj.GSV.length > 1 && "text-red-500 line-through"
+                obj.GSV.length > 1 && "text-red-500 text-red-500 line-through"
               }`}
             >
               {" "}
@@ -246,7 +262,8 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           <td className="px-6  py-2">
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"CSV") && "line-through"
+                // hasKey(obj.dataToUpdate,"CSV") && "text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"CSV") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"CSV") && "text-red-500 line-through")
               }`}
             >
               {obj.CSV }
@@ -258,7 +275,8 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           <td className="px-6  py-2">
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"deposit") && "line-through"
+                // hasKey(obj.dataToUpdate,"deposit") && "text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"deposit") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"deposit") && "text-red-500 line-through")
               }`}
             >
               {obj.deposit }
@@ -267,10 +285,11 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
               <p className="text-blue-600">{obj.dataToUpdate.deposit}</p>
             )}
           </td>
-          <td className="px-6  py-2 text-center">
+          <td className="px-6  py-2 text-center whitespace-nowrap">
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"status") && "line-through"
+                // hasKey(obj.dataToUpdate,"status") && "text-red-500 line-through"
+                (hasKey(obj.dataToUpdate,"status") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"status") && "text-red-500 line-through")
               }`}
             >
               {obj.status }
@@ -280,11 +299,11 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
             )}
           </td>
           <td className="px-6  py-2 text-center">
-            0
+              {obj.CSV - obj.deposit}
             {/* <p
               className={`${
                 (obj.GSV.length > 1 || obj.deposit.length > 1) &&
-                "line-through"
+                "text-red-500 line-through"
               }`}
             >
               {obj.CSV  - obj.deposit }
@@ -297,15 +316,40 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
             )} */}
           </td>
           <td className="px-6 py-2 text-center">{yearsCountTillNow || "-"}</td>
-          <td className="px-6 py-2 text-center">{afterFeesDeduction__99based || "-"}</td>
-                  <td className="px-6 py-2 text-center">{afterFeesDeduction__33based || "-"}</td>
-          <td className="px-6 py-4">
-            <p
+          
+          {/* <td className="px-6 py-2 text-center">{afterFeesDeduction__99based || "-"}</td> */}
+          {/* <td className="px-6 py-2 text-center">{afterFeesDeduction__33based || "-"}</td> */}
+          <td className="px-6 py-2">
+           <p
               className={`${
-                hasKey(obj.dataToUpdate,"lastCommunication") && "line-through"
+                (hasKey(obj.dataToUpdate,"afterFeesDeduction99based") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"afterFeesDeduction99based") && "text-red-500 line-through")
               }`}
             >
-              {obj.lastCommunication }
+              {obj.afterFeesDeduction99based }
+            </p>
+            {hasKey(obj.dataToUpdate,"afterFeesDeduction99based") && (
+              <p className="text-blue-600">{obj.dataToUpdate.afterFeesDeduction99based}</p>
+            )}
+          </td>
+          <td className="px-6 py-2">
+          <p 
+              className={`${
+                (hasKey(obj.dataToUpdate,"afterFeesDeduction33based") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"afterFeesDeduction33based") && "text-red-500 line-through") 
+              }`}
+            >
+              {obj.afterFeesDeduction33based }
+            </p>
+            {hasKey(obj.dataToUpdate,"afterFeesDeduction33based") && (
+              <p className="text-blue-600">{obj.dataToUpdate.afterFeesDeduction33based}</p>
+            )}
+          </td>
+          <td className="px-6 py-2">
+            <p
+              className={`${
+                hasKey(obj.dataToUpdate,"lastCommunication") && "text-red-500 line-through"
+              }`}
+            >
+              {obj.lastCommunication || "-" }
             </p>
             {hasKey(obj.dataToUpdate,"lastCommunication") && (
               <p className="text-blue-600">{obj.dataToUpdate.lastCommunication}</p>
@@ -314,7 +358,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
           <td className="px-6  py-2 whitespace-nowrap overflow-hidden hover:overflow-visible">
             <p
               className={`${
-                hasKey(obj.dataToUpdate,"remarks")  && "line-through"
+                hasKey(obj.dataToUpdate,"remarks")  && "text-red-500 line-through"
               }`}
             >
                   <div
@@ -334,10 +378,11 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject}) => {
             )}
           </td>
           {role==='executive' && (
-            <td className="px-6 py-4 ">
+            <td className="px-6 py-2 whitespace-nowrap ">
             {obj?.editStatus  ? (
-              <p className={color(obj.editStatus )}>
-                {obj.editStatus }
+              <p style={{display:"flex",alignItems:"center"}} className={color(obj.editStatus )}>
+          
+               {(obj.editStatus==='rejected' && user?.role==="executive") && (<EditExeData id={obj._id} showForm={showForm} dri_id={obj.dri_id}  />)} <span className='ml-2'>{obj.editStatus }</span>
               </p>
             ) : (
               <p>No changes</p>

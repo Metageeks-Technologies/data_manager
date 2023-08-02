@@ -1,5 +1,5 @@
 import VerifierDash from "./VerifierDash";
 import Data from "./Data";
-
-
-export {VerifierDash,Data}
+import Work from "./Work"
+import Vdata from './Vdata'
+export {VerifierDash,Data,Work,Vdata};

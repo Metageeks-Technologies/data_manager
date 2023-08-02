@@ -15,12 +15,13 @@ const UserActivityTimeline = ({ data }) => {
     useAppContext();
   const [dri_Id, setId] = useState("");
   const [Page, setPage] = useState(1);
+  const [lastPage,setLastPage]=useState(0);
   const [showBtn, setShowBtn] = useState(false);
   const handleClick = (id) => {
     setId(id);
     setAdminPopup(true);
   };
-  const debouncedSetPage = useCallback(debounce(setPage, 1200), []);
+  const debouncedSetPage = useCallback(debounce(setPage, 1800), []);
   const observerTarget = useRef(null);
   const scrollTarget = useRef(null);
 
@@ -31,17 +32,19 @@ const UserActivityTimeline = ({ data }) => {
     }
     setShowBtn(false);
   };
+  
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && Page <= activityNumOfPage) {
-          console.log(Page);
+          // console.log(Page,"exe",lastPage);
           debouncedSetPage((prev) => prev + 1);
           if (Page > 2) setShowBtn(true);
           if (data.length === 8 && Page == 1) {
           } else {
             getAllActivity("executive", Page);
+            
           }
         }
       },
@@ -69,7 +72,7 @@ const UserActivityTimeline = ({ data }) => {
       <div className=" w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center justify-center rounded-md">
         <div className="w-10/12">
           <h1 className="w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize">
-            {data && data[0]?.userRole }
+            {data && data[0]?.userRole  } {data.length}
           </h1>
         </div>
         <div

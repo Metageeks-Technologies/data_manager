@@ -18,6 +18,8 @@ const SearchContainer = ({ form, setForm,role }) => {
       getAllVarData({...form,page:1}) 
     }else if(role==='VarEX'){
       getAllVarData({...form,page:1})
+    }else if(role==='varData'){
+      getAllVarData({...form,page:1})
     }
 
      getAllData({ ...form,page:1})
@@ -202,7 +204,7 @@ const SearchContainer = ({ form, setForm,role }) => {
             </select>
           </div>
           {/* edit Status */}
-          {(role && (role==='executive')) && (
+          {(role && (role==='varData')) && (
             <div className="flex flex-col mb-4 flex-1">
             <label htmlFor="editStatus" className="text-xs">
             editStatus:
@@ -214,7 +216,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               onChange={handleInputChange}
               className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {editStatusOption.map((data) => {
+              {["Both",...editStatusOption.filter(d=>d!='pending')].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -236,7 +238,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               onChange={handleInputChange}
               className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {editStatusOption.map((data) => {
+              {["all",...editStatusOption].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}
@@ -246,6 +248,7 @@ const SearchContainer = ({ form, setForm,role }) => {
             </select>
           </div>
           ) }
+        
           {/* Customer Name */}
           
           <div className="flex flex-col mb-4">
@@ -260,7 +263,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               onChange={handleInputChange}
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {[ "Never",...yearsOption.slice(27)].map((data) => {
+              {["All", "Never",...yearsOption.slice(27)].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}

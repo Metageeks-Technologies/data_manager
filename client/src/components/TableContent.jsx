@@ -69,8 +69,8 @@ const TableContent = ({data,role,dataType,showForm}) => {
 
                   <td className="px-6 py-2">{obj.CSV - obj.deposit}</td>
                   <td className="px-6 py-2">{yearsCountTillNow || "-"}</td>
-                  <td className="px-6 py-2">{afterFeesDeduction_99 || "-"}</td>
-                  <td className="px-6 py-2">{afterFeesDeduction_33 || "-"}</td>
+                  <td className="px-6 py-2">{obj.afterFeesDeduction99 || "-"}</td>
+                  <td className="px-6 py-2">{obj.afterFeesDeduction33 || "-"}</td>
                   <td className="px-6 py-2">{"-"}</td>
 
                   {/* <td className="px-6 py-2">{obj.remarks || "-"}</td> */}

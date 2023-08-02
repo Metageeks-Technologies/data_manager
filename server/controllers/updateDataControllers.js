@@ -109,6 +109,7 @@ import MainData from "../models/MainData.js";
     const dataToUpdate=data.dataToUpdate;
     dataToUpdate.editStatus="approved";
     
+    
     const updatedData=await MainData.findOneAndUpdate({_id:id},dataToUpdate,{
       new:true,
       runValidators:true

@@ -30,7 +30,7 @@ const Work = () => {
         company: 'All',
         membership_type: 'All',
         acceptance: 'accepted',
-        editStatus:"!unchanged",
+        editStatus:"var",
         page:1
       });
       useEffect(()=>{
@@ -40,7 +40,7 @@ const Work = () => {
         }
       },[]);
       useEffect(() => {
-        getAllVarData({acceptance:"accepted", editStatus: "!unchanged", page:page}); 
+        getAllVarData({acceptance:"accepted", editStatus: "var", page:page}); 
       }, [toggleAction]);
 
   const color = (cl) => {
@@ -69,7 +69,7 @@ const Work = () => {
         <div className="sticky top-0 z-10 w-full  bg-[#F0F4F8] shadow ">
           {openSearchBar && (
             <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-              <SearchContainer role={"VarEX"} type={"work"} form={form} setForm={setForm} />
+              <SearchContainer role={"varData"} type={"work"} form={form} setForm={setForm} />
             </div>
           )}
          
@@ -85,7 +85,7 @@ const Work = () => {
         <div className="custom-scrollbar relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-center">
               <TableHeaders action={true} dataType={"accepted"}/>
-              <TableContentWithChange role={"executive"} data={varData} showForm={showForm} />
+              <TableContentWithChange role={"executive"} hideEdit data={varData} showForm={showForm} />
             </table>
         
         </div>

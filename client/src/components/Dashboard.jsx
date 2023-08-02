@@ -9,8 +9,8 @@ const Dashboard = ({ links, admin,role }) => {
   const { toggleExeData,toggleExeDataF, logoutUser, user,setShowTable,showTable, searchBar } =
     useAppContext();
 
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+   await logoutUser();
     navigate("/auth");
   };
   return (
@@ -67,6 +67,27 @@ const Dashboard = ({ links, admin,role }) => {
                 className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
               >
                 Edit
+              </button>
+              )
+            }
+              </span>
+            )}
+             {role==='verifier' && (
+              <span>
+                {
+              toggleExeData?(
+                <button
+                onClick={() => toggleExeDataF()}
+                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+              >
+                MyWork
+              </button>
+              ):(
+                <button
+                onClick={() => toggleExeDataF()}
+                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+              >
+                Data
               </button>
               )
             }

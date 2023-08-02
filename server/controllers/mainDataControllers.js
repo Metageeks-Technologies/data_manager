@@ -35,7 +35,7 @@ const upload = catchAsyncError(async (req, res,next) => {
 
         
         
-        if(row.hasOwnProperty('APP No.')){
+        if(row.hasOwnProperty('APP No.') && row["Year Of Purchase"]){
           row['DRI-ID'] = row['DRI-ID'].replace(/\s/g, "");
           (row['APP No.'])
          if( (row['APP No.'])) row['APP No.'] = row['APP No.'].toString().replace(/\s/g, "");
@@ -51,15 +51,24 @@ const upload = catchAsyncError(async (req, res,next) => {
           row[' GSV ']=row[' GSV '].split(',').join('');
           row[' GSV ']=Number(row[' GSV ']);
          } 
-          console.log(typeof row[' CSV ']);
-          console.log();
-          temp += 1;
-          // if (temp > 105) {
-          //   break;
-          // }
-          // console.log(temp);
-          // const date =
-          // row["Year Of Purchase"] + "-" + row["PP D"] + "-" + row["A"];
+
+        temp += 1;
+        // let x=String(row["Year Of Purchase"]);
+        // const yearsCountTillNow = new Date().getFullYear() - Number(x.split("-")[0]);
+        // // console.log(yearsCountTillNow,row['DRI-ID']);
+        // // console.log("x", x);
+        // 1002651
+        // const deposit=row[' Deposit '];
+        // const afterFeesDeduction99based = Math.round(
+        //   deposit  - (deposit  / 99) * yearsCountTillNow 
+        // );
+
+        // const afterFeesDeduction33based = Math.round(
+        //   deposit  - (deposit  / 33) * yearsCountTillNow 
+        // );
+        //   console.log(afterFeesDeduction99based)
+
+          
           const documentData = {
             dri_id: row["DRI-ID"],
             place: row["Place"],
@@ -76,7 +85,8 @@ const upload = catchAsyncError(async (req, res,next) => {
             remarks: row[" Remarks "],
             // date: date.replaceAll("/", ""),
             date: row["Year Of Purchase"],
-  
+            afterFeesDeduction99based:0,
+            afterFeesDeduction33based:0
           };
           
 
@@ -347,8 +357,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       {fontWeight:"bold", value: "Year of purchase" },
       {fontWeight:"bold", value: "AMC" },
       {fontWeight:"bold", value: "CUSTOMER NAME" },
-      {fontWeight:"bold", value: " GSV " },
-      // {fontWeight:"bold", value: " CSV " },
+      // {fontWeight:"bold", value: " GSV " },
+      {fontWeight:"bold", value: " CSV " },
       {fontWeight:"bold", value: " Deposit " },
       {fontWeight:"bold", value: "Status" },
       {fontWeight:"bold", value: "Outstanding" },
@@ -388,8 +398,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
          
           { value:amc },
           { value:customerName },
-          { value:GSV },
-          // { value:CSV },
+          // { value:GSV },
+          { value:CSV },
           { value:deposit },
           { value:status },
           { value:GSV-deposit },
@@ -461,9 +471,13 @@ const getData = catchAsyncError(async (req, res, next) => {
   if(acceptance){
     queryObject.acceptance=acceptance;
   }
-  if(editStatus && editStatus!="All"){
-    if(editStatus==="!unchanged"){
+  if(editStatus && editStatus !='All'){
+    console.log(editStatus);
+    if(editStatus==="!unchanged" || editStatus=== "all"){
       queryObject.editStatus={ $ne: "unchanged" }
+    }
+    else if(editStatus==="var" || editStatus==="Both"){
+      queryObject.editStatus={ $in: ['rejected','approved'] }
     }
     else queryObject.editStatus=editStatus
   }

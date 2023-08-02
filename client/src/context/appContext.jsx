@@ -101,7 +101,8 @@ export const initialState = {
   memberOptions:[],
   adminPopup:false,
   activityNumOfPageVar:1,
-  activityNumOfPage:1
+  activityNumOfPage:1,
+  isPageServed:{},
 
   
 };
@@ -315,6 +316,8 @@ const AppProvider = ({ children }) => {
     }
   };
   const getAllActivity = async (userRole,page) => {
+    // if(initialState.isPageServed) return ;
+
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(`/activity/getAllActivity?userRole=${userRole}&page=${page}`);
@@ -322,7 +325,9 @@ const AppProvider = ({ children }) => {
         type: GET_ALL_ACTIVITY_SUCCESS,
         payload: data,
       });
+      // initialState.isPageServed[page]=true;
     } catch (error) {
+      alert(error);
       dispatch({ type: API_CALL_FAIL });
       showAlert("error", error.message || "something went wrong try again");
     }
@@ -783,6 +788,7 @@ const AppProvider = ({ children }) => {
         getSingleData,
         deleteOption,
         getAllActivityVar,
+        
       }}
     >
       {children}

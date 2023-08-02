@@ -12,6 +12,8 @@ const mainDataSchema = new mongoose.Schema({
   GSV: { type: Number, default: 0 },
   CSV: { type: Number, default: 0 },
   deposit: { type: Number, default: 0 },
+  afterFeesDeduction33based: { type: Number, default: 0 },
+  afterFeesDeduction99based: { type: Number, default: 0 },
   status: { type: String, default: "" },
   currentValue: { type: String },
   remarks: { type: String, default: "",trim: true },

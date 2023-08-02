@@ -7,29 +7,33 @@ import {  yearsOption} from "../utils/options";
 
 
 
-function EditForm({ setShow, dataId }) {
+function EditForm({ setShow, dataId ,varData}) {
   const { mainData,placeOptions,statusOptions,memberOptions, editData,makeActivity,user,dri_idOnWhichActionPerformed } = useAppContext();
-  const data = mainData.find((obj) => obj._id === dataId);
+  let data ;
+  if(varData){
+    data= varData.find((obj) => obj._id === dataId);
+  }
+  else data=mainData.find((obj) => obj._id === dataId);
   const [changed,setChanged] = useState(false)
   const [form, setFormData] = useState({
-    place: data.place || "",
-    appNumber: data.appNumber || "",
-    company: data.company || "",
-    membership_type: data.membership_type || "",
-    date: data.date || "",
-    amc: data.amc || "",
-    customerName: data.customerName || "",
-    CSV: data.CSV || "",
+    place: data?.place || "",
+    appNumber: data?.appNumber || "",
+    company: data?.company || "",
+    membership_type: data?.membership_type || "",
+    date: data?.date || "",
+    amc: data?.amc || "",
+    customerName: data?.customerName || "",
+    CSV: data?.CSV || "",
     lastCommunication: "",
-    deposit: data.deposit || "",
-    status: data.status || "",
-    dri_id: data.dri_id || "",
-    remarks: data.remarks || "",
-    address: data.address || "",
-    residentialPhone: data.residentialPhone || "",
-    officePhone: data.officePhone || "",
-    profession: data.profession || "",
-    
+    deposit: data?.deposit || "",
+    status: data?.status || "",
+    dri_id: data?.dri_id || "",
+    remarks: data?.remarks || "",
+    address: data?.address || "",
+    residentialPhone: data?.residentialPhone || "",
+    officePhone: data?.officePhone || "",
+    profession: data?.profession || "",
+    adlf: ""
     
   });
 
@@ -52,12 +56,28 @@ function EditForm({ setShow, dataId }) {
     const changedData = {};
 
     for (let key in data) {
+      
       if (form.hasOwnProperty(key) && data[key] !== form[key]) {
         changedData[key] = form[key];
       }
     }
+    if(form.adlf){
+      const yearsCountTillNow = new Date().getFullYear() - Number(data.date.split("-")[0]);
+      const deposit=data.deposit;
+      if(form.adlf==="99 Based"){
+        const afterFeesDeduction99based = Math.round(
+            deposit  - (deposit  / 99) * yearsCountTillNow 
+          );
+        changedData.afterFeesDeduction99based=afterFeesDeduction99based;
+      }else if(form.adlf==="33 Based"){
+        const afterFeesDeduction33based = Math.round(
+          deposit  - (deposit  / 33) * yearsCountTillNow 
+        );
+      changedData.afterFeesDeduction33based=afterFeesDeduction33based;
+      }
+    }
     
-
+    // 1006441	1006741
     editData(dataId, changedData);
     const obj={
       userName:user?.name,
@@ -365,6 +385,27 @@ function EditForm({ setShow, dataId }) {
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {["Never",...yearsOption.slice(27)].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="flex flex-col mb-4">
+          <label htmlFor="adlf" className="text-xs">
+          After Deducting License Fee
+            </label>
+            <select
+              size={1}
+              id="adlf"
+              name="adlf"
+              value={form.adlf}
+              onChange={handleInputChange}
+              className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["select","99 Based","33 Based"].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}

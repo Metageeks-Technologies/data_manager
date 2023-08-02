@@ -3,6 +3,8 @@ import ErrorHandler from "../utils/errorHandler.js";
 import catchAsyncError from "../middleware/catchAsyncError.js";
 import cron from 'node-cron'
 
+
+
 const makeActivity = catchAsyncError(async (req, res, next) => {
     const { userName, userRole, dataId } = req.body;
     if (!userName || !userRole || !dataId) {
@@ -23,8 +25,11 @@ const makeActivity = catchAsyncError(async (req, res, next) => {
 
 const getAllActivity = catchAsyncError(async (req, res, next) => {
 
-
+  
     const {userRole,page}=req.query;
+   
+   
+    
     console.log(req.query);
     const p=Number(page) ||1;
     const limit =8;
@@ -49,7 +54,7 @@ const getAllActivity = catchAsyncError(async (req, res, next) => {
       // Define the threshold date for deleting old activity data
       const thresholdDate = new Date();
       thresholdDate.setDate(thresholdDate.getDate() - 7); // Example: Delete data older than 7 days
-  
+      thresholdDate.setHours(0, 0, 0, 0)
       // Delete old activity data using Mongoose query
       await Activity.deleteMany({ createdAt: { $lt: thresholdDate } });
   

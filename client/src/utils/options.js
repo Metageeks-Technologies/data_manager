@@ -2,7 +2,7 @@
 // export const placeOptions = ["Goa","Delhi","Ajmer"];
 // export const memberOptions=["Purchaser"];
 // export const companyOptions=["DRIPL"];
-export const editStatusOption=["unchanged","pending","rejected","approved",]
+export const editStatusOption=["pending","rejected","approved",]
 export const yearsOption=[]; 
 const minYear = 1980;
 const maxYear =  new Date().getFullYear();

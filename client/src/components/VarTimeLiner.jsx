@@ -16,12 +16,13 @@ const UserActivityTimeline = ({ data }) => {
   const [dri_Id, setId] = useState("");
   const [Page, setPage] = useState(1);
   const [showBtn, setShowBtn] = useState(false);
+  // const [isOneCalled,setOneCalled]=useState(false);
 
   const handleClick = (id) => {
     setId(id);
     setAdminPopup(true);
   };
-  const debouncedSetPage = useCallback(debounce(setPage, 1200), []);
+  const debouncedSetPage = useCallback(debounce(setPage, 1800), []);
   const observerTargetVar = useRef(null);
   const scrollTargetVar = useRef(null);
 
@@ -32,16 +33,18 @@ const UserActivityTimeline = ({ data }) => {
     }
     setShowBtn(false);
   };
+  
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && Page <= activityNumOfPageVar) {
-          console.log(Page, "var");
+          // console.log(Page, "var");
           debouncedSetPage((prev) => prev + 1);
           if (Page > 2) setShowBtn(true);
-          if (data.length === 8 && Page == 1) {
+          if (data.length ===8 && Page == 1) {
           } else {
+          
             getAllActivityVar("verifier", Page);
           }
         }

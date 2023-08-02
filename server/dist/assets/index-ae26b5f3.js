@@ -11722,7 +11722,8 @@ const initialState$1 = {
   memberOptions: [],
   adminPopup: false,
   activityNumOfPageVar: 1,
-  activityNumOfPage: 1
+  activityNumOfPage: 1,
+  isPageServed: {}
 };
 const showAlert = (type, text) => {
   if (type === "warn") {
@@ -11919,6 +11920,7 @@ const AppProvider = ({ children }) => {
         payload: data
       });
     } catch (error) {
+      alert(error);
       dispatch({ type: API_CALL_FAIL });
       showAlert("error", error.message || "something went wrong try again");
     }
@@ -12322,7 +12324,7 @@ const AppProvider = ({ children }) => {
 const useAppContext = () => {
   return reactExports.useContext(AppContext);
 };
-const editStatusOption = ["unchanged", "pending", "rejected", "approved"];
+const editStatusOption = ["pending", "rejected", "approved"];
 const yearsOption = [];
 const minYear = 1980;
 const maxYear = (/* @__PURE__ */ new Date()).getFullYear();
@@ -12359,6 +12361,8 @@ const SearchContainer = ({ form, setForm, role }) => {
     } else if (role === "verifier") {
       getAllVarData({ ...form, page: 1 });
     } else if (role === "VarEX") {
+      getAllVarData({ ...form, page: 1 });
+    } else if (role === "varData") {
       getAllVarData({ ...form, page: 1 });
     }
     getAllData({ ...form, page: 1 });
@@ -12490,7 +12494,7 @@ const SearchContainer = ({ form, setForm, role }) => {
               }
             )
           ] }),
-          role && role === "executive" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4 flex-1", children: [
+          role && role === "varData" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4 flex-1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "editStatus", className: "text-xs", children: "editStatus:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
@@ -12500,7 +12504,7 @@ const SearchContainer = ({ form, setForm, role }) => {
                 value: form.editStatus,
                 onChange: handleInputChange,
                 className: "border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: editStatusOption.map((data) => {
+                children: ["Both", ...editStatusOption.filter((d2) => d2 != "pending")].map((data) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
                 })
               }
@@ -12516,7 +12520,7 @@ const SearchContainer = ({ form, setForm, role }) => {
                 value: form.editStatus,
                 onChange: handleInputChange,
                 className: "border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: editStatusOption.map((data) => {
+                children: ["all", ...editStatusOption].map((data) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
                 })
               }
@@ -12533,7 +12537,7 @@ const SearchContainer = ({ form, setForm, role }) => {
                 value: form.amc,
                 onChange: handleInputChange,
                 className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["Never", ...yearsOption.slice(27)].map((data) => {
+                children: ["All", "Never", ...yearsOption.slice(27)].map((data) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
                 })
               }
@@ -12573,8 +12577,8 @@ const Alert = () => {
 const Dashboard = ({ links, admin, role }) => {
   const navigate = useNavigate();
   const { toggleExeData, toggleExeDataF, logoutUser, user, setShowTable, showTable, searchBar } = useAppContext();
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+    await logoutUser();
     navigate("/auth");
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex ", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full", children: [
@@ -12627,6 +12631,21 @@ const Dashboard = ({ links, admin, role }) => {
             children: "Edit"
           }
         ) }),
+        role === "verifier" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => toggleExeDataF(),
+            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
+            children: "MyWork"
+          }
+        ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => toggleExeDataF(),
+            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
+            children: "Data"
+          }
+        ) }),
         admin && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: showTable ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
@@ -12667,28 +12686,33 @@ const Loader = () => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { role: "statu
   /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z", fill: "currentColor" }),
   /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z", fill: "currentFill" })
 ] }) });
-function EditForm({ setShow, dataId }) {
+function EditForm({ setShow, dataId, varData }) {
   const { mainData, placeOptions, statusOptions, memberOptions, editData, makeActivity, user, dri_idOnWhichActionPerformed } = useAppContext();
-  const data = mainData.find((obj) => obj._id === dataId);
+  let data;
+  if (varData) {
+    data = varData.find((obj) => obj._id === dataId);
+  } else
+    data = mainData.find((obj) => obj._id === dataId);
   const [changed, setChanged] = reactExports.useState(false);
   const [form, setFormData] = reactExports.useState({
-    place: data.place || "",
-    appNumber: data.appNumber || "",
-    company: data.company || "",
-    membership_type: data.membership_type || "",
-    date: data.date || "",
-    amc: data.amc || "",
-    customerName: data.customerName || "",
-    CSV: data.CSV || "",
+    place: (data == null ? void 0 : data.place) || "",
+    appNumber: (data == null ? void 0 : data.appNumber) || "",
+    company: (data == null ? void 0 : data.company) || "",
+    membership_type: (data == null ? void 0 : data.membership_type) || "",
+    date: (data == null ? void 0 : data.date) || "",
+    amc: (data == null ? void 0 : data.amc) || "",
+    customerName: (data == null ? void 0 : data.customerName) || "",
+    CSV: (data == null ? void 0 : data.CSV) || "",
     lastCommunication: "",
-    deposit: data.deposit || "",
-    status: data.status || "",
-    dri_id: data.dri_id || "",
-    remarks: data.remarks || "",
-    address: data.address || "",
-    residentialPhone: data.residentialPhone || "",
-    officePhone: data.officePhone || "",
-    profession: data.profession || ""
+    deposit: (data == null ? void 0 : data.deposit) || "",
+    status: (data == null ? void 0 : data.status) || "",
+    dri_id: (data == null ? void 0 : data.dri_id) || "",
+    remarks: (data == null ? void 0 : data.remarks) || "",
+    address: (data == null ? void 0 : data.address) || "",
+    residentialPhone: (data == null ? void 0 : data.residentialPhone) || "",
+    officePhone: (data == null ? void 0 : data.officePhone) || "",
+    profession: (data == null ? void 0 : data.profession) || "",
+    adlf: ""
   });
   const handleInputChange = (e) => {
     if (!changed)
@@ -12708,6 +12732,21 @@ function EditForm({ setShow, dataId }) {
     for (let key in data) {
       if (form.hasOwnProperty(key) && data[key] !== form[key]) {
         changedData[key] = form[key];
+      }
+    }
+    if (form.adlf) {
+      const yearsCountTillNow = (/* @__PURE__ */ new Date()).getFullYear() - Number(data.date.split("-")[0]);
+      const deposit = data.deposit;
+      if (form.adlf === "99 Based") {
+        const afterFeesDeduction99based = Math.round(
+          deposit - deposit / 99 * yearsCountTillNow
+        );
+        changedData.afterFeesDeduction99based = afterFeesDeduction99based;
+      } else if (form.adlf === "33 Based") {
+        const afterFeesDeduction33based = Math.round(
+          deposit - deposit / 33 * yearsCountTillNow
+        );
+        changedData.afterFeesDeduction33based = afterFeesDeduction33based;
       }
     }
     editData(dataId, changedData);
@@ -12926,6 +12965,23 @@ function EditForm({ setShow, dataId }) {
                 onChange: handleInputChange,
                 className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
                 children: ["Never", ...yearsOption.slice(27)].map((data2) => {
+                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data2, children: data2 }, data2);
+                })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "adlf", className: "text-xs", children: "After Deducting License Fee" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                size: 1,
+                id: "adlf",
+                name: "adlf",
+                value: form.adlf,
+                onChange: handleInputChange,
+                className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                children: ["select", "99 Based", "33 Based"].map((data2) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data2, children: data2 }, data2);
                 })
               }
@@ -23272,11 +23328,10 @@ const TableContent = ({ data, role, dataType, showForm }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: data && data.map((obj) => {
     var _a;
     const yearsCountTillNow = (/* @__PURE__ */ new Date()).getFullYear() - parseInt((_a = obj == null ? void 0 : obj.date) == null ? void 0 : _a.split("-")[0]);
-    const afterFeesDeduction_99 = Math.round(
+    Math.round(
       (obj == null ? void 0 : obj.deposit) - (obj == null ? void 0 : obj.deposit) / 99 * yearsCountTillNow
     );
-    
-    const afterFeesDeduction_33 = Math.round(
+    Math.round(
       (obj == null ? void 0 : obj.deposit) - (obj == null ? void 0 : obj.deposit) / 33 * yearsCountTillNow
     );
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -23313,8 +23368,8 @@ const TableContent = ({ data, role, dataType, showForm }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.status || "-" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV - obj.deposit }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: yearsCountTillNow || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: afterFeesDeduction_99 || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: afterFeesDeduction_33 || "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction99 || "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33 || "-" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: "-" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap ", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "div",
@@ -23675,8 +23730,8 @@ const Sidebar = () => {
     ) })
   ] });
 };
-const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => {
-  useAppContext();
+const TableContentWithChange = ({ data, role, handleApprove, handleReject, showForm, hideEdit }) => {
+  const { user } = useAppContext();
   function hasKey(obj, key) {
     return obj && Object.prototype.hasOwnProperty.call(obj, key);
   }
@@ -23692,10 +23747,10 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: data.length > 0 && data.map((obj) => {
     const yearsCountTillNow = (/* @__PURE__ */ new Date()).getFullYear() - parseInt(obj.date.split("-")[0]);
-    const afterFeesDeduction__99based = Math.round(
+    Math.round(
       obj.deposit - obj.deposit / 99 * yearsCountTillNow
     );
-    const afterFeesDeduction__33based = Math.round(
+    Math.round(
       obj.deposit - obj.deposit / 33 * yearsCountTillNow
     );
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -23720,7 +23775,9 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "place") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"place") &&
+                    // "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "place") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "place") && "text-red-500 line-through"}`,
                     children: [
                       " ",
                       obj.place
@@ -23742,7 +23799,9 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "membership_type") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"membership_type") &&
+                    // "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "membership_type") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "membership_type") && "text-red-500 line-through"}`,
                     children: [
                       " ",
                       obj.membership_type
@@ -23763,7 +23822,8 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "date") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"date") && "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "date") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "date") && "text-red-500 line-through"}`,
                     children: [
                       " ",
                       obj.date
@@ -23784,10 +23844,11 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "amc") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"amc") && "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "amc") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "amc") && "text-red-500 line-through"}`,
                     children: [
                       " ",
-                      obj.amc
+                      obj.amc || "-"
                     ]
                   }
                 ),
@@ -23805,7 +23866,9 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "customerName") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"customerName") &&
+                    // "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "customerName") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "customerName") && "text-red-500 line-through"}`,
                     children: [
                       " ",
                       obj.customerName
@@ -23825,7 +23888,9 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "address") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"address") &&
+                    // "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "address") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "address") && "text-red-500 line-through"}`,
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "div",
                       {
@@ -23856,10 +23921,12 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "residentialPhone") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"residentialPhone") &&
+                    // "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "residentialPhone") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "residentialPhone") && "text-red-500 line-through"}`,
                     children: [
                       " ",
-                      obj.residentialPhone
+                      obj.residentialPhone || "-"
                     ]
                   }
                 ),
@@ -23876,10 +23943,12 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "p",
                   {
-                    className: `${hasKey(obj.dataToUpdate, "officePhone") && "text-red-500 line-through"}`,
+                    className: `${// hasKey(obj.dataToUpdate,"officePhone") &&
+                    // "text-red-500 text-red-500 line-through"
+                    hasKey(obj.dataToUpdate, "officePhone") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "officePhone") && "text-red-500 line-through"}`,
                     children: [
                       " ",
-                      obj.officePhone
+                      obj.officePhone || "-"
                     ]
                   }
                 ),
@@ -23891,7 +23960,8 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "p",
               {
-                className: `${hasKey(obj.dataToUpdate, "CSV") && "line-through"}`,
+                className: `${// hasKey(obj.dataToUpdate,"CSV") && "text-red-500 line-through"
+                hasKey(obj.dataToUpdate, "CSV") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "CSV") && "text-red-500 line-through"}`,
                 children: obj.CSV
               }
             ),
@@ -23901,32 +23971,52 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "p",
               {
-                className: `${hasKey(obj.dataToUpdate, "deposit") && "line-through"}`,
+                className: `${// hasKey(obj.dataToUpdate,"deposit") && "text-red-500 line-through"
+                hasKey(obj.dataToUpdate, "deposit") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "deposit") && "text-red-500 line-through"}`,
                 children: obj.deposit
               }
             ),
             hasKey(obj.dataToUpdate, "deposit") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.deposit })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6  py-2 text-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6  py-2 text-center whitespace-nowrap", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "p",
               {
-                className: `${hasKey(obj.dataToUpdate, "status") && "line-through"}`,
+                className: `${// hasKey(obj.dataToUpdate,"status") && "text-red-500 line-through"
+                hasKey(obj.dataToUpdate, "status") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "status") && "text-red-500 line-through"}`,
                 children: obj.status
               }
             ),
             hasKey(obj.dataToUpdate, "status") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.status })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6  py-2 text-center", children: "0" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6  py-2 text-center", children: obj.CSV - obj.deposit }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 text-center", children: yearsCountTillNow || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 text-center", children: afterFeesDeduction__99based || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 text-center", children: afterFeesDeduction__33based || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "p",
               {
-                className: `${hasKey(obj.dataToUpdate, "lastCommunication") && "line-through"}`,
-                children: obj.lastCommunication
+                className: `${hasKey(obj.dataToUpdate, "afterFeesDeduction99based") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "afterFeesDeduction99based") && "text-red-500 line-through"}`,
+                children: obj.afterFeesDeduction99based
+              }
+            ),
+            hasKey(obj.dataToUpdate, "afterFeesDeduction99based") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.afterFeesDeduction99based })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "p",
+              {
+                className: `${hasKey(obj.dataToUpdate, "afterFeesDeduction33based") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "afterFeesDeduction33based") && "text-red-500 line-through"}`,
+                children: obj.afterFeesDeduction33based
+              }
+            ),
+            hasKey(obj.dataToUpdate, "afterFeesDeduction33based") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.afterFeesDeduction33based })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "p",
+              {
+                className: `${hasKey(obj.dataToUpdate, "lastCommunication") && "text-red-500 line-through"}`,
+                children: obj.lastCommunication || "-"
               }
             ),
             hasKey(obj.dataToUpdate, "lastCommunication") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.lastCommunication })
@@ -23935,7 +24025,7 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "p",
               {
-                className: `${hasKey(obj.dataToUpdate, "remarks") && "line-through"}`,
+                className: `${hasKey(obj.dataToUpdate, "remarks") && "text-red-500 line-through"}`,
                 children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "div",
                   {
@@ -23955,7 +24045,11 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject }) => 
               }
             )
           ] }),
-          role === "executive" && /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-4 ", children: (obj == null ? void 0 : obj.editStatus) ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "No changes" }) }),
+          role === "executive" && /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap ", children: (obj == null ? void 0 : obj.editStatus) ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { display: "flex", alignItems: "center" }, className: color(obj.editStatus), children: [
+            obj.editStatus === "rejected" && (user == null ? void 0 : user.role) === "executive" && /* @__PURE__ */ jsxRuntimeExports.jsx(EditExeData, { id: obj._id, showForm, dri_id: obj.dri_id }),
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2", children: obj.editStatus })
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "No changes" }) }),
           role === "verifier" && /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6  py-2 flex justify-center flex-col", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
@@ -30070,7 +30164,7 @@ const UserActivityTimeline$1 = ({ data }) => {
     setId(id2);
     setAdminPopup(true);
   };
-  const debouncedSetPage = reactExports.useCallback(lodashExports.debounce(setPage, 1200), []);
+  const debouncedSetPage = reactExports.useCallback(lodashExports.debounce(setPage, 1800), []);
   const observerTargetVar = reactExports.useRef(null);
   const scrollTargetVar = reactExports.useRef(null);
   const scrollToTop = () => {
@@ -30083,7 +30177,6 @@ const UserActivityTimeline$1 = ({ data }) => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && Page <= activityNumOfPageVar) {
-          console.log(Page, "var");
           debouncedSetPage((prev) => prev + 1);
           if (Page > 2)
             setShowBtn(true);
@@ -30210,12 +30303,13 @@ const UserActivityTimeline = ({ data }) => {
   const { getAllActivity, activityNumOfPage, adminPopup, setAdminPopup } = useAppContext();
   const [dri_Id, setId] = reactExports.useState("");
   const [Page, setPage] = reactExports.useState(1);
+  reactExports.useState(0);
   const [showBtn, setShowBtn] = reactExports.useState(false);
   const handleClick = (id2) => {
     setId(id2);
     setAdminPopup(true);
   };
-  const debouncedSetPage = reactExports.useCallback(lodashExports.debounce(setPage, 1200), []);
+  const debouncedSetPage = reactExports.useCallback(lodashExports.debounce(setPage, 1800), []);
   const observerTarget = reactExports.useRef(null);
   const scrollTarget = reactExports.useRef(null);
   const scrollToTop = () => {
@@ -30228,7 +30322,6 @@ const UserActivityTimeline = ({ data }) => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && Page <= activityNumOfPage) {
-          console.log(Page);
           debouncedSetPage((prev) => prev + 1);
           if (Page > 2)
             setShowBtn(true);
@@ -30253,7 +30346,11 @@ const UserActivityTimeline = ({ data }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id, role: "executive" }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center justify-center rounded-md", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize", children: data && ((_a = data[0]) == null ? void 0 : _a.userRole) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize", children: [
+        data && ((_a = data[0]) == null ? void 0 : _a.userRole),
+        " ",
+        data.length
+      ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
@@ -30571,14 +30668,20 @@ const TimeLine = () => {
     allActivityByExe,
     allActivityByVar
   } = useAppContext();
+  const uniqueDataExe = allActivityByExe.filter((item, index2, arr) => {
+    return index2 === arr.findIndex((obj) => obj._id === item._id);
+  });
+  const uniqueDataVar = allActivityByVar.filter((item, index2, arr) => {
+    return index2 === arr.findIndex((obj) => obj._id === item._id);
+  });
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
       style: { height: "calc(100vh - 5.5rem)" },
       className: "flex gap-[14rem] bg-[#f0f4f8] py-4 px-[5rem] border-t border-gray-300",
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(UserActivityTimeline, { data: allActivityByExe }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(UserActivityTimeline$1, { data: allActivityByVar })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(UserActivityTimeline, { data: uniqueDataExe }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(UserActivityTimeline$1, { data: uniqueDataVar })
       ]
     }
   ) });
@@ -30599,7 +30702,7 @@ function Items$2({ currentItems, form, fun }) {
     ] }) })
   ] });
 }
-const Data$2 = () => {
+const Data$3 = () => {
   const {
     getAllData,
     isSearched,
@@ -56422,7 +56525,9 @@ const mainDataSchema = new mongoose.Schema({
   customerName: { type: String, default: "" },
   GSV: { type: Number, default: 0 },
   CSV: { type: Number, default: 0 },
-  deposit: { type: Number, default: "" },
+  deposit: { type: Number, default: 0 },
+  afterFeesDeduction33based: { type: Number, default: 0 },
+  afterFeesDeduction99based: { type: Number, default: 0 },
   status: { type: String, default: "" },
   currentValue: { type: String },
   remarks: { type: String, default: "", trim: true },
@@ -56436,7 +56541,7 @@ const mainDataSchema = new mongoose.Schema({
   dataToUpdate: { type: Object }
 });
 mongoose.model("MainData", mainDataSchema);
-const Work = () => {
+const Work$1 = () => {
   const {
     varData,
     getAllVarData,
@@ -56446,6 +56551,7 @@ const Work = () => {
     setPage,
     isSearchedHandler,
     page,
+    setDriId,
     getAllEditRequest
   } = useAppContext();
   const [form, setForm] = reactExports.useState({
@@ -56471,23 +56577,33 @@ const Work = () => {
   reactExports.useEffect(() => {
     getAllVarData({ acceptance: "accepted", editStatus: "!unchanged", page });
   }, [toggleAction]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      style: { height: "calc(100vh - 5.5rem)" },
-      className: "bg-[#f0f4f8]  py-5 px-[3rem] border-t border-l border-gray-300",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { role: "VarEX", form, setForm }) }) }),
-        varData.length === 0 && isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: "calc(100vh - 7.5rem)" }, className: "w-full  flex justify-center items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, {}) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(PaginationAndExport, { form, fun: getAllVarData }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "custom-scrollbar relative overflow-x-auto shadow-md sm:rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm text-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeaders, { action: true, dataType: "accepted" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableContentWithChange, { role: "executive", data: varData })
-          ] }) })
-        ] })
-      ]
-    }
-  ) });
+  const [show, setShow] = reactExports.useState(false);
+  const [dataId, setDataId] = reactExports.useState(null);
+  const showForm = (id2, dri_id) => {
+    setShow(true);
+    setDataId(id2);
+    setDriId(dri_id);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    show && /* @__PURE__ */ jsxRuntimeExports.jsx(EditForm, { setShow, dataId, varData }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        style: { height: "calc(100vh - 5.5rem)" },
+        className: "bg-[#f0f4f8]  py-5 px-[3rem] border-t border-l border-gray-300",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { role: "VarEX", type: "work", form, setForm }) }) }),
+          varData.length === 0 && isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: "calc(100vh - 7.5rem)" }, className: "w-full  flex justify-center items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, {}) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PaginationAndExport, { form, fun: getAllVarData }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "custom-scrollbar relative overflow-x-auto shadow-md sm:rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm text-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeaders, { action: true, dataType: "accepted" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableContentWithChange, { role: "executive", data: varData, showForm })
+            ] }) })
+          ] })
+        ]
+      }
+    )
+  ] });
 };
 function Items({ currentItems, showForm, form, fun }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -56562,21 +56678,85 @@ const EData = () => {
         style: { height: "calc(100vh - 5.5rem)" },
         className: "bg-[#f0f4f8]  py-5 px-[3rem] border-t border-l border-gray-300",
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { role: "executive", form, setForm }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { role: "executive", type: "data", form, setForm }) }) }),
           mainData.length === 0 && isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: "calc(100vh - 7.5rem)" }, className: "w-full flex justify-center items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, {}) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Items, { currentItems: mainData, form, fun: getAllData, showForm }) })
         ]
       }
     )
   ] });
 };
-const Data$1 = () => {
+const Data$2 = () => {
   const { toggleExeData } = useAppContext();
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(Work, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(EData, {}) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(Work$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(EData, {}) });
 };
 const VerifierDash = () => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dashboard, { links: verLinks, hideSideBar: true });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dashboard, { links: verLinks, hideSideBar: true, role: "verifier" });
 };
-const Data = () => {
+const Work = () => {
+  const {
+    varData,
+    getAllVarData,
+    isLoading,
+    toggleAction,
+    openSearchBar,
+    setPage,
+    isSearchedHandler,
+    page,
+    setDriId,
+    getAllEditRequest
+  } = useAppContext();
+  const [form, setForm] = reactExports.useState({
+    status: "All",
+    place: "All",
+    dri_id: "",
+    date: "All",
+    customerName: "",
+    amc: "All",
+    appNumber: "",
+    company: "All",
+    membership_type: "All",
+    acceptance: "accepted",
+    editStatus: "var",
+    page: 1
+  });
+  reactExports.useEffect(() => {
+    return () => {
+      setPage(1);
+      isSearchedHandler(false);
+    };
+  }, []);
+  reactExports.useEffect(() => {
+    getAllVarData({ acceptance: "accepted", editStatus: "var", page });
+  }, [toggleAction]);
+  const [show, setShow] = reactExports.useState(false);
+  const [dataId, setDataId] = reactExports.useState(null);
+  const showForm = (id2, dri_id) => {
+    setShow(true);
+    setDataId(id2);
+    setDriId(dri_id);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    show && /* @__PURE__ */ jsxRuntimeExports.jsx(EditForm, { setShow, dataId, varData }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        style: { height: "calc(100vh - 5.5rem)" },
+        className: "bg-[#f0f4f8]  py-5 px-[3rem] border-t border-l border-gray-300",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { role: "varData", type: "work", form, setForm }) }) }),
+          varData.length === 0 && isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: "calc(100vh - 7.5rem)" }, className: "w-full  flex justify-center items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Loader, {}) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PaginationAndExport, { form, fun: getAllVarData }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "custom-scrollbar relative overflow-x-auto shadow-md sm:rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm text-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeaders, { action: true, dataType: "accepted" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableContentWithChange, { role: "executive", hideEdit: true, data: varData, showForm })
+            ] }) })
+          ] })
+        ]
+      }
+    )
+  ] });
+};
+const Data$1 = () => {
   const {
     varData,
     getAllVarData,
@@ -56663,6 +56843,10 @@ const Data = () => {
     )
   ] });
 };
+const Data = () => {
+  const { toggleExeData } = useAppContext();
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(Data$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(Work, {}) });
+};
 function App() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(BrowserRouter, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, {}),
@@ -56673,7 +56857,7 @@ function App() {
         /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDash, {}),
         " "
       ] }), children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { index: true, element: /* @__PURE__ */ jsxRuntimeExports.jsx(Data$2, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { index: true, element: /* @__PURE__ */ jsxRuntimeExports.jsx(Data$3, {}) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "upload", element: /* @__PURE__ */ jsxRuntimeExports.jsx(Upload, {}) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "users", element: /* @__PURE__ */ jsxRuntimeExports.jsx(Team, {}) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "trash", element: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash, {}) })
@@ -56682,7 +56866,7 @@ function App() {
         " ",
         /* @__PURE__ */ jsxRuntimeExports.jsx(ExecutiveDash, {}),
         " "
-      ] }), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { index: true, element: /* @__PURE__ */ jsxRuntimeExports.jsx(Data$1, {}) }) }),
+      ] }), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { index: true, element: /* @__PURE__ */ jsxRuntimeExports.jsx(Data$2, {}) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/verifier", element: /* @__PURE__ */ jsxRuntimeExports.jsxs(ProtectedRoute, { children: [
         " ",
         /* @__PURE__ */ jsxRuntimeExports.jsx(VerifierDash, {}),

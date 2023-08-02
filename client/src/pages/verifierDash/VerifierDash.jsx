@@ -4,7 +4,7 @@ import { Dashboard } from '../../components'
 
 const VerifierDash = () => {
   return (
-     <Dashboard links={verLinks} hideSideBar={true}></Dashboard>
+     <Dashboard links={verLinks} hideSideBar={true} role={"verifier"} ></Dashboard>
   )
 }
 
