@@ -17,7 +17,7 @@ import IP from './IP';
 import AdminPop from "./AdminPop";
 import TableContentWithChange from "./TableContentWithChange";
 import VarTimeLiner from './VarTimeLiner'
-import ExeTimeLiner from './ExeTime'
+import ExeTimeLiner from './ExeTime' 
 
 export {
   IP,

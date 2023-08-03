@@ -154,6 +154,7 @@ const Sidebar = () => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const handleOptionChange = (event) => {
+
     setSelectedOption(event.target.value);
   };
 

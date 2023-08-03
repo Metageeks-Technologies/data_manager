@@ -369,12 +369,16 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       {fontWeight:"bold", value: " CSV " },
       {fontWeight:"bold", value: " Deposit " },
       {fontWeight:"bold", value: "Status" },
+
       {fontWeight:"bold", value: "Outstanding" },
       {fontWeight:"bold", value: "Year Till Now" },
-      {fontWeight:"bold", value: "After Deducting License Fees" },
+      {fontWeight:"bold", value: "After Deducting License Fees (99 based)" },
+      {fontWeight:"bold", value: "After Deducting License Fees (33 based)" },
+
       {fontWeight:"bold", value: "LAST COMMUNICATION" },
       {fontWeight:"bold", value: "REMARKS" },
     ]];
+    
     result.forEach((doc,i)=>{
 
       const {dri_id,
@@ -388,13 +392,16 @@ const exportFile = catchAsyncError(async (req, res, next) => {
         CSV="",
         deposit="",
         status="",
+        afterFeesDeduction99based="",
+        afterFeesDeduction33based="",
         lastCommunication="",
         remarks="",
+
         date} = doc;
         if(!dri_id)return;
         const dateArr = date.split("-")
         const yearsTillNow =new Date().getFullYear()-dateArr[0]
-        const afterDeductingFee = deposit-(deposit/99)*yearsTillNow
+        // const outstanding = {CSV - deposit};
         fileData.push([
           { value: i+1},
           { value:dri_id },
@@ -410,15 +417,16 @@ const exportFile = catchAsyncError(async (req, res, next) => {
           { value:CSV },
           { value:deposit },
           { value:status },
-          { value:GSV-deposit },
+          { value:CSV-deposit},
           { value: yearsTillNow },
-          { value: afterDeductingFee},
+          { value: afterFeesDeduction99based},
+          { value: afterFeesDeduction33based},
           { value: lastCommunication},
           { value:remarks },
         ])
     })
 
-    const fileName = "Export" +new Date().getTime() + ".xlsx"
+    const fileName = "DRI"+ "_Export"+new Date().getDate() + ".xlsx"
    
    const buffer = await writeXlsxFile(fileData, { buffer: true })
    

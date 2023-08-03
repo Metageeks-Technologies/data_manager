@@ -49,7 +49,8 @@ import {
     GET_OPTION,ADD_OPTION, ADMIN_POPUP,
     GET_SINGLE_DATA_SUCCESS,
     DELETE_OPTION,
-    GET_ALL_ACTIVITY_SUCCESS_VAR
+    GET_ALL_ACTIVITY_SUCCESS_VAR,
+    VAR_ADMIN_POPUP
     
 } from './action'
 
@@ -188,6 +189,12 @@ const reducer =(state,action)=>{
         return {
             ...state,
             userLoading:true,
+        }
+    }
+    if(action.type===VAR_ADMIN_POPUP){
+        return {
+            ...state,
+            varAdminPopup:action.payload,
         }
     }
     if(action.type===ADMIN_POPUP){

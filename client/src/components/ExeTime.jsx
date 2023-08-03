@@ -15,7 +15,7 @@ const UserActivityTimeline = ({ data }) => {
     useAppContext();
   const [dri_Id, setId] = useState("");
   const [Page, setPage] = useState(1);
-  const [lastPage,setLastPage]=useState(0);
+  const [lastPage, setLastPage] = useState(0);
   const [showBtn, setShowBtn] = useState(false);
   const handleClick = (id) => {
     setId(id);
@@ -32,7 +32,6 @@ const UserActivityTimeline = ({ data }) => {
     }
     setShowBtn(false);
   };
-  
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,7 +43,6 @@ const UserActivityTimeline = ({ data }) => {
           if (data.length === 8 && Page == 1) {
           } else {
             getAllActivity("executive", Page);
-            
           }
         }
       },
@@ -66,13 +64,13 @@ const UserActivityTimeline = ({ data }) => {
     <>
       {adminPopup && (
         <div className="fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center">
-          <AdminPop id={dri_Id} role={"executive"} />
+          <AdminPop id={dri_Id} />
         </div> 
       )}
       <div className=" w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center rounded-md">
         <div className="w-10/12">
           <h1 className="w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize">
-            {data && data[0]?.userRole  } 
+            {data && data[0]?.userRole}
           </h1>
         </div>
         <div
@@ -89,51 +87,51 @@ const UserActivityTimeline = ({ data }) => {
                 let date = dateStr(obj.createdAt);
 
                 return (
-                  <VerticalTimelineElement
-                    key={index}
-                    className="m-3 flex items-center justify-start"
-                    contentStyle={{
-                      background: "#F9FEFF",
-                      color: "black",
-                    }}
-                    contentArrowStyle={{
-                      borderRight: "7px solid  #d7d3d7",
-                    }}
-                    date={date}
-                    iconStyle={{
-                      background: "rgb(115, 249, 124)",
-                      color: "#fff",
-                      marginTop: "1.2rem",
-                      marginLeft: "1.6rem",
-                      height: "10px",
-                      width: "10px",
-                    }}
-                  >
-                    <p>
-                      <span className="text-sky-700">{`${obj.userName}(${obj?.userRole})`}</span>{" "}
-                      <span
-                        className={
-                          obj.actionType === "edited"
-                            ? "text-orange-500"
-                            : obj.actionType === "approved"
-                            ? "text-[#2eef3b]"
-                            : "text-red-600/95"
-                        }
-                      >{`${obj.actionType}`}</span>{" "}
-                      data with DRI-Id{" "}
-                      <span
-                        onClick={() => handleClick(obj.dataId)}
-                        className="cursor-pointer text-[#3B82F6]"
-                      >{`${obj.dataId}`}</span>
-                    </p>
-                  </VerticalTimelineElement>
+                  
+                    <VerticalTimelineElement
+                      key={index}
+                      className="m-3 flex items-center justify-start"
+                      contentStyle={{
+                        background: "#F9FEFF",
+                        color: "black",
+                      }}
+                      contentArrowStyle={{
+                        borderRight: "7px solid  #d7d3d7",
+                      }}
+                      date={date}
+                      iconStyle={{
+                        background: "rgb(115, 249, 124)",
+                        color: "#fff",
+                        marginTop: "1.2rem",
+                        marginLeft: "1.6rem",
+                        height: "10px",
+                        width: "10px",
+                      }}
+                    >
+                      <p>
+                        <span className="text-sky-700">{`${obj.userName}(${obj?.userRole})`}</span>{" "}
+                        <span
+                          className={
+                            obj.actionType === "edited"
+                              ? "text-orange-500"
+                              : obj.actionType === "approved"
+                              ? "text-[#2eef3b]"
+                              : "text-red-600/95"
+                          }
+                        >{`${obj.actionType}`}</span>{" "}
+                        data with DRI-Id{" "}
+                        <span
+                          onClick={() => handleClick(obj.dataId)}
+                          className="cursor-pointer text-[#3B82F6]"
+                        >{`${obj.dataId}`}</span>
+                      </p>
+                    </VerticalTimelineElement>
+                  
                 );
               })}
               <div ref={observerTarget}>
                 <div className="w-full flex justify-center">
-                  {
-                    Page<activityNumOfPage && <Loader />
-                  } 
+                  {Page < activityNumOfPage && <Loader />}
                 </div>
               </div>
             </div>

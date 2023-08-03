@@ -9046,6 +9046,7 @@ const GET_OPTION = "GET_OPTION";
 const ADD_OPTION = "ADD_OPTION";
 const DELETE_OPTION = "DELETE_OPTION";
 const ADMIN_POPUP = "ADMIN_POPUP";
+const VAR_ADMIN_POPUP = "VAR_ADMIN_POPUP";
 const GET_SINGLE_DATA_SUCCESS = "GET_SINGLE_DATA_SUCCESS";
 const GET_ALL_ACTIVITY_SUCCESS_VAR = "GET_ALL_ACTIVITY_SUCCESS_VAR";
 const reducer$1 = (state, action) => {
@@ -9181,6 +9182,12 @@ const reducer$1 = (state, action) => {
     return {
       ...state,
       userLoading: true
+    };
+  }
+  if (action.type === VAR_ADMIN_POPUP) {
+    return {
+      ...state,
+      varAdminPopup: action.payload
     };
   }
   if (action.type === ADMIN_POPUP) {
@@ -11721,6 +11728,7 @@ const initialState$1 = {
   placeOptions: [],
   memberOptions: [],
   adminPopup: false,
+  varAdminPopup: false,
   activityNumOfPageVar: 1,
   activityNumOfPage: 1,
   isPageServed: {}
@@ -11792,6 +11800,9 @@ const AppProvider = ({ children }) => {
   };
   const setAdminPopup = (val) => {
     dispatch({ type: ADMIN_POPUP, payload: val });
+  };
+  const setVarAdminPopup = (val) => {
+    dispatch({ type: VAR_ADMIN_POPUP, payload: val });
   };
   const toggleExeDataF = () => {
     dispatch({ type: TOGGLE_EXE_DATA });
@@ -12315,7 +12326,8 @@ const AppProvider = ({ children }) => {
         setAdminPopup,
         getSingleData,
         deleteOption,
-        getAllActivityVar
+        getAllActivityVar,
+        setVarAdminPopup
       },
       children
     }
@@ -23382,9 +23394,9 @@ const TableContent = ({ data, role, dataType, showForm }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.status || "-" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV - obj.deposit }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: yearsCountTillNow || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction99 || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33 || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction99based || "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33based || "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.lastCommunication || "-" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap ", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "div",
             {
@@ -24088,17 +24100,18 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject, showF
     );
   }) });
 };
-const AdminPop = ({ id: id2, role }) => {
+const AdminPop = ({ id: id2, data, Role }) => {
   const { getSingleData, setAdminPopup, singleData } = useAppContext();
+  console.log(Role);
   reactExports.useEffect(() => {
     getSingleData(id2);
   }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-md shadow-md px-8 py-6 w-[97%]", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mb-4 items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "", children: [
-        "Activity Detail ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", {}),
-        " "
+        "Activity Detail: Executive ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-orange-500", children: "Edited" }),
+        " This Data"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setAdminPopup(false), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         "svg",
@@ -30168,15 +30181,54 @@ const dateStr = (date) => {
   }
   return `${hours}:${minutes} ${ampm} ${day} `;
 };
+const VarAdminPop = ({ id: id2, data, Role }) => {
+  const { getSingleData, setVarAdminPopup, singleData } = useAppContext();
+  console.log(Role);
+  reactExports.useEffect(() => {
+    getSingleData(id2);
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-md shadow-md px-8 py-6 w-[97%]", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mb-4 items-center", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "", children: [
+        "Activity Detail: Verifier  ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `${singleData.editStatus === "approved" ? "text-green-500" : "text-red-500"}`, children: singleData.editStatus }),
+        " This Data "
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setVarAdminPopup(false), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "svg",
+        {
+          xmlns: "http://www.w3.org/2000/svg",
+          fill: "none",
+          viewBox: "0 0 24 24",
+          strokeWidth: 1.5,
+          stroke: "currentColor",
+          className: "w-6 h-6",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "path",
+            {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              d: "M6 18L18 6M6 6l12 12"
+            }
+          )
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "custom-scrollbar  h-fit relative overflow-x-auto shadow-md sm:rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full  text-sm text-center ", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeaders, { role: "popup", dataType: "accepted" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableContentWithChange, { data: singleData ? [singleData] : [] })
+    ] }) })
+  ] });
+};
 const UserActivityTimeline$1 = ({ data }) => {
   var _a;
-  const { getAllActivityVar, activityNumOfPageVar, adminPopup, setAdminPopup } = useAppContext();
+  const { getAllActivityVar, activityNumOfPageVar, setVarAdminPopup, varAdminPopup } = useAppContext();
   const [dri_Id, setId] = reactExports.useState("");
   const [Page, setPage] = reactExports.useState(1);
   const [showBtn, setShowBtn] = reactExports.useState(false);
   const handleClick = (id2) => {
     setId(id2);
-    setAdminPopup(true);
+    setVarAdminPopup(true);
   };
   const debouncedSetPage = reactExports.useCallback(lodashExports.debounce(setPage, 1800), []);
   const observerTargetVar = reactExports.useRef(null);
@@ -30213,7 +30265,7 @@ const UserActivityTimeline$1 = ({ data }) => {
     };
   }, [observerTargetVar, Page]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id, role: "kk" }) }),
+    varAdminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(VarAdminPop, { id: dri_Id }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 pr-7 relative  bg-blue-100  flex flex-col items-center rounded-md", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12 p-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "w-fit border-b-2 border-cyan-600 text-bl text-[2rem] capitalize", children: data && ((_a = data[0]) == null ? void 0 : _a.userRole) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -30358,7 +30410,7 @@ const UserActivityTimeline = ({ data }) => {
     };
   }, [observerTarget, Page]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id, role: "executive" }) }),
+    adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center rounded-md", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize", children: data && ((_a = data[0]) == null ? void 0 : _a.userRole) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(

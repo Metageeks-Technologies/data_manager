@@ -53,6 +53,7 @@ import {
   GET_OPTION,
   ADD_OPTION,
   ADMIN_POPUP,
+  VAR_ADMIN_POPUP,
   GET_SINGLE_DATA_SUCCESS,
   DELETE_OPTION,
   GET_ALL_ACTIVITY_SUCCESS_VAR,
@@ -100,6 +101,7 @@ export const initialState = {
   placeOptions:[],
   memberOptions:[],
   adminPopup:false,
+  varAdminPopup:false,
   activityNumOfPageVar:1,
   activityNumOfPage:1,
   isPageServed:{},
@@ -180,6 +182,9 @@ const AppProvider = ({ children }) => {
   };
   const setAdminPopup = (val) => {
     dispatch({ type: ADMIN_POPUP,payload:val});
+  };
+  const setVarAdminPopup = (val) => {
+    dispatch({ type: VAR_ADMIN_POPUP,payload:val});
   };
   const toggleExeDataF = () => {
     dispatch({ type: TOGGLE_EXE_DATA});
@@ -788,6 +793,7 @@ const AppProvider = ({ children }) => {
         getSingleData,
         deleteOption,
         getAllActivityVar,
+        setVarAdminPopup,
         
       }}
     >

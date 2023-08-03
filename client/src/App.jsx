@@ -21,7 +21,7 @@ function App() {
          
         {/* admin */}
         <Route path="/auth" exact element={<LoginPage/>} />
-
+ 
         <Route path="/" element={<ProtectedRoute> <AdminDash/> </ProtectedRoute> } >
           <Route index element={<Data/>} />
           <Route  path="upload" element={<Upload/>} />

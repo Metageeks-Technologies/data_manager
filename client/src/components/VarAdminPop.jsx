@@ -3,8 +3,8 @@ import { useAppContext } from "../context/appContext";
 import TableHeaders from "./TableHeaders";
 import TableContentWithChange from "./TableContentWithChange";
 
-const AdminPop = ({ id,data,Role }) => {
-  const { getSingleData, setAdminPopup, singleData } = useAppContext();
+const VarAdminPop = ({ id,data,Role }) => {
+  const { getSingleData, setVarAdminPopup, singleData } = useAppContext();
   console.log(Role);
 
   useEffect(() => {
@@ -13,10 +13,11 @@ const AdminPop = ({ id,data,Role }) => {
   return (
     <div className="bg-white rounded-md shadow-md px-8 py-6 w-[97%]">
       <div className="flex justify-between mb-4 items-center">
-        <h1 className="">Activity Detail: Executive <span className="text-orange-500">
-           Edited 
-          </span> This Data</h1>
-        <button onClick={() => setAdminPopup(false)}>
+        <h1 className="">Activity Detail: Verifier  <span className={`${singleData.editStatus==="approved"?"text-green-500":"text-red-500"}`}>
+          
+        {singleData.editStatus}
+          </span> This Data </h1>
+        <button onClick={() => setVarAdminPopup(false)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -44,4 +45,4 @@ const AdminPop = ({ id,data,Role }) => {
   );
 };
 
-export default AdminPop;
+export default VarAdminPop;
