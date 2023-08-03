@@ -69,10 +69,10 @@ const UserActivityTimeline = ({ data }) => {
           <AdminPop id={dri_Id} role={"executive"} />
         </div> 
       )}
-      <div className=" w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center justify-center rounded-md">
+      <div className=" w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center rounded-md">
         <div className="w-10/12">
           <h1 className="w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize">
-            {data && data[0]?.userRole  } {data.length}
+            {data && data[0]?.userRole  } 
           </h1>
         </div>
         <div

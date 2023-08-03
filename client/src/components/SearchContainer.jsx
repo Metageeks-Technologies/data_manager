@@ -26,15 +26,23 @@ const SearchContainer = ({ form, setForm,role }) => {
     
     setPage(1);
     setShowTable(true);
+    setForm((prevState) => ({
+      ...prevState,
+      dri_id: "",
+    customerName: "",
+    appNumber: "",
+    }));
   };
 
   
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+   
     setForm((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+    console.log(form);
   };
 
   return (

@@ -1,10 +1,15 @@
 import React, { useEffect } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import Alert from "./Alert";
+// import { useLocation } from 'react-router-dom';
 
 const Dashboard = ({ links, admin,role }) => {
+  const location = useLocation();
+  const currentURL = location.pathname;
+  const endpoint = currentURL.split('/').pop();
+  console.log(endpoint);
   const navigate = useNavigate();
   const { toggleExeData,toggleExeDataF, logoutUser, user,setShowTable,showTable, searchBar } =
     useAppContext();
@@ -57,16 +62,16 @@ const Dashboard = ({ links, admin,role }) => {
               !toggleExeData?(
                 <button
                 onClick={() => toggleExeDataF()}
-                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-3 py-2.5 text-center"
               >
-                MyWork
+                Already Worked
               </button>
               ):(
                 <button
                 onClick={() => toggleExeDataF()}
-                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+                className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-3 py-2.5 text-center"
               >
-                Edit
+                Pending Task
               </button>
               )
             }
@@ -75,19 +80,20 @@ const Dashboard = ({ links, admin,role }) => {
              {role==='verifier' && (
               <span>
                 {
-              toggleExeData?(
+              !toggleExeData?(
                 <button
+                
                 onClick={() => toggleExeDataF()}
                 className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
               >
-                MyWork
+                Already worked
               </button>
               ):(
                 <button
                 onClick={() => toggleExeDataF()}
                 className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
               >
-                Data
+                Pending Task
               </button>
               )
             }
@@ -97,6 +103,7 @@ const Dashboard = ({ links, admin,role }) => {
               <span>
                 {showTable ?(
               <button
+              disabled={endpoint==='users' || endpoint==='upload' || endpoint==='trash'}
               onClick={() => setShowTable(false)}
               className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
             >
@@ -104,6 +111,7 @@ const Dashboard = ({ links, admin,role }) => {
             </button>
             ):(
               <button
+              disabled={endpoint==='users' || endpoint==='upload' || endpoint==='trash'}
               onClick={() => setShowTable(true)}
               className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
             >
@@ -113,6 +121,7 @@ const Dashboard = ({ links, admin,role }) => {
               </span>
             )}
             <button
+            disabled={endpoint==='users' || endpoint==='upload'}
               onClick={() => searchBar(true)}
               className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
             >

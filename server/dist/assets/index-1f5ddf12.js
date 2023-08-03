@@ -11715,7 +11715,7 @@ const initialState$1 = {
   totalData: 0,
   numOfPages: 1,
   showTable: false,
-  toggleExeData: true,
+  toggleExeData: false,
   allowedIPs: [],
   statusOptions: [],
   placeOptions: [],
@@ -12368,6 +12368,12 @@ const SearchContainer = ({ form, setForm, role }) => {
     getAllData({ ...form, page: 1 });
     setPage(1);
     setShowTable(true);
+    setForm((prevState) => ({
+      ...prevState,
+      dri_id: "",
+      customerName: "",
+      appNumber: ""
+    }));
   };
   const handleInputChange = (event) => {
     const { name, value: value2 } = event.target;
@@ -12375,6 +12381,7 @@ const SearchContainer = ({ form, setForm, role }) => {
       ...prevState,
       [name]: value2
     }));
+    console.log(form);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "form",
@@ -12575,6 +12582,10 @@ const Alert = () => {
   ) });
 };
 const Dashboard = ({ links, admin, role }) => {
+  const location = useLocation();
+  const currentURL = location.pathname;
+  const endpoint = currentURL.split("/").pop();
+  console.log(endpoint);
   const navigate = useNavigate();
   const { toggleExeData, toggleExeDataF, logoutUser, user, setShowTable, showTable, searchBar } = useAppContext();
   const handleLogout = async () => {
@@ -12620,35 +12631,36 @@ const Dashboard = ({ links, admin, role }) => {
           "button",
           {
             onClick: () => toggleExeDataF(),
-            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
-            children: "MyWork"
+            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-3 py-2.5 text-center",
+            children: "Already Worked"
           }
         ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             onClick: () => toggleExeDataF(),
-            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
-            children: "Edit"
+            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-3 py-2.5 text-center",
+            children: "Pending Task"
           }
         ) }),
-        role === "verifier" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        role === "verifier" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: !toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             onClick: () => toggleExeDataF(),
             className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
-            children: "MyWork"
+            children: "Already worked"
           }
         ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             onClick: () => toggleExeDataF(),
             className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
-            children: "Data"
+            children: "Pending Task"
           }
         ) }),
         admin && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: showTable ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
+            disabled: endpoint === "users" || endpoint === "upload" || endpoint === "trash",
             onClick: () => setShowTable(false),
             className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
             children: "Activity"
@@ -12656,6 +12668,7 @@ const Dashboard = ({ links, admin, role }) => {
         ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
+            disabled: endpoint === "users" || endpoint === "upload" || endpoint === "trash",
             onClick: () => setShowTable(true),
             className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
             children: "Show Data"
@@ -12664,6 +12677,7 @@ const Dashboard = ({ links, admin, role }) => {
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
+            disabled: endpoint === "users" || endpoint === "upload",
             onClick: () => searchBar(true),
             className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
             children: "Search"
@@ -24082,7 +24096,7 @@ const AdminPop = ({ id: id2, role }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-md shadow-md px-8 py-6 w-[97%]", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mb-4 items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "", children: [
-        "Activity Details ",
+        "Activity Detail ",
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", {}),
         " "
       ] }),
@@ -30199,8 +30213,8 @@ const UserActivityTimeline$1 = ({ data }) => {
     };
   }, [observerTargetVar, Page]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id, role: "verifier" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 pr-7 relative  bg-blue-100  flex flex-col items-center justify-center rounded-md", children: [
+    adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id, role: "kk" }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 pr-7 relative  bg-blue-100  flex flex-col items-center rounded-md", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12 p-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "w-fit border-b-2 border-cyan-600 text-bl text-[2rem] capitalize", children: data && ((_a = data[0]) == null ? void 0 : _a.userRole) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
@@ -30345,12 +30359,8 @@ const UserActivityTimeline = ({ data }) => {
   }, [observerTarget, Page]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     adminPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AdminPop, { id: dri_Id, role: "executive" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center justify-center rounded-md", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize", children: [
-        data && ((_a = data[0]) == null ? void 0 : _a.userRole),
-        " ",
-        data.length
-      ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " w-9/12 p-3 relative pr-7  bg-blue-100  flex flex-col items-center rounded-md", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10/12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "w-fit border-b-2 text-bl border-cyan-600   text-[2rem] capitalize", children: data && ((_a = data[0]) == null ? void 0 : _a.userRole) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
@@ -30830,6 +30840,12 @@ const Team = () => {
       email: userForm.email,
       password: userForm.password,
       role: userForm.role
+    });
+    setUser({
+      name: "",
+      email: "",
+      password: "",
+      role: ""
     });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -56845,7 +56861,7 @@ const Data$1 = () => {
 };
 const Data = () => {
   const { toggleExeData } = useAppContext();
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(Data$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(Work, {}) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: !toggleExeData ? /* @__PURE__ */ jsxRuntimeExports.jsx(Data$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(Work, {}) });
 };
 function App() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(BrowserRouter, { children: [

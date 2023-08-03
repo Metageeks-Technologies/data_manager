@@ -11,7 +11,7 @@ const Data = () => {
   
   return (
     <>
-    {toggleExeData?(
+    {!toggleExeData?(
       <Vdata/>
     ):(
     

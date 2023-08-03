@@ -6,6 +6,10 @@ import fs from "fs";
 import writeXlsxFile from "write-excel-file/node";
 import { type } from "os";
 
+async function isDriIdExists(dri_id) {
+  const existingDocument = await MainData.findOne({ dri_id });
+  return !!existingDocument; // Returns true if a document with the given dri_id exists, false otherwise
+}
 
 const upload = catchAsyncError(async (req, res,next) => {
   try {
@@ -37,6 +41,10 @@ const upload = catchAsyncError(async (req, res,next) => {
         
         if(row.hasOwnProperty('APP No.') && row["Year Of Purchase"]){
           row['DRI-ID'] = row['DRI-ID'].replace(/\s/g, "");
+          if (await isDriIdExists(row['DRI-ID'])) {
+            console.log(`Skipping duplicate DRI-ID: ${row['DRI-ID']}`);
+            continue;
+          }
           (row['APP No.'])
          if( (row['APP No.'])) row['APP No.'] = row['APP No.'].toString().replace(/\s/g, "");
          if(typeof row[' Deposit ']==='string'){
@@ -440,7 +448,11 @@ const getData = catchAsyncError(async (req, res, next) => {
     queryObject.appNumber = appNumber;
   }
   if (dri_id) {
-    queryObject.dri_id = dri_id;
+    
+    
+    const Pure_dri_id=dri_id.split(" ").join("");
+    // console.log(dri_id);
+    queryObject.dri_id = Pure_dri_id;
 
   }
   if (status && status !== "All") {

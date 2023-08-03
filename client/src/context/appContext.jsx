@@ -94,7 +94,7 @@ export const initialState = {
   totalData: 0,
   numOfPages:1,
   showTable:false,
-  toggleExeData:true,
+  toggleExeData:false,
   allowedIPs:[],
   statusOptions:[],
   placeOptions:[],
@@ -163,7 +163,7 @@ const AppProvider = ({ children }) => {
     // to get cookies in browser during development
     
     // baseURL: "call/api/v1",
-
+ 
     // production
     baseURL:"/api/v1",
   });

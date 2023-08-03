@@ -12,7 +12,7 @@ const AdminPop = ({ id,role }) => {
   return (
     <div className="bg-white rounded-md shadow-md px-8 py-6 w-[97%]">
       <div className="flex justify-between mb-4 items-center">
-        <h1 className="">Activity Details <span>
+        <h1 className="">Activity Detail <span>
             {/* {role} */}
           </span> </h1>
         <button onClick={() => setAdminPopup(false)}>

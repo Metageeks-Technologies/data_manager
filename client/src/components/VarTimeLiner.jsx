@@ -67,10 +67,10 @@ const UserActivityTimeline = ({ data }) => {
     <>
       {adminPopup && (
         <div className="fixed z-10 top-0 left-0 right-0 bottom-0 bg-gray-700 bg-opacity-50 flex items-center justify-center">
-          <AdminPop id={dri_Id} role={"verifier"} />
+          <AdminPop id={dri_Id} role={"kk"} />
         </div>
       )}
-      <div className=" w-9/12 p-3 pr-7 relative  bg-blue-100  flex flex-col items-center justify-center rounded-md">
+      <div className=" w-9/12 p-3 pr-7 relative  bg-blue-100  flex flex-col items-center rounded-md">
         <div className="w-10/12 p-0">
           <h1 className="w-fit border-b-2 border-cyan-600 text-bl text-[2rem] capitalize">
             {data && data[0]?.userRole}

@@ -101,6 +101,12 @@ const Team = () => {
       password:userForm.password,
       role:userForm.role
     });
+    setUser({
+      name:"",
+      email:"",
+      password:"",
+      role:""
+    })
   }
   
   return (
