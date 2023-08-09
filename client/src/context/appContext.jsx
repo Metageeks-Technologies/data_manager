@@ -57,6 +57,7 @@ import {
   GET_SINGLE_DATA_SUCCESS,
   DELETE_OPTION,
   GET_ALL_ACTIVITY_SUCCESS_VAR,
+  MAKE_DATA_EDITABLE
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -100,6 +101,7 @@ export const initialState = {
   statusOptions:[],
   placeOptions:[],
   memberOptions:[],
+  amcOptions:[],
   adminPopup:false,
   varAdminPopup:false,
   activityNumOfPageVar:1,
@@ -734,6 +736,16 @@ const AppProvider = ({ children }) => {
       dispatch({ type: API_CALL_FAIL });
     }
   };
+  const makeEditable = async (id) => {
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance.patch(`/edit/editable/${id}`);
+      console.log(data);
+      dispatch({ type: MAKE_DATA_EDITABLE });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+    }
+  };
   const rejectEditRequest = async (id) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
@@ -794,6 +806,7 @@ const AppProvider = ({ children }) => {
         deleteOption,
         getAllActivityVar,
         setVarAdminPopup,
+        makeEditable
         
       }}
     >

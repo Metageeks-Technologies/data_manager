@@ -50,7 +50,8 @@ import {
     GET_SINGLE_DATA_SUCCESS,
     DELETE_OPTION,
     GET_ALL_ACTIVITY_SUCCESS_VAR,
-    VAR_ADMIN_POPUP
+    VAR_ADMIN_POPUP,
+    MAKE_DATA_EDITABLE
     
 } from './action'
 
@@ -81,7 +82,8 @@ const reducer =(state,action)=>{
             isLoading:false,
             statusOptions:action.payload.data.status,
             placeOptions:action.payload.data.place,
-            memberOptions:action.payload.data.membership_type
+            amcOptions:action.payload.data.amc,
+            memberOptions:action.payload.data.membership_type,
             // toggleExeData:!state.toggleExeData      
         }
     }
@@ -91,8 +93,9 @@ const reducer =(state,action)=>{
             isLoading:false,
             statusOptions:action.payload.data.status,
             placeOptions:action.payload.data.place,
-            memberOptions:action.payload.data.membership_type
-            // toggleExeData:!state.toggleExeData      
+            amcOptions:action.payload.data.amc,
+            memberOptions:action.payload.data.membership_type,
+            // toggleExeData:!state.toggleExeData,      
         }
     }
     if(action.type===DELETE_OPTION ){
@@ -101,8 +104,9 @@ const reducer =(state,action)=>{
             isLoading:false,
             statusOptions:action.payload.data.status,
             placeOptions:action.payload.data.place,
-            memberOptions:action.payload.data.membership_type
-            // toggleExeData:!state.toggleExeData      
+            amcOptions:action.payload.data.amc,
+            memberOptions:action.payload.data.membership_type,
+            // toggleExeData:!state.toggleExeData,      
         }
     }
     if(action.type===GET_ALL_IPS ){
@@ -345,7 +349,7 @@ const reducer =(state,action)=>{
              
         }
     }
-    if(action.type===APPROVE_EDIT_SUCCESS ||action.type=== REJECT_EDIT_SUCCESS ){
+    if(action.type===APPROVE_EDIT_SUCCESS ||action.type=== REJECT_EDIT_SUCCESS || action.type===MAKE_DATA_EDITABLE ){
         return {
             ...state,
             toggleAction:!state.toggleAction,
@@ -353,6 +357,7 @@ const reducer =(state,action)=>{
              
         }
     }
+    
     if(action.type===GET_ALL_USERS_SUCCESS){
         return {
             ...state,

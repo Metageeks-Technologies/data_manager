@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+export const yearsOption=[]; 
+const minYear = 2007;
+const maxYear =  new Date().getFullYear();
+
+for (let year = minYear; year <= maxYear; year++) {
+    yearsOption.push(year.toString());
+}
+
 const optionSchema = new mongoose.Schema({
   place: {
     type: [String],
@@ -14,6 +22,10 @@ const optionSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  amc: {
+    type: [String],
+    default: [...yearsOption],
+  },
 });
 const trimAllArrayValues = (arr) => {
   return arr.map((value) => value.trim());
@@ -24,6 +36,7 @@ optionSchema.pre('save', function (next) {
   this.place = trimAllArrayValues(this.place);
   this.membership_type = trimAllArrayValues(this.membership_type);
   this.status = trimAllArrayValues(this.status);
+  this.amc = trimAllArrayValues(this.amc);
   next();
 });
 

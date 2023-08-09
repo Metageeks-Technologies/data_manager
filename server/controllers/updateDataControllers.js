@@ -95,6 +95,24 @@ import MainData from "../models/MainData.js";
         data
     })
   })
+  const makeEditable=catchAsyncError(async(req,res,next)=>{
+    
+    
+    const {id}=req.params;
+    const data=await MainData.findOne({_id:id});
+
+    if(!data){
+        return next(new ErrorHandler("Data not found",404))
+      }
+     data.editStatus="unchanged";
+     
+     await data.save();
+      
+    res.status(200).json({
+        success:true,
+        data
+    })
+  })
   const approveEdit=catchAsyncError(async(req,res,next)=>{
     const {id}=req.params;
    
@@ -126,4 +144,4 @@ import MainData from "../models/MainData.js";
 
   
 
-    export {editData,allEditedData,rejectEdit,approveEdit}
+    export {editData,makeEditable,allEditedData,rejectEdit,approveEdit}

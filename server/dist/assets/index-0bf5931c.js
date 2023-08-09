@@ -9047,6 +9047,7 @@ const ADD_OPTION = "ADD_OPTION";
 const DELETE_OPTION = "DELETE_OPTION";
 const ADMIN_POPUP = "ADMIN_POPUP";
 const VAR_ADMIN_POPUP = "VAR_ADMIN_POPUP";
+const MAKE_DATA_EDITABLE = "MAKE_DATA_EDITABLE";
 const GET_SINGLE_DATA_SUCCESS = "GET_SINGLE_DATA_SUCCESS";
 const GET_ALL_ACTIVITY_SUCCESS_VAR = "GET_ALL_ACTIVITY_SUCCESS_VAR";
 const reducer$1 = (state, action) => {
@@ -9077,6 +9078,7 @@ const reducer$1 = (state, action) => {
       isLoading: false,
       statusOptions: action.payload.data.status,
       placeOptions: action.payload.data.place,
+      amcOptions: action.payload.data.amc,
       memberOptions: action.payload.data.membership_type
       // toggleExeData:!state.toggleExeData      
     };
@@ -9087,8 +9089,9 @@ const reducer$1 = (state, action) => {
       isLoading: false,
       statusOptions: action.payload.data.status,
       placeOptions: action.payload.data.place,
+      amcOptions: action.payload.data.amc,
       memberOptions: action.payload.data.membership_type
-      // toggleExeData:!state.toggleExeData      
+      // toggleExeData:!state.toggleExeData,      
     };
   }
   if (action.type === DELETE_OPTION) {
@@ -9097,8 +9100,9 @@ const reducer$1 = (state, action) => {
       isLoading: false,
       statusOptions: action.payload.data.status,
       placeOptions: action.payload.data.place,
+      amcOptions: action.payload.data.amc,
       memberOptions: action.payload.data.membership_type
-      // toggleExeData:!state.toggleExeData      
+      // toggleExeData:!state.toggleExeData,      
     };
   }
   if (action.type === GET_ALL_IPS) {
@@ -9324,7 +9328,7 @@ const reducer$1 = (state, action) => {
       isLoading: false
     };
   }
-  if (action.type === APPROVE_EDIT_SUCCESS || action.type === REJECT_EDIT_SUCCESS) {
+  if (action.type === APPROVE_EDIT_SUCCESS || action.type === REJECT_EDIT_SUCCESS || action.type === MAKE_DATA_EDITABLE) {
     return {
       ...state,
       toggleAction: !state.toggleAction,
@@ -11727,6 +11731,7 @@ const initialState$1 = {
   statusOptions: [],
   placeOptions: [],
   memberOptions: [],
+  amcOptions: [],
   adminPopup: false,
   varAdminPopup: false,
   activityNumOfPageVar: 1,
@@ -12269,6 +12274,16 @@ const AppProvider = ({ children }) => {
       dispatch({ type: API_CALL_FAIL });
     }
   };
+  const makeEditable = async (id2) => {
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance.patch(`/edit/editable/${id2}`);
+      console.log(data);
+      dispatch({ type: MAKE_DATA_EDITABLE });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+    }
+  };
   const rejectEditRequest = async (id2) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
@@ -12327,7 +12342,8 @@ const AppProvider = ({ children }) => {
         getSingleData,
         deleteOption,
         getAllActivityVar,
-        setVarAdminPopup
+        setVarAdminPopup,
+        makeEditable
       },
       children
     }
@@ -12362,7 +12378,7 @@ const loginImgOption = [
   }
 ];
 const SearchContainer = ({ form, setForm, role }) => {
-  const { getAllData, getAllDeletedData, getAllVarData, setPage, isSearchedHandler, placeOptions, statusOptions, memberOptions, setShowTable, searchBar } = useAppContext();
+  const { getAllData, getAllDeletedData, getAllVarData, setPage, isSearchedHandler, placeOptions, statusOptions, amcOptions, memberOptions, setShowTable, searchBar } = useAppContext();
   reactExports.useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12556,7 +12572,7 @@ const SearchContainer = ({ form, setForm, role }) => {
                 value: form.amc,
                 onChange: handleInputChange,
                 className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["All", "Never", ...yearsOption.slice(27)].map((data) => {
+                children: ["All", ...amcOptions].map((data) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
                 })
               }
@@ -12713,7 +12729,7 @@ const Loader = () => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { role: "statu
   /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z", fill: "currentFill" })
 ] }) });
 function EditForm({ setShow, dataId, varData }) {
-  const { mainData, placeOptions, statusOptions, memberOptions, editData, makeActivity, user, dri_idOnWhichActionPerformed } = useAppContext();
+  const { mainData, placeOptions, amcOptions, statusOptions, memberOptions, editData, makeActivity, user, dri_idOnWhichActionPerformed } = useAppContext();
   let data;
   if (varData) {
     data = varData.find((obj) => obj._id === dataId);
@@ -12990,7 +13006,7 @@ function EditForm({ setShow, dataId, varData }) {
                 value: form.amc,
                 onChange: handleInputChange,
                 className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["Never", ...yearsOption.slice(27)].map((data2) => {
+                children: [...amcOptions].map((data2) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data2, children: data2 }, data2);
                 })
               }
@@ -23070,7 +23086,7 @@ const TableHeaders = ({ role, dataType, action }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "Last Communication" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "REMARKS" }),
     role !== "popup" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: role === "admin" ? dataType === "accepted" ? "DELETE" : "RESTORE" : "ACTION" }),
-    role === "executive" && /* @__PURE__ */ jsxRuntimeExports.jsxs("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: [
+    (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsxs("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: [
       "ACTION ",
       !action && "STATUS"
     ] })
@@ -23341,6 +23357,10 @@ const EditExeData = ({ showForm, id: id2, dri_id }) => {
 };
 dayjs.extend(localizedFormat);
 const TableContent = ({ data, role, dataType, showForm }) => {
+  const { makeEditable } = useAppContext();
+  const handleEditable = (id2) => {
+    makeEditable(id2);
+  };
   const color = (cl2) => {
     if (cl2 === "unchanged")
       return;
@@ -23360,57 +23380,70 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     Math.round(
       (obj == null ? void 0 : obj.deposit) - (obj == null ? void 0 : obj.deposit) / 33 * yearsCountTillNow
     );
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "tr",
-      {
-        className: "bg-white border-b dark:bg-gray-100 ",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "td",
-            {
-              scope: "row",
-              className: "px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-black",
-              children: obj.dri_id
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.place }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2  ", children: obj.appNumber }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.membership_type || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.date || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.amc || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 text-left whitespace-nowrap", children: obj.customerName }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              "data-tip": `${obj.address}`,
-              className: `${toolTipClass}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: `${obj.address.slice(0, 20)}...` })
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.residentialPhone || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.officePhone || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.deposit || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.status || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV - obj.deposit }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: yearsCountTillNow || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction99based || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33based || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.lastCommunication || "-" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap ", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              "data-tip": `${obj.remarks}`,
-              className: `${toolTipClass}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: `${obj.remarks.slice(0, 10)}...` })
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: role === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteAdminData, { id: obj._id, isTrash: dataType === "deleted" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(EditExeData, { id: obj._id, showForm, dri_id: obj.dri_id }) }),
-          role === "executive" && /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-[1.1rem] capitalize", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }) })
-        ]
-      },
-      obj._id
-    );
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-white border-b dark:bg-gray-100 ", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "td",
+        {
+          scope: "row",
+          className: "px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-black",
+          children: obj.dri_id
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.place }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2  ", children: obj.appNumber }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.membership_type || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.date || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.amc || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 text-left whitespace-nowrap", children: obj.customerName }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-tip": `${obj.address}`, className: `${toolTipClass}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: `${obj.address.slice(0, 20)}...` }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.residentialPhone || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.officePhone || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.deposit || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.status || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV - obj.deposit }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: yearsCountTillNow || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction99based || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33based || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.lastCommunication || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-tip": `${obj.remarks}`, className: `${toolTipClass}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: `${obj.remarks.slice(0, 10)}...` }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: role === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        DeleteAdminData,
+        {
+          id: obj._id,
+          isTrash: dataType === "deleted"
+        }
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+        EditExeData,
+        {
+          id: obj._id,
+          showForm,
+          dri_id: obj.dri_id
+        }
+      ) }),
+      (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-[1.1rem] capitalize flex gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }),
+        role === "admin" && obj.editStatus === "approved" && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => handleEditable(obj._id), "data-tip": `Editable`, className: `${toolTipClass}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "svg",
+          {
+            xmlns: "http://www.w3.org/2000/svg",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            strokeWidth: 1.5,
+            stroke: "currentColor",
+            className: "w-5 h-5",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "path",
+              {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                d: "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+              }
+            )
+          }
+        ) })
+      ] })
+    ] }, obj._id);
   }) });
 };
 const PaginationAndExport = ({ form, fun }) => {
@@ -23526,6 +23559,8 @@ const OptionList = ({ items, fun, isForIP, submitFun, forOption }) => {
       submitFun({ status: inputValue });
     else if (forOption === "Membership Type")
       submitFun({ membership_type: inputValue });
+    else if (forOption === "amc")
+      submitFun({ amc: inputValue });
     setInputValue("");
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -23605,7 +23640,7 @@ const OptionList = ({ items, fun, isForIP, submitFun, forOption }) => {
         "button",
         {
           type: "submit",
-          className: "bg-blue-500 text-white px-4 py-2 mt-2 rounded-md",
+          className: "bg-blue-500 mb-7 text-white px-4 py-2 mt-2 rounded-md",
           children: "Submit"
         }
       )
@@ -23617,6 +23652,7 @@ const Sidebar = () => {
     getAllIPs,
     AddIP,
     deleteIP,
+    amcOptions,
     deleteOption,
     addOption,
     allowedIPs,
@@ -23637,7 +23673,7 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-  const options = ["Select Option", "Ip", "Place", "Status", "Membership Type"];
+  const options = ["Select Option", "Ip", "Place", "Status", "Membership Type", "amc"];
   const [selectedOption, setSelectedOption] = reactExports.useState(options[0]);
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -23668,6 +23704,12 @@ const Sidebar = () => {
       PropsForOption.fun = deleteOption;
       PropsForOption.submitFun = addOption;
       PropsForOption.forOption = options[4];
+    } else if (selectedOption === options[5]) {
+      PropsForOption.items = amcOptions;
+      PropsForOption.isForIP = false;
+      PropsForOption.fun = deleteOption;
+      PropsForOption.submitFun = addOption;
+      PropsForOption.forOption = options[5];
     }
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -23707,10 +23749,10 @@ const Sidebar = () => {
         )
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `fixed top-0 left-0 right-0 bottom-0 flex justify-end bg-gray-800 bg-opacity-50 z-20 ${isOpen ? "translate-x-0" : "translate-x-full"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `fixed top-0 left-0 right-0 bottom-0 overflow-y-auto flex justify-end bg-gray-800 bg-opacity-50 z-20 ${isOpen ? "translate-x-0" : "translate-x-full"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
-        className: ` h-screen py-[3rem] flex px-2 w-[23%] rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${isOpen ? "translate-x-0" : "translate-x-full"}`,
+        className: ` h-screen py-[3rem] flex px-2 w-[23%] pb overflow-y-auto rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${isOpen ? "translate-x-0" : "translate-x-full"}`,
         children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-[80%]", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",

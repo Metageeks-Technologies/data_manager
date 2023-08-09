@@ -6,7 +6,7 @@ import catchAsyncError from "../middleware/catchAsyncError.js";
 
 const addOption =catchAsyncError(async (req,res,next)=>{
 
-    const {place:_place,status:_status,membership_type:_membership_type} =req.body;
+    const {place:_place,status:_status,membership_type:_membership_type,amc:_amc} =req.body;
     console.log(req.body);
    
     if(!req.body){
@@ -21,15 +21,17 @@ const addOption =catchAsyncError(async (req,res,next)=>{
     }else{
         data=model[0];
     //    console.log(data);
-        if(_place){
+        if(_place && !data.place.includes(_place)){
             data.place.push(_place);
-            console.log(data.place,"places")
         }
-        if(_status){
+        if(_status && !data.status.includes(_status)){
             data.status.push(_status);
         }
-        if(_membership_type){
+        if(_membership_type && !data.membership_type.includes(_membership_type)){
             data.membership_type.push(_membership_type);
+        }
+        if(_amc && !data.amc.includes(_amc)){
+            data.amc.push(_amc);
         }
        await  data.save();
        
@@ -89,6 +91,9 @@ const deleteOption =catchAsyncError(async (req,res,next)=>{
         }
         else if(data.membership_type.includes(value)){
             data.membership_type=data.membership_type.filter(item=>item !==value);
+        }
+        else if(data.amc.includes(value)){
+            data.amc=data.amc.filter(item=>item !==value);
         }
         else return next(new ErrorHandler("Provided value doesn't match with existing options",400))
         

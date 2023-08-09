@@ -4,7 +4,7 @@ import { useAppContext } from "../context/appContext";
 
 import { editStatusOption,yearsOption} from "../utils/options";
 const SearchContainer = ({ form, setForm,role }) => {
-  const { getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler,placeOptions,statusOptions,memberOptions,setShowTable,searchBar } = useAppContext();
+  const { getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler,placeOptions,statusOptions,amcOptions,memberOptions,setShowTable,searchBar } = useAppContext();
   const [exporting,setExporting] = useState(false)
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -271,7 +271,7 @@ const SearchContainer = ({ form, setForm,role }) => {
               onChange={handleInputChange}
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {["All", "Never",...yearsOption.slice(27)].map((data) => {
+              {["All", ...amcOptions].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}

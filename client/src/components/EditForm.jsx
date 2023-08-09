@@ -8,7 +8,7 @@ import {  yearsOption} from "../utils/options";
 
 
 function EditForm({ setShow, dataId ,varData}) {
-  const { mainData,placeOptions,statusOptions,memberOptions, editData,makeActivity,user,dri_idOnWhichActionPerformed } = useAppContext();
+  const { mainData,placeOptions,amcOptions,statusOptions,memberOptions, editData,makeActivity,user,dri_idOnWhichActionPerformed } = useAppContext();
   let data ;
   if(varData){
     data= varData.find((obj) => obj._id === dataId);
@@ -77,7 +77,7 @@ function EditForm({ setShow, dataId ,varData}) {
       }
     }
     
-    // 1006441	1006741
+   
     editData(dataId, changedData);
     const obj={
       userName:user?.name,
@@ -384,7 +384,7 @@ function EditForm({ setShow, dataId ,varData}) {
               onChange={handleInputChange}
               className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {["Never",...yearsOption.slice(27)].map((data) => {
+              {[...amcOptions].map((data) => {
                 return (
                   <option key={data} value={data}>
                     {data}

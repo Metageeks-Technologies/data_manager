@@ -18,6 +18,8 @@ const OptionList=({items,fun,isForIP,submitFun,forOption})=>{
    }else if(forOption==="Place") submitFun({place:inputValue})
    else if(forOption==="Status") submitFun({status:inputValue})
   else if(forOption==="Membership Type") submitFun({membership_type:inputValue})
+  else if(forOption==="amc") submitFun({amc:inputValue})
+
 
 
    setInputValue("");
@@ -100,7 +102,7 @@ const OptionList=({items,fun,isForIP,submitFun,forOption})=>{
                   />
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md"
+                    className="bg-blue-500 mb-7 text-white px-4 py-2 mt-2 rounded-md"
                   >
                     Submit
                   </button>
@@ -112,7 +114,7 @@ const OptionList=({items,fun,isForIP,submitFun,forOption})=>{
 
 
 const Sidebar = () => {
-   const {getAllIPs,AddIP,deleteIP,deleteOption, addOption,allowedIPs,toggleAction ,statusOptions,
+   const {getAllIPs,AddIP,deleteIP,amcOptions,deleteOption, addOption,allowedIPs,toggleAction ,statusOptions,
     placeOptions,
     memberOptions,}=useAppContext();
    useEffect(()=>{
@@ -150,7 +152,7 @@ const Sidebar = () => {
     })
     setIsOpen(!isOpen);
   };
-  const options =  ['Select Option','Ip', 'Place', 'Status', 'Membership Type'];
+  const options =  ['Select Option','Ip', 'Place', 'Status', 'Membership Type','amc'];
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
   const handleOptionChange = (event) => {
@@ -188,6 +190,13 @@ const Sidebar = () => {
       PropsForOption.submitFun=addOption
       PropsForOption.forOption=options[4]
     }
+    else if(selectedOption===options[5]){
+      PropsForOption.items=amcOptions;
+      PropsForOption.isForIP=false;
+      PropsForOption.fun=deleteOption;
+      PropsForOption.submitFun=addOption
+      PropsForOption.forOption=options[5]
+    }
   }
   
   return (
@@ -219,11 +228,11 @@ const Sidebar = () => {
       </button>
     
       {/* Sidebar */}
-      <div className={`fixed top-0 left-0 right-0 bottom-0 flex justify-end bg-gray-800 bg-opacity-50 z-20 ${
+      <div className={`fixed top-0 left-0 right-0 bottom-0 overflow-y-auto flex justify-end bg-gray-800 bg-opacity-50 z-20 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}>
       <div
-        className={` h-screen py-[3rem] flex px-2 w-[23%] rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${
+        className={` h-screen py-[3rem] flex px-2 w-[23%] pb overflow-y-auto rounded-l-lg bg-[#E5E7EB] text  transition-transform duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

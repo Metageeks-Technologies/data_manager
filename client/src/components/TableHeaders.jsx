@@ -102,7 +102,7 @@ const TableHeaders = ({ role, dataType, action }) => {
             : "ACTION"}
         </th>
         )}
-        {role === "executive" && (
+        {(role === "executive" || role === "admin") && (
           <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
             ACTION {!action && "STATUS"}
           </th>
