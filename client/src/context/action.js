@@ -52,6 +52,7 @@ export const ADD_IP='ADD_IP'
 export const GET_OPTION='GET_OPTION';
 export const ADD_OPTION='ADD_OPTION';
 export const DELETE_OPTION='DELETE_OPTION';
+export const IS_FILTER_APPLIED='IS_FILTER_APPLIED';
 export const ADMIN_POPUP='ADMIN_POPUP';
 export const VAR_ADMIN_POPUP='VAR_ADMIN_POPUP';
 export const MAKE_DATA_EDITABLE='MAKE_DATA_EDITABLE';

@@ -4,7 +4,7 @@ import { useAppContext } from "../context/appContext";
 
 import { editStatusOption,yearsOption} from "../utils/options";
 const SearchContainer = ({ form, setForm,role }) => {
-  const { getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler,placeOptions,statusOptions,amcOptions,memberOptions,setShowTable,searchBar } = useAppContext();
+  const {handleFilterApplied, getAllData,getAllDeletedData,getAllVarData, setPage,isSearchedHandler,placeOptions,statusOptions,amcOptions,memberOptions,setShowTable,searchBar } = useAppContext();
   const [exporting,setExporting] = useState(false)
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +32,16 @@ const SearchContainer = ({ form, setForm,role }) => {
     customerName: "",
     appNumber: "",
     }));
+
+    if(form.status ==="All" && form.place==="All" && form.membership_type==="All" && form.date ==="All" && form.amc ==="All"){
+      handleFilterApplied(false);
+    }else{
+      handleFilterApplied(true);
+  
+    }
   };
+
+  
 
   
   const handleInputChange = (event) => {
@@ -211,54 +220,6 @@ const SearchContainer = ({ form, setForm,role }) => {
               })}
             </select>
           </div>
-          {/* edit Status */}
-          {(role && (role==='varData')) && (
-            <div className="flex flex-col mb-4 flex-1">
-            <label htmlFor="editStatus" className="text-xs">
-            editStatus:
-            </label>
-            <select
-              id="editStatus"
-              name="editStatus"
-              value={form.editStatus}
-              onChange={handleInputChange}
-              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {["Both",...editStatusOption.filter(d=>d!='pending')].map((data) => {
-                return (
-                  <option key={data} value={data}>
-                    {data}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          ) }
-           {(role && (role==='VarEX')) && (
-            <div className="flex flex-col mb-4 flex-1">
-            <label htmlFor="editStatus" className="text-xs">
-            editStatus:
-            </label>
-            <select
-              id="editStatus"
-              name="editStatus"
-              value={form.editStatus}
-              onChange={handleInputChange}
-              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {["all",...editStatusOption].map((data) => {
-                return (
-                  <option key={data} value={data}>
-                    {data}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          ) }
-        
-          {/* Customer Name */}
-          
           <div className="flex flex-col mb-4">
           <label htmlFor="lastCommunication" className="text-xs">
           Amc
@@ -280,7 +241,74 @@ const SearchContainer = ({ form, setForm,role }) => {
               })}
             </select>
           </div>
-          
+          {/* edit Status */}
+          {(role && (role==='varData')) && (
+            <div className="flex flex-col mb-4 flex-1">
+            <label htmlFor="editStatus" className="text-xs">
+            Action:
+            </label>
+            <select
+              id="editStatus"
+              name="editStatus"
+              value={form.editStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["Both",...editStatusOption.filter(d=>d!='pending')].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          ) }
+           {(role && (role==='VarEX')) && (
+            <div className="flex flex-col mb-4 flex-1">
+            <label htmlFor="editStatus" className="text-xs">
+            Action:
+            </label>
+            <select
+              id="editStatus"
+              name="editStatus"
+              value={form.editStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["all",...editStatusOption].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          ) }
+          {(role && (role==='admin')) && (
+            <div className="flex flex-col mb-4 flex-1">
+            <label htmlFor="editStatus" className="text-xs">
+            Action:
+            </label>
+            <select
+              id="editStatus"
+              name="editStatus"
+              value={form.editStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["All",...editStatusOption].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          ) }
+        
         </div>
 
         <button

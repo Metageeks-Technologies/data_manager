@@ -10,7 +10,7 @@ dayjs.extend(localizedFormat);
 // 0604A002255
 const TableContent = ({ data, role, dataType, showForm }) => {
 
-  const { makeEditable } = useAppContext();
+  const { makeEditable ,page} = useAppContext();
   const handleEditable=(id)=>{
     makeEditable(id);
   }
@@ -24,7 +24,7 @@ const TableContent = ({ data, role, dataType, showForm }) => {
   return (
     <tbody>
       {data &&
-        data.map((obj) => {
+        data.map((obj,index) => {
           const yearsCountTillNow =
             new Date().getFullYear() - parseInt(obj?.date?.split("-")[0]);
           const afterFeesDeduction_99 = Math.round(
@@ -34,8 +34,10 @@ const TableContent = ({ data, role, dataType, showForm }) => {
           const afterFeesDeduction_33 = Math.round(
             obj?.deposit - (obj?.deposit / 33) * yearsCountTillNow
           );
+          const serialNum=(page-1)*8 +(index+1);
           return (
             <tr key={obj._id} className="bg-white border-b dark:bg-gray-100 ">
+              <td className="px-6 py-2">{serialNum}</td>
               <td
                 scope="row"
                 className="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-black"

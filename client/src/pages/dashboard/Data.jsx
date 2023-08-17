@@ -73,7 +73,7 @@ const Data = () => {
       {openSearchBar && (
         <div className="relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ">
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <SearchContainer form={form} setForm={setForm} />
+            <SearchContainer form={form} role={"admin"} setForm={setForm} />
           </div>
         </div>
       )}

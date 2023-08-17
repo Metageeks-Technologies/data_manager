@@ -5,6 +5,9 @@ const TableHeaders = ({ role, dataType, action }) => {
   return (
     <thead className="text-xs sticky  top-0  uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
       <tr>
+      <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
+         Serial No.
+        </th>
         <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
           DRI-ID
         </th>
@@ -102,6 +105,12 @@ const TableHeaders = ({ role, dataType, action }) => {
             : "ACTION"}
         </th>
         )}
+        {role==="popup" && (
+          <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
+          ACTION
+        </th>
+        )}
+
         {(role === "executive" || role === "admin") && (
           <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
             ACTION {!action && "STATUS"}

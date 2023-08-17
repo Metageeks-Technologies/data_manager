@@ -37,7 +37,7 @@ const AdminPop = ({ id,data,Role }) => {
         <table className="w-full  text-sm text-center ">
           <TableHeaders role={"popup"} dataType={"accepted"} />
           <TableContentWithChange data={singleData ?[singleData]:[]} />
-          
+           
         </table>
       </div>
     </div>

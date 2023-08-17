@@ -4,11 +4,13 @@ import { toolTipClass } from '../utils/tooltip';
 import EditExeData from './EditExeData';
 // EditExeData
 const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,hideEdit}) => {
-    const {user}=useAppContext();
+    const {user,page,makeEditable}=useAppContext();
     function hasKey(obj, key) {
         return obj && Object.prototype.hasOwnProperty.call(obj, key);
       }
-
+      const handleEditable=(id)=>{
+        makeEditable(id);
+      }
       const color = (cl) => {
         if(cl==="unchanged") return;
         if (cl == "pending") return "text-yellow-500";
@@ -17,7 +19,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,h
       }; 
   return (
     <tbody>
-    {(data.length >0) && data.map((obj) => {
+    {(data.length >0) && data.map((obj,index) => {
       const yearsCountTillNow =
         new Date().getFullYear() -
         parseInt(obj.date .split("-")[0]);
@@ -28,11 +30,13 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,h
       const afterFeesDeduction__33based = Math.round(
         obj.deposit  - (obj.deposit  / 33) * yearsCountTillNow 
       );
+      const serialNum=(page-1)*8 +(index+1);
       return (
         <tr
           key={obj._id }
           className="bg-white border-b dark:bg-gray-100 "
         >
+           <td className="px-6 py-2  ">{serialNum}</td>
           <td
                     scope="row"
                     className="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-black"
@@ -46,7 +50,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,h
             <p
               className={`${
                 // hasKey(obj.dataToUpdate,"place") &&
-                // "text-red-500 text-red-500 line-through"
+                
                 (hasKey(obj.dataToUpdate,"place") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"place") && "text-red-500 line-through")
 
               }`}
@@ -83,7 +87,7 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,h
             <p
               className={`${
                 // hasKey(obj.dataToUpdate,"membership_type") &&
-                // "text-red-500 text-red-500 line-through"
+               
                 (hasKey(obj.dataToUpdate,"membership_type") && obj.editStatus==='approved') ? "hidden" :(hasKey(obj.dataToUpdate,"membership_type") && "text-red-500 line-through")
 
               }`}
@@ -387,6 +391,30 @@ const TableContentWithChange = ({data,role,handleApprove,handleReject,showForm,h
             ) : (
               <p>No changes</p>
             )}
+          </td>
+          )}
+         
+          {role==='popup' && (
+            <td className="px-6 py-2 flex gap-2 whitespace-nowrap ">
+            <p className={color(obj.editStatus)}>{obj.editStatus}</p>
+                  {(role === "popup" && obj.editStatus==="approved") && (
+                    <button onClick={()=>handleEditable(obj._id)} data-tip={`Editable`} className={`${toolTipClass}`} >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                        />
+                      </svg>
+                    </button>
+                  )}
           </td>
           )}
           {

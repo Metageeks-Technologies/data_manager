@@ -364,10 +364,13 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       // {fontWeight:"bold", value: "PP D" },
       {fontWeight:"bold", value: "Year of purchase" },
       {fontWeight:"bold", value: "AMC" },
-      {fontWeight:"bold", value: "CUSTOMER NAME" },
-      // {fontWeight:"bold", value: " GSV " },
-      {fontWeight:"bold", value: " CSV " },
-      {fontWeight:"bold", value: " Deposit " },
+      {fontWeight:"bold", value: "Customer Name" },
+      {fontWeight:"bold", value: "Address" },
+      {fontWeight:"bold", value: "Res Phone" },
+      {fontWeight:"bold", value: "Office Phone" },
+
+      {fontWeight:"bold", value: "CSV" },
+      {fontWeight:"bold", value: "Deposit"},
       {fontWeight:"bold", value: "Status" },
 
       {fontWeight:"bold", value: "Outstanding" },
@@ -375,8 +378,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       {fontWeight:"bold", value: "After Deducting License Fees (99 based)" },
       {fontWeight:"bold", value: "After Deducting License Fees (33 based)" },
 
-      {fontWeight:"bold", value: "LAST COMMUNICATION" },
-      {fontWeight:"bold", value: "REMARKS" },
+      {fontWeight:"bold", value: "Last Communication" },
+      {fontWeight:"bold", value: "Remarks" },
     ]];
     
     result.forEach((doc,i)=>{
@@ -389,6 +392,9 @@ const exportFile = catchAsyncError(async (req, res, next) => {
         amc="",
         customerName="",
         GSV="",
+        address="",
+        residentialPhone="",
+        officePhone="",
         CSV="",
         deposit="",
         status="",
@@ -414,6 +420,9 @@ const exportFile = catchAsyncError(async (req, res, next) => {
           { value:amc },
           { value:customerName },
           // { value:GSV },
+          {value:address},
+          {value:residentialPhone},
+          {value:officePhone},
           { value:CSV },
           { value:deposit },
           { value:status },

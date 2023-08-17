@@ -9045,6 +9045,7 @@ const ADD_IP = "ADD_IP";
 const GET_OPTION = "GET_OPTION";
 const ADD_OPTION = "ADD_OPTION";
 const DELETE_OPTION = "DELETE_OPTION";
+const IS_FILTER_APPLIED = "IS_FILTER_APPLIED";
 const ADMIN_POPUP = "ADMIN_POPUP";
 const VAR_ADMIN_POPUP = "VAR_ADMIN_POPUP";
 const MAKE_DATA_EDITABLE = "MAKE_DATA_EDITABLE";
@@ -9070,6 +9071,12 @@ const reducer$1 = (state, action) => {
       ...state,
       isLoading: false,
       toggleExeData: !state.toggleExeData
+    };
+  }
+  if (action.type === IS_FILTER_APPLIED) {
+    return {
+      ...state,
+      isFiltered: action.payload
     };
   }
   if (action.type === GET_OPTION) {
@@ -11736,7 +11743,8 @@ const initialState$1 = {
   varAdminPopup: false,
   activityNumOfPageVar: 1,
   activityNumOfPage: 1,
-  isPageServed: {}
+  isPageServed: {},
+  isFiltered: false
 };
 const showAlert = (type, text) => {
   if (type === "warn") {
@@ -11790,9 +11798,9 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = reactExports.useReducer(reducer$1, initialState$1);
   const instance = axios$1.create({
     // to get cookies in browser during development
-    // baseURL: "call/api/v1",
+    // baseURL: "call/api/v1"
     // production
-    baseURL: "/api/v1"
+    baseURL:"/api/v1",
   });
   reactExports.useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
@@ -11829,6 +11837,9 @@ const AppProvider = ({ children }) => {
       dispatch({ type: INCREASE_PAGE });
     else
       dispatch({ type: DECREASE_PAGE });
+  };
+  const handleFilterApplied = (value2) => {
+    dispatch({ type: IS_FILTER_APPLIED, payload: value2 });
   };
   const setPage = (num) => {
     dispatch({ type: SET_PAGE, payload: num });
@@ -12343,7 +12354,8 @@ const AppProvider = ({ children }) => {
         deleteOption,
         getAllActivityVar,
         setVarAdminPopup,
-        makeEditable
+        makeEditable,
+        handleFilterApplied
       },
       children
     }
@@ -12378,7 +12390,7 @@ const loginImgOption = [
   }
 ];
 const SearchContainer = ({ form, setForm, role }) => {
-  const { getAllData, getAllDeletedData, getAllVarData, setPage, isSearchedHandler, placeOptions, statusOptions, amcOptions, memberOptions, setShowTable, searchBar } = useAppContext();
+  const { handleFilterApplied, getAllData, getAllDeletedData, getAllVarData, setPage, isSearchedHandler, placeOptions, statusOptions, amcOptions, memberOptions, setShowTable, searchBar } = useAppContext();
   reactExports.useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12402,6 +12414,11 @@ const SearchContainer = ({ form, setForm, role }) => {
       customerName: "",
       appNumber: ""
     }));
+    if (form.status === "All" && form.place === "All" && form.membership_type === "All" && form.date === "All" && form.amc === "All") {
+      handleFilterApplied(false);
+    } else {
+      handleFilterApplied(true);
+    }
   };
   const handleInputChange = (event) => {
     const { name, value: value2 } = event.target;
@@ -12529,8 +12546,25 @@ const SearchContainer = ({ form, setForm, role }) => {
               }
             )
           ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lastCommunication", className: "text-xs", children: "Amc" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                size: 1,
+                id: "amc",
+                name: "amc",
+                value: form.amc,
+                onChange: handleInputChange,
+                className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                children: ["All", ...amcOptions].map((data) => {
+                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
+                })
+              }
+            )
+          ] }),
           role && role === "varData" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4 flex-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "editStatus", className: "text-xs", children: "editStatus:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "editStatus", className: "text-xs", children: "Action:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
@@ -12546,7 +12580,7 @@ const SearchContainer = ({ form, setForm, role }) => {
             )
           ] }),
           role && role === "VarEX" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4 flex-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "editStatus", className: "text-xs", children: "editStatus:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "editStatus", className: "text-xs", children: "Action:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
@@ -12561,18 +12595,17 @@ const SearchContainer = ({ form, setForm, role }) => {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lastCommunication", className: "text-xs", children: "Amc" }),
+          role && role === "admin" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4 flex-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "editStatus", className: "text-xs", children: "Action:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
-                size: 1,
-                id: "amc",
-                name: "amc",
-                value: form.amc,
+                id: "editStatus",
+                name: "editStatus",
+                value: form.editStatus,
                 onChange: handleInputChange,
-                className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["All", ...amcOptions].map((data) => {
+                className: "border border-gray-400 py-1 capitalize px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                children: ["All", ...editStatusOption].map((data) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
                 })
               }
@@ -12615,7 +12648,7 @@ const Dashboard = ({ links, admin, role }) => {
   const endpoint = currentURL.split("/").pop();
   console.log(endpoint);
   const navigate = useNavigate();
-  const { toggleExeData, toggleExeDataF, logoutUser, user, setShowTable, showTable, searchBar } = useAppContext();
+  const { toggleExeData, toggleExeDataF, isFiltered, logoutUser, user, setShowTable, showTable, searchBar } = useAppContext();
   const handleLogout = async () => {
     await logoutUser();
     navigate("/auth");
@@ -12702,13 +12735,16 @@ const Dashboard = ({ links, admin, role }) => {
             children: "Show Data"
           }
         ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "button",
           {
             disabled: endpoint === "users" || endpoint === "upload",
             onClick: () => searchBar(true),
-            className: " text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
-            children: "Search"
+            className: " text-white relative bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center",
+            children: [
+              "Search",
+              isFiltered && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-green-400 absolute top-[2px] right-[2px] rounded-full h-[0.85rem] w-[0.85rem]" })
+            ]
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -23028,6 +23064,7 @@ const LoginSwiper = () => {
 const toolTipClass = "hover:before:opacity-100 before:absolute relative before:content-[attr(data-tip)] before:whitespace-normal before:px-3 before:py-2 before:left-1 before:top-[3px] before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full before:bg-gray-700 before:text-white before:rounded-md before:opacity-0 before:transition-all ";
 const TableHeaders = ({ role, dataType, action }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { className: "text-xs sticky  top-0  uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "Serial No." }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "DRI-ID" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "PLACE" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "APP NO" }),
@@ -23086,6 +23123,7 @@ const TableHeaders = ({ role, dataType, action }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "Last Communication" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "REMARKS" }),
     role !== "popup" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: role === "admin" ? dataType === "accepted" ? "DELETE" : "RESTORE" : "ACTION" }),
+    role === "popup" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "ACTION" }),
     (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsxs("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: [
       "ACTION ",
       !action && "STATUS"
@@ -23357,7 +23395,7 @@ const EditExeData = ({ showForm, id: id2, dri_id }) => {
 };
 dayjs.extend(localizedFormat);
 const TableContent = ({ data, role, dataType, showForm }) => {
-  const { makeEditable } = useAppContext();
+  const { makeEditable, page } = useAppContext();
   const handleEditable = (id2) => {
     makeEditable(id2);
   };
@@ -23371,7 +23409,7 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     else
       return "text-green-500";
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: data && data.map((obj) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: data && data.map((obj, index2) => {
     var _a;
     const yearsCountTillNow = (/* @__PURE__ */ new Date()).getFullYear() - parseInt((_a = obj == null ? void 0 : obj.date) == null ? void 0 : _a.split("-")[0]);
     Math.round(
@@ -23380,7 +23418,9 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     Math.round(
       (obj == null ? void 0 : obj.deposit) - (obj == null ? void 0 : obj.deposit) / 33 * yearsCountTillNow
     );
+    const serialNum = (page - 1) * 8 + (index2 + 1);
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-white border-b dark:bg-gray-100 ", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: serialNum }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "td",
         {
@@ -23446,6 +23486,10 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     ] }, obj._id);
   }) });
 };
+function containsOnlyNumbers(inputString) {
+  const regex = /^[0-9]+$/;
+  return regex.test(inputString);
+}
 const PaginationAndExport = ({ form, fun }) => {
   const {
     page,
@@ -23453,8 +23497,11 @@ const PaginationAndExport = ({ form, fun }) => {
     setPageNumber,
     isSearched,
     lastFilterQuery,
-    exportData
+    exportData,
+    showAlert: showAlert2,
+    setPage
   } = useAppContext();
+  const [customPage, setCustomPage] = reactExports.useState("");
   const [exporting, setExporting] = reactExports.useState(false);
   const handleExport = async () => {
     setExporting(true);
@@ -23470,8 +23517,28 @@ const PaginationAndExport = ({ form, fun }) => {
     setPageNumber();
     fun({ ...form, page: page - 1 });
   };
+  const handleCustom = () => {
+    console.log(customPage);
+    if (!containsOnlyNumbers(customPage)) {
+      showAlert2("warn", "Invalid Page");
+      return;
+    }
+    const page2 = Number(customPage);
+    if (page2 <= 0 || page2 > numOfPages) {
+      showAlert2("warn", "Given page is out of range");
+      return;
+    }
+    setPage(page2);
+    fun({ ...form, page: page2 });
+    setCustomPage("");
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleCustom();
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center gap-[4rem] ", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-center  items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {
@@ -23525,7 +23592,40 @@ const PaginationAndExport = ({ form, fun }) => {
             }
           )
         }
-      )
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex mb-2 ml-2 w-full px-2 justify-between items-center py-1 border-2 bg-white border-blue-100 rounded-md", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            className: "border-none w-[6.5rem] focus:border-none  rounded-sm bg-white py-1 px-1 placeholder-[#b8c5d7] appearance-none focus:outline-none",
+            type: "text",
+            name: "",
+            placeholder: "Enter page",
+            value: customPage,
+            onKeyDown: handleKeyDown,
+            onChange: (e) => setCustomPage(e.target.value)
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleCustom, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "svg",
+          {
+            xmlns: "http://www.w3.org/2000/svg",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            strokeWidth: 1.5,
+            stroke: "#b8c5d7",
+            className: "w-6 h-6",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "path",
+              {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                d: "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              }
+            )
+          }
+        ) })
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
       numOfPages ? `${page} of Total ${numOfPages} pages` : `No data found with applied filter`,
@@ -23799,10 +23899,13 @@ const Sidebar = () => {
   ] });
 };
 const TableContentWithChange = ({ data, role, handleApprove, handleReject, showForm, hideEdit }) => {
-  const { user } = useAppContext();
+  const { user, page, makeEditable } = useAppContext();
   function hasKey(obj, key) {
     return obj && Object.prototype.hasOwnProperty.call(obj, key);
   }
+  const handleEditable = (id2) => {
+    makeEditable(id2);
+  };
   const color = (cl2) => {
     if (cl2 === "unchanged")
       return;
@@ -23813,7 +23916,7 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject, showF
     else
       return "text-green-500";
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: data.length > 0 && data.map((obj) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: data.length > 0 && data.map((obj, index2) => {
     const yearsCountTillNow = (/* @__PURE__ */ new Date()).getFullYear() - parseInt(obj.date.split("-")[0]);
     Math.round(
       obj.deposit - obj.deposit / 99 * yearsCountTillNow
@@ -23821,11 +23924,13 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject, showF
     Math.round(
       obj.deposit - obj.deposit / 33 * yearsCountTillNow
     );
+    const serialNum = (page - 1) * 8 + (index2 + 1);
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "tr",
       {
         className: "bg-white border-b dark:bg-gray-100 ",
         children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2  ", children: serialNum }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "td",
             {
@@ -23844,7 +23949,6 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject, showF
                   "p",
                   {
                     className: `${// hasKey(obj.dataToUpdate,"place") &&
-                    // "text-red-500 text-red-500 line-through"
                     hasKey(obj.dataToUpdate, "place") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "place") && "text-red-500 line-through"}`,
                     children: [
                       " ",
@@ -23868,7 +23972,6 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject, showF
                   "p",
                   {
                     className: `${// hasKey(obj.dataToUpdate,"membership_type") &&
-                    // "text-red-500 text-red-500 line-through"
                     hasKey(obj.dataToUpdate, "membership_type") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "membership_type") && "text-red-500 line-through"}`,
                     children: [
                       " ",
@@ -24118,6 +24221,28 @@ const TableContentWithChange = ({ data, role, handleApprove, handleReject, showF
             " ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2", children: obj.editStatus })
           ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "No changes" }) }),
+          role === "popup" && /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2 flex gap-2 whitespace-nowrap ", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }),
+            role === "popup" && obj.editStatus === "approved" && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => handleEditable(obj._id), "data-tip": `Editable`, className: `${toolTipClass}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "svg",
+              {
+                xmlns: "http://www.w3.org/2000/svg",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                strokeWidth: 1.5,
+                stroke: "currentColor",
+                className: "w-5 h-5",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "path",
+                  {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    d: "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  }
+                )
+              }
+            ) })
+          ] }),
           role === "verifier" && /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6  py-2 flex justify-center flex-col", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
@@ -30233,7 +30358,7 @@ const VarAdminPop = ({ id: id2, data, Role }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mb-4 items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "", children: [
         "Activity Detail: Verifier  ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `${singleData.editStatus === "approved" ? "text-green-500" : "text-red-500"}`, children: singleData.editStatus }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `${(singleData == null ? void 0 : singleData.editStatus) === "approved" ? "text-green-500" : "text-red-500"}`, children: singleData == null ? void 0 : singleData.editStatus }),
         " This Data "
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setVarAdminPopup(false), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -30258,7 +30383,7 @@ const VarAdminPop = ({ id: id2, data, Role }) => {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "custom-scrollbar  h-fit relative overflow-x-auto shadow-md sm:rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full  text-sm text-center ", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeaders, { role: "popup", dataType: "accepted" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableContentWithChange, { data: singleData ? [singleData] : [] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableContentWithChange, { role: "popup", data: singleData ? [singleData] : [] })
     ] }) })
   ] });
 };
@@ -30845,7 +30970,7 @@ const Data$3 = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     " ",
     /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, {}),
-    openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { form, setForm }) }) }),
+    openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { form, role: "admin", setForm }) }) }),
     showTable ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {

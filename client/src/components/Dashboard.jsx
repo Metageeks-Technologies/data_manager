@@ -11,7 +11,7 @@ const Dashboard = ({ links, admin,role }) => {
   const endpoint = currentURL.split('/').pop();
   console.log(endpoint);
   const navigate = useNavigate();
-  const { toggleExeData,toggleExeDataF, logoutUser, user,setShowTable,showTable, searchBar } =
+  const { toggleExeData,toggleExeDataF,isFiltered, logoutUser, user,setShowTable,showTable, searchBar } =
     useAppContext();
 
   const handleLogout = async () => {
@@ -123,9 +123,10 @@ const Dashboard = ({ links, admin,role }) => {
             <button
             disabled={endpoint==='users' || endpoint==='upload'}
               onClick={() => searchBar(true)}
-              className=" text-white bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
+              className=" text-white relative bg-blue-500 font-medium rounded-md text-sm w-full sm:w-auto block px-5 py-2.5 text-center"
             >
               Search
+           { isFiltered &&  <span className="bg-green-400 absolute top-[2px] right-[2px] rounded-full h-[0.85rem] w-[0.85rem]"></span>  }
             </button>
             <button
               onClick={handleLogout}

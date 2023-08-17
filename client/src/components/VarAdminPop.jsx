@@ -13,9 +13,9 @@ const VarAdminPop = ({ id,data,Role }) => {
   return (
     <div className="bg-white rounded-md shadow-md px-8 py-6 w-[97%]">
       <div className="flex justify-between mb-4 items-center">
-        <h1 className="">Activity Detail: Verifier  <span className={`${singleData.editStatus==="approved"?"text-green-500":"text-red-500"}`}>
+        <h1 className="">Activity Detail: Verifier  <span className={`${singleData?.editStatus==="approved"?"text-green-500":"text-red-500"}`}>
           
-        {singleData.editStatus}
+        {singleData?.editStatus}
           </span> This Data </h1>
         <button onClick={() => setVarAdminPopup(false)}>
           <svg
@@ -37,8 +37,8 @@ const VarAdminPop = ({ id,data,Role }) => {
       <div className="custom-scrollbar  h-fit relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full  text-sm text-center ">
           <TableHeaders role={"popup"} dataType={"accepted"} />
-          <TableContentWithChange data={singleData ?[singleData]:[]} />
-          
+          <TableContentWithChange role={"popup"} data={singleData ?[singleData]:[]} />
+           
         </table>
       </div>
     </div>

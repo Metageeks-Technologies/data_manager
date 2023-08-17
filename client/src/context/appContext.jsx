@@ -57,7 +57,8 @@ import {
   GET_SINGLE_DATA_SUCCESS,
   DELETE_OPTION,
   GET_ALL_ACTIVITY_SUCCESS_VAR,
-  MAKE_DATA_EDITABLE
+  MAKE_DATA_EDITABLE,
+  IS_FILTER_APPLIED
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -107,6 +108,7 @@ export const initialState = {
   activityNumOfPageVar:1,
   activityNumOfPage:1,
   isPageServed:{},
+  isFiltered:false
 
   
 };
@@ -166,10 +168,10 @@ const AppProvider = ({ children }) => {
   const instance = axios.create({
     // to get cookies in browser during development
     
-    // baseURL: "call/api/v1",
+    baseURL: "call/api/v1",
  
     // production
-    baseURL:"/api/v1",
+    // baseURL:"/api/v1",
   });
   
   useEffect(() => {
@@ -208,11 +210,13 @@ const AppProvider = ({ children }) => {
     else dispatch({ type: DECREASE_PAGE });
 
   };
+  const handleFilterApplied = (value)=>{
+    dispatch({type:IS_FILTER_APPLIED,payload:value})
+  }
   
-  
-  const setPage=(num=>{
+  const setPage=(num)=>{
     dispatch({type:SET_PAGE,payload:num});
-  })
+  }
   const getOption = async () => {
     dispatch({ type: API_CALL_BEGIN });
     
@@ -806,7 +810,8 @@ const AppProvider = ({ children }) => {
         deleteOption,
         getAllActivityVar,
         setVarAdminPopup,
-        makeEditable
+        makeEditable,
+        handleFilterApplied
         
       }}
     >

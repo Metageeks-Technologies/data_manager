@@ -1,7 +1,13 @@
-import React ,{useState}from "react";
+import React, { useState } from "react";
 import { useAppContext } from "../context/appContext";
 
-const PaginationAndExport = ({form,fun}) => {
+function containsOnlyNumbers(inputString) {
+  const regex = /^[0-9]+$/;
+  return regex.test(inputString);
+}
+
+
+const PaginationAndExport = ({ form, fun }) => {
   const {
     page,
     numOfPages,
@@ -9,7 +15,10 @@ const PaginationAndExport = ({form,fun}) => {
     isSearched,
     lastFilterQuery,
     exportData,
+    showAlert,
+    setPage
   } = useAppContext();
+  const [customPage,setCustomPage]=useState("");
   const [exporting, setExporting] = useState(false);
   const handleExport = async () => {
     setExporting(true);
@@ -17,20 +26,42 @@ const PaginationAndExport = ({form,fun}) => {
     await exportData(lastFilterQuery);
     setExporting(false);
   };
-  const handleNext=()=>{
+  const handleNext = () => {
     setPageNumber(true);
     console.log(form);
-    fun({...form,page:page+1});
-
-  }
-  const handlePrev=()=>{
+    fun({ ...form, page: page + 1 });
+  };
+  const handlePrev = () => {
     setPageNumber();
-    fun({...form,page:page-1})
-  }
+    fun({ ...form, page: page - 1 });
+  };
+  const handleCustom = () => {
+   console.log( customPage);
+   if(!containsOnlyNumbers(customPage)){
+    showAlert("warn","Invalid Page")
+    return;
+   }
+   const page=Number(customPage);
+   if(page<=0 || page>numOfPages){
+    showAlert("warn","Given page is out of range")
+    return;
+   }
+   setPage(page);
+   fun({...form,page:page}) 
+   setCustomPage("");  
+  };
+  
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleCustom();
+    }
+  };
+
 
   return (
     <div className="flex justify-between items-center gap-[4rem] ">
-      <div >
+      <div className="flex justify-center  items-center">
         <button
           disabled={!numOfPages || page === 1}
           onClick={handlePrev}
@@ -79,6 +110,33 @@ const PaginationAndExport = ({form,fun}) => {
             />
           </svg>
         </button>
+        <div className="flex mb-2 ml-2 w-full px-2 justify-between items-center py-1 border-2 bg-white border-blue-100 rounded-md">
+          <input
+            className="border-none w-[6.5rem] focus:border-none  rounded-sm bg-white py-1 px-1 placeholder-[#b8c5d7] appearance-none focus:outline-none"
+            type="text"
+            name=""
+            placeholder="Enter page"
+            value={customPage}
+            onKeyDown={handleKeyDown}
+            onChange={(e)=>setCustomPage(e.target.value)}
+          />
+          <button onClick={handleCustom}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="#b8c5d7"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
       <p>
         {numOfPages

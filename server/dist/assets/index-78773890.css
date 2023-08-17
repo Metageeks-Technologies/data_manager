@@ -1613,8 +1613,14 @@ video {
 .right-\[2\.5rem\]{
   right: 2.5rem;
 }
+.right-\[2px\]{
+  right: 2px;
+}
 .top-0{
   top: 0px;
+}
+.top-\[2px\]{
+  top: 2px;
 }
 .top-\[6\%\]{
   top: 6%;
@@ -1775,6 +1781,9 @@ video {
 .h-8{
   height: 2rem;
 }
+.h-\[0\.85rem\]{
+  height: 0.85rem;
+}
 .h-\[5\.5rem\]{
   height: 5.5rem;
 }
@@ -1818,8 +1827,14 @@ video {
 .w-9\/12{
   width: 75%;
 }
+.w-\[0\.85rem\]{
+  width: 0.85rem;
+}
 .w-\[23\%\]{
   width: 23%;
+}
+.w-\[6\.5rem\]{
+  width: 6.5rem;
 }
 .w-\[6rem\]{
   width: 6rem;

@@ -51,7 +51,8 @@ import {
     DELETE_OPTION,
     GET_ALL_ACTIVITY_SUCCESS_VAR,
     VAR_ADMIN_POPUP,
-    MAKE_DATA_EDITABLE
+    MAKE_DATA_EDITABLE,
+    IS_FILTER_APPLIED
     
 } from './action'
 
@@ -74,6 +75,12 @@ const reducer =(state,action)=>{
             ...state,
             isLoading:false,           
             toggleExeData:!state.toggleExeData      
+        }
+    }
+    if(action.type===IS_FILTER_APPLIED ){
+        return{   
+            ...state,    
+            isFiltered:action.payload  
         }
     }
     if(action.type===GET_OPTION ){
