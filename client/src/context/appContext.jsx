@@ -58,7 +58,7 @@ import {
   DELETE_OPTION,
   GET_ALL_ACTIVITY_SUCCESS_VAR,
   MAKE_DATA_EDITABLE,
-  IS_FILTER_APPLIED
+  IS_FILTER_APPLIED,
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -87,30 +87,28 @@ export const initialState = {
   isOtpVerified: false,
   yearPicker: null,
   isSearched: false,
-  lastFilterQuery: "",
+  lastFilterQuery: {},
   allActivityByExe: [],
   allActivityByVar: [],
-  singleData:null,
+  singleData: null,
   dri_idOnWhichActionPerformed: "",
   page: 1,
   varPage: 1,
   totalData: 0,
-  numOfPages:1,
-  showTable:false,
-  toggleExeData:false,
-  allowedIPs:[],
-  statusOptions:[],
-  placeOptions:[],
-  memberOptions:[],
-  amcOptions:[],
-  adminPopup:false,
-  varAdminPopup:false,
-  activityNumOfPageVar:1,
-  activityNumOfPage:1,
-  isPageServed:{},
-  isFiltered:false
-
-  
+  numOfPages: 1,
+  showTable: false,
+  toggleExeData: false,
+  allowedIPs: [],
+  statusOptions: [],
+  placeOptions: [],
+  memberOptions: [],
+  amcOptions: [],
+  adminPopup: false,
+  varAdminPopup: false,
+  activityNumOfPageVar: 1,
+  activityNumOfPage: 1,
+  isPageServed: {},
+  isFiltered: false,
 };
 export const showAlert = (type, text) => {
   if (type === "warn") {
@@ -163,17 +161,16 @@ export const showAlert = (type, text) => {
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-
   const [state, dispatch] = useReducer(reducer, initialState);
   const instance = axios.create({
     // to get cookies in browser during development
-    
-    baseURL: "call/api/v1",
- 
+
+    // baseURL: "call/api/v1",
+
     // production
-    // baseURL:"/api/v1",
+    baseURL: "/api/v1",
   });
-  
+
   useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
   }, [instance, state.isAuthenticated]);
@@ -182,19 +179,19 @@ const AppProvider = ({ children }) => {
   };
 
   const setInitialPag = () => {
-    dispatch({ type: INITIAL_PAGINATION});
+    dispatch({ type: INITIAL_PAGINATION });
   };
   const setAdminPopup = (val) => {
-    dispatch({ type: ADMIN_POPUP,payload:val});
+    dispatch({ type: ADMIN_POPUP, payload: val });
   };
   const setVarAdminPopup = (val) => {
-    dispatch({ type: VAR_ADMIN_POPUP,payload:val});
+    dispatch({ type: VAR_ADMIN_POPUP, payload: val });
   };
   const toggleExeDataF = () => {
-    dispatch({ type: TOGGLE_EXE_DATA});
+    dispatch({ type: TOGGLE_EXE_DATA });
   };
   const setShowTable = (val) => {
-    dispatch({ type: SET_SHOW_TABLE,payload:val});
+    dispatch({ type: SET_SHOW_TABLE, payload: val });
   };
   const setDriId = (id) => {
     dispatch({ type: DRI_ID, payload: id });
@@ -208,19 +205,17 @@ const AppProvider = ({ children }) => {
   const setPageNumber = (increase) => {
     if (increase) dispatch({ type: INCREASE_PAGE });
     else dispatch({ type: DECREASE_PAGE });
-
   };
-  const handleFilterApplied = (value)=>{
-    dispatch({type:IS_FILTER_APPLIED,payload:value})
-  }
-  
-  const setPage=(num)=>{
-    dispatch({type:SET_PAGE,payload:num});
-  }
+  const handleFilterApplied = (value) => {
+    dispatch({ type: IS_FILTER_APPLIED, payload: value });
+  };
+
+  const setPage = (num) => {
+    dispatch({ type: SET_PAGE, payload: num });
+  };
   const getOption = async () => {
     dispatch({ type: API_CALL_BEGIN });
-    
-    
+
     try {
       const { data } = await instance.get(`/option/getOption`);
 
@@ -228,7 +223,6 @@ const AppProvider = ({ children }) => {
         type: GET_OPTION,
         payload: data,
       });
-      
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
       console.log(error);
@@ -237,9 +231,9 @@ const AppProvider = ({ children }) => {
   const addOption = async (obj) => {
     dispatch({ type: API_CALL_BEGIN });
     console.log(obj);
-    
+
     try {
-      const { data } = await instance.post(`/option/addOption`,obj);
+      const { data } = await instance.post(`/option/addOption`, obj);
 
       dispatch({
         type: ADD_OPTION,
@@ -254,7 +248,7 @@ const AppProvider = ({ children }) => {
   const deleteOption = async (value) => {
     dispatch({ type: API_CALL_BEGIN });
     // console.log(obj);
-    
+
     try {
       const { data } = await instance.delete(`/option/deleteOption/${value}`);
 
@@ -271,7 +265,7 @@ const AppProvider = ({ children }) => {
   const AddIP = async (obj) => {
     dispatch({ type: API_CALL_BEGIN });
     console.log(obj);
-    
+
     try {
       const { data } = await instance.post(`/ip/addIP`, obj);
 
@@ -326,12 +320,14 @@ const AppProvider = ({ children }) => {
       showAlert("error", error.message || "something went wrong try again");
     }
   };
-  const getAllActivity = async (userRole,page) => {
+  const getAllActivity = async (userRole, page) => {
     // if(initialState.isPageServed) return ;
 
     dispatch({ type: API_CALL_BEGIN });
     try {
-      const { data } = await instance(`/activity/getAllActivity?userRole=${userRole}&page=${page}`);
+      const { data } = await instance(
+        `/activity/getAllActivity?userRole=${userRole}&page=${page}`
+      );
       dispatch({
         type: GET_ALL_ACTIVITY_SUCCESS,
         payload: data,
@@ -343,10 +339,12 @@ const AppProvider = ({ children }) => {
       showAlert("error", error.message || "something went wrong try again");
     }
   };
-  const getAllActivityVar = async (userRole,page) => {
+  const getAllActivityVar = async (userRole, page) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
-      const { data } = await instance(`/activity/getAllActivity?userRole=${userRole}&page=${page}`);
+      const { data } = await instance(
+        `/activity/getAllActivity?userRole=${userRole}&page=${page}`
+      );
       dispatch({
         type: GET_ALL_ACTIVITY_SUCCESS_VAR,
         payload: data,
@@ -467,7 +465,7 @@ const AppProvider = ({ children }) => {
       console.log(error);
     }
   };
-  const getSingleData=async (id)=>{
+  const getSingleData = async (id) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(`/getSingleData/${id}`);
@@ -477,9 +475,9 @@ const AppProvider = ({ children }) => {
         payload: data,
       });
     } catch (err) {
-      dispatch({type:API_CALL_FAIL});
+      dispatch({ type: API_CALL_FAIL });
     }
-  }
+  };
   const getAllVarData = async (queryObject) => {
     // let {status,place,date,customerName,editStatus,dri_id,appNumber,amc,company,membership_type,acceptance,page}=queryObject;
     let {
@@ -494,7 +492,7 @@ const AppProvider = ({ children }) => {
       amc = "All",
       acceptance = "accepted",
       editStatus = "pending",
-      page=1,
+      page = 1,
     } = queryObject;
     customerName = customerName?.toUpperCase();
     dispatch({ type: API_CALL_BEGIN });
@@ -502,15 +500,17 @@ const AppProvider = ({ children }) => {
       const { data } = await instance(
         `/getData?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
       );
-      dispatch({ type: GET_ALL_VAR_DATA_SUCCESS, payload: { data, queryObject } });
+      dispatch({
+        type: GET_ALL_VAR_DATA_SUCCESS,
+        payload: { data, queryObject },
+      });
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
     }
   };
   const getAllDeletedData = async (queryObject) => {
     console.log("getALLdeted Called");
-    
-   
+
     let {
       status = "All",
       place = "All",
@@ -523,7 +523,7 @@ const AppProvider = ({ children }) => {
       amc = "All",
       membership_type = "All",
       acceptance = "deleted",
-      page=1,
+      page = 1,
     } = queryObject;
 
     customerName = customerName?.toUpperCase();
@@ -534,14 +534,16 @@ const AppProvider = ({ children }) => {
       );
       console.log(data);
 
-      dispatch({ type: GET_ALL_DELETED_DATA_SUCCESS, payload: { data, queryObject } });
+      dispatch({
+        type: GET_ALL_DELETED_DATA_SUCCESS,
+        payload: { data, queryObject },
+      });
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
       console.log(error);
     }
   };
   const exportData = async (queryObject) => {
-    
     let {
       status = "All",
       place = "All",
@@ -557,7 +559,6 @@ const AppProvider = ({ children }) => {
     } = queryObject;
     customerName = customerName.toUpperCase();
     try {
-     
       const response = await instance(
         `/export?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`,
         {
@@ -584,7 +585,7 @@ const AppProvider = ({ children }) => {
       link.remove();
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
-      alert("error")
+      alert("error");
       console.log(error);
     }
   };
@@ -724,11 +725,9 @@ const AppProvider = ({ children }) => {
   };
   // VERIFIER
   const getAllEditRequest = async (queryObject) => {
-  //  const {status,page}=queryObject;
-   
-    dispatch({ type: API_CALL_BEGIN });
+    //  const {status,page}=queryObject;
 
-    
+    dispatch({ type: API_CALL_BEGIN });
   };
   const approveEditRequest = async (id) => {
     dispatch({ type: API_CALL_BEGIN });
@@ -762,11 +761,9 @@ const AppProvider = ({ children }) => {
   };
   // initial app load
   useEffect(() => {
-    
     // getAllActivity("executive",1);
     getCurrUser();
     getOption();
-    
   }, []);
   return (
     <AppContext.Provider
@@ -802,7 +799,9 @@ const AppProvider = ({ children }) => {
         setPage,
         setInitialPag,
         toggleExeDataF,
-        getAllIPs,AddIP,deleteIP,
+        getAllIPs,
+        AddIP,
+        deleteIP,
         getOption,
         addOption,
         setAdminPopup,
@@ -811,8 +810,7 @@ const AppProvider = ({ children }) => {
         getAllActivityVar,
         setVarAdminPopup,
         makeEditable,
-        handleFilterApplied
-        
+        handleFilterApplied,
       }}
     >
       {children}

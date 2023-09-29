@@ -13,11 +13,11 @@ import TableHeaders from "./TableHeaders";
 import TableContent from "./TableContent";
 import PaginationAndExport from "./PaginationAndExport";
 import EditExeData from "./EditExeData";
-import IP from './IP';
+import IP from "./IP";
 import AdminPop from "./AdminPop";
 import TableContentWithChange from "./TableContentWithChange";
-import VarTimeLiner from './VarTimeLiner'
-import ExeTimeLiner from './ExeTime' 
+import VarTimeLiner from "./VarTimeLiner";
+import ExeTimeLiner from "./ExeTime";
 
 export {
   IP,
@@ -40,7 +40,4 @@ export {
   EditExeData,
   VarTimeLiner,
   ExeTimeLiner,
-
-
-
 };

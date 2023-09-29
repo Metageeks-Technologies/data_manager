@@ -8,6 +8,9 @@ import {
   getSingleData,
   changeAcceptance,
   exportFile,
+  getAutoCompleteCustomerName,
+  getAutoCompleteAppNumber,
+  getAutoCompleteDriId,
 } from "../controllers/mainDataControllers.js";
 import MainData from "../models/MainData.js";
 
@@ -29,9 +32,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // router
-router.get("/main",async(req,res)=>{
-  res.send(await MainData.find({}))
-})
+router.get("/main", async (req, res) => {
+  res.send(await MainData.find({}));
+});
 // router.get("/edit",async(req,res)=>{
 //   res.send(await UpdateData.find({}))
 // })
@@ -44,8 +47,8 @@ router.get("/main",async(req,res)=>{
 //     const update = await MainData.findOneAndUpdate({dri_id:doc.dri_id},{address:doc.address,
 //       officePhone:doc.officePhone,
 //       profession:doc.profession,
-//       residentialPhone:doc.residentialPhone, 
-    
+//       residentialPhone:doc.residentialPhone,
+
 //     })
 //     console.log("Updated",i);
 //   })
@@ -58,7 +61,7 @@ router.get("/main",async(req,res)=>{
 //   res.send(result)
 // })
 // router.get("/reset",async(req,res)=>{
-  
+
 // await MainData.deleteMany({}).then(console.log);
 // await UpdateData.deleteMany({}).then(console.log);
 // res.send("success")
@@ -75,7 +78,10 @@ router.route("/getData").get(isAuthenticatedUser, getData);
 router.route("/deleteData").patch(changeAcceptance);
 // router.route("/getDataList").get(getDataList);
 router.route("/export").get(exportFile);
-router.route("/getSingleData/:id").get(getSingleData);
+// router.route("/customerName").get(getAutoCompleteCustomerName);
+// router.route("/appNumber").get(getAutoCompleteAppNumber);
+// router.route("/driId").get(getAutoCompleteDriId);
 
+router.route("/getSingleData/:id").get(getSingleData);
 
 export default router;
