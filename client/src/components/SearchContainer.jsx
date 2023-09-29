@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 
 import { editStatusOption, yearsOption } from "../utils/options";
-import AutocompleteSearch from "./AutocompleteSearch";
 const SearchContainer = ({ form, setForm, role }) => {
   const {
     handleFilterApplied,
