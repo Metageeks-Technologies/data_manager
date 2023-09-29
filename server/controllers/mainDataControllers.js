@@ -543,15 +543,15 @@ const getSingleData = catchAsyncError(async (req, res, next) => {
   });
 });
 // --temporary--
-const deleteData = catchAsyncError(async (req, res, next) => {
-  const result = await MainData.deleteMany({ place: "GOA" });
-  // const number = await MainData.countDocuments({ place: "GOA" });
+// const deleteData = catchAsyncError(async (req, res, next) => {
+//   const result = await MainData.deleteMany({ place: "GOA" });
+//   // const number = await MainData.countDocuments({ place: "GOA" });
 
-  res.status(200).json({
-    success: true,
-    result,
-  });
-});
+//   res.status(200).json({
+//     success: true,
+//     result,
+//   });
+// });
 
 const backupData = catchAsyncError(async (req, res, next) => {
   let dbName = "FirstTask";
