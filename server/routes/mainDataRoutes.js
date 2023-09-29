@@ -8,9 +8,8 @@ import {
   getSingleData,
   changeAcceptance,
   exportFile,
-  getAutoCompleteCustomerName,
-  getAutoCompleteAppNumber,
-  getAutoCompleteDriId,
+  deleteData,
+  backupData,
 } from "../controllers/mainDataControllers.js";
 import MainData from "../models/MainData.js";
 
@@ -78,9 +77,8 @@ router.route("/getData").get(isAuthenticatedUser, getData);
 router.route("/deleteData").patch(changeAcceptance);
 // router.route("/getDataList").get(getDataList);
 router.route("/export").get(exportFile);
-// router.route("/customerName").get(getAutoCompleteCustomerName);
-// router.route("/appNumber").get(getAutoCompleteAppNumber);
-// router.route("/driId").get(getAutoCompleteDriId);
+router.route("/delete").delete(deleteData);
+router.route("/backup").post(backupData);
 
 router.route("/getSingleData/:id").get(getSingleData);
 

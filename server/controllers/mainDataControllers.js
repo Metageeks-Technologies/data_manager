@@ -2,6 +2,7 @@ import catchAsyncError from "../middleware/catchAsyncError.js";
 import MainData from "../models/MainData.js";
 import XLSX from "xlsx";
 import fs from "fs";
+import { exec } from "child_process";
 
 import writeXlsxFile from "write-excel-file/node";
 import { type } from "os";
@@ -541,6 +542,38 @@ const getSingleData = catchAsyncError(async (req, res, next) => {
     data,
   });
 });
+// --temporary--
+const deleteData = catchAsyncError(async (req, res, next) => {
+  const result = await MainData.deleteMany({ place: "GOA" });
+  // const number = await MainData.countDocuments({ place: "GOA" });
+
+  res.status(200).json({
+    success: true,
+    result,
+  });
+});
+
+const backupData = catchAsyncError(async (req, res, next) => {
+  let dbName = "FirstTask";
+
+  // Replace output_path with your desired output path
+  let outputPath = "/output";
+
+  exec(
+    `mongodump --db ${dbName} --out ${outputPath}`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`Error: ${error.message}`);
+        res.status(500).json({ message: error.message, from: "error" });
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        res.status(500).json({ message: stderr, from: "stderr" });
+      }
+      console.log(`stdout: ${stdout}`);
+    }
+  );
+});
 
 const getAutoCompleteCustomerName = catchAsyncError(async (req, res, next) => {
   const result = await MainData.aggregate([
@@ -598,9 +631,8 @@ const getAutoCompleteDriId = catchAsyncError(async (req, res, next) => {
 });
 
 export {
-  getAutoCompleteAppNumber,
-  getAutoCompleteDriId,
-  getAutoCompleteCustomerName,
+  backupData,
+  deleteData,
   upload,
   getSingleData,
   getData,
