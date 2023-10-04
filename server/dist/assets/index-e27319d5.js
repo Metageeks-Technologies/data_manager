@@ -31160,7 +31160,8 @@ const Data$3 = () => {
     setPage,
     isSearchedHandler,
     user,
-    showTable
+    showTable,
+    lastFilterQuery
   } = useAppContext();
   const [form, setForm] = reactExports.useState({
     status: "All",
@@ -31181,8 +31182,13 @@ const Data$3 = () => {
     };
   }, []);
   reactExports.useEffect(() => {
-    if (user)
-      getAllData({ acceptance: "accepted", page });
+    getAllData({ acceptance: "accepted", page });
+  }, []);
+  reactExports.useEffect(() => {
+    if (isSearched) {
+      console.log("here is initial render");
+      getAllData({ ...lastFilterQuery });
+    }
   }, [toggleAction]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     " ",

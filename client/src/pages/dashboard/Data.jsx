@@ -40,6 +40,7 @@ const Data = () => {
     isSearchedHandler,
     user,
     showTable,
+    lastFilterQuery,
   } = useAppContext();
   const [form, setForm] = useState({
     status: "All",
@@ -59,8 +60,16 @@ const Data = () => {
       isSearchedHandler(false);
     };
   }, []);
+
   useEffect(() => {
-    if (user) getAllData({ acceptance: "accepted", page: page });
+    getAllData({ acceptance: "accepted", page: page });
+  }, []);
+  useEffect(() => {
+    if (isSearched) {
+      console.log("here is initial render");
+
+      getAllData({ ...lastFilterQuery });
+    }
   }, [toggleAction]);
 
   return (
