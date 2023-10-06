@@ -41,7 +41,6 @@ const SearchContainer = ({ form, setForm, role }) => {
     setForm((prevState) => ({
       ...prevState,
       dri_id: "",
-      customerName: "",
       appNumber: "",
     }));
 

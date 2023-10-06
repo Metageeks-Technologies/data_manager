@@ -12434,7 +12434,6 @@ const SearchContainer = ({ form, setForm, role }) => {
     setForm((prevState) => ({
       ...prevState,
       dri_id: "",
-      customerName: "",
       appNumber: ""
     }));
     if (form.status === "All" && form.place === "All" && form.membership_type === "All" && form.date === "All" && form.amc === "All") {
