@@ -107,6 +107,27 @@ const makeEditable = catchAsyncError(async (req, res, next) => {
     data,
   });
 });
+const makeEditableBulk = catchAsyncError(async (req, res, next) => {
+  const { ids } = req.body;
+
+  const dataItems = await MainData.find({ _id: { $in: ids } });
+
+  if (!dataItems.length) {
+    return next(new ErrorHandler("Data not found", 404));
+  }
+
+  const updatePromises = dataItems.map((data) => {
+    data.editStatus = "unchanged";
+    return data.save();
+  });
+
+  await Promise.all(updatePromises);
+
+  res.status(200).json({
+    success: true,
+    message: "Data updated Successfully",
+  });
+});
 const approveEdit = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
 
@@ -136,4 +157,11 @@ const approveEdit = catchAsyncError(async (req, res, next) => {
   });
 });
 
-export { editData, makeEditable, allEditedData, rejectEdit, approveEdit };
+export {
+  editData,
+  makeEditable,
+  allEditedData,
+  rejectEdit,
+  approveEdit,
+  makeEditableBulk,
+};

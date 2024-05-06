@@ -22,6 +22,11 @@ const upload = catchAsyncError(async (req, res, next) => {
       console.log("yes txt");
       return uploadText(req, res, next);
     }
+    if (fileArr[fileArr.length - 2] === "_extension") {
+      console.log("yes _extension");
+
+      return uploadExtension(req, res, next);
+    }
 
     // console.log("Converting to json!", req.file);
 
@@ -260,6 +265,80 @@ const uploadText = catchAsyncError(async (req, res) => {
         console.log("Error occurred for", i);
       }
     });
+    res.status(200).json({
+      success: true,
+      message: "File uploaded successfully! Data will be updated shortly",
+    });
+
+    // Update the documents in the collection
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error occurred while uploading the file",
+    });
+  }
+});
+const uploadExtension = catchAsyncError(async (req, res, next) => {
+  try {
+    console.log(req.file, "here");
+    const file = req.file;
+    const workbook = XLSX.readFile(file.path);
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+    const batchSize = 500;
+    let batchData = [];
+    let insertedCount = 0;
+    let temp = 0;
+    if (jsonData) {
+      for (const row of jsonData) {
+        if (row.hasOwnProperty("DRI_ID") && row["AMC Letter Status"]) {
+          row["DRI_ID"] = row["DRI_ID"].replace(/\s/g, "");
+
+          if (row["AMC Letter Status"])
+            row["AMC Letter Status"] = row["AMC Letter Status"]
+              .toString()
+              .replace(/\s/g, "");
+
+          const documentData = {
+            dri_id: row["DRI_ID"],
+            amcLetterStatus: row["AMC Letter Status"],
+          };
+
+          batchData.push(documentData);
+          if (batchData.length === batchSize) {
+            console.log("Inserting batch!");
+
+            await Promise.all(
+              batchData.map((documentData) =>
+                MainData.updateOne(
+                  { dri_id: documentData.dri_id },
+                  { amcLetterStatus: documentData.amcLetterStatus }
+                )
+              )
+            );
+            insertedCount += batchData.length;
+            batchData = [];
+          }
+        }
+      }
+      if (batchData.length > 0) {
+        await Promise.all(
+          batchData.map((documentData) =>
+            MainData.updateOne(
+              { dri_id: documentData.dri_id },
+              { amcLetterStatus: documentData.amcLetterStatus }
+            )
+          )
+        );
+        insertedCount += batchData.length;
+      }
+    }
+
+    console.log(insertedCount);
+
     res.status(200).json({
       success: true,
       message: "File uploaded successfully! Data will be updated shortly",
@@ -565,6 +644,30 @@ const backupData = catchAsyncError(async (req, res, next) => {
   );
 });
 
+const changeAcceptanceBulk = catchAsyncError(async (req, res, next) => {
+  const { ids } = req.body;
+
+  const dataItems = await MainData.find({ _id: { $in: ids } });
+
+  if (!dataItems.length) {
+    return next(new ErrorHandler("Data not found", 404));
+  }
+
+  const updatePromises = dataItems.map((data) => {
+    if (data.acceptance === "accepted") {
+      data.acceptance = "deleted";
+    } else data.acceptance = "accepted";
+    return data.save();
+  });
+
+  await Promise.all(updatePromises);
+
+  res.status(200).json({
+    success: true,
+    message: "Data updated Successfully",
+  });
+});
+
 const getAutoCompleteCustomerName = catchAsyncError(async (req, res, next) => {
   const result = await MainData.aggregate([
     {
@@ -627,5 +730,6 @@ export {
   getData,
   uploadText,
   exportFile,
+  changeAcceptanceBulk,
   changeAcceptance,
 };

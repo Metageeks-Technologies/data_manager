@@ -9,6 +9,7 @@ import {
   changeAcceptance,
   exportFile,
   backupData,
+  changeAcceptanceBulk,
 } from "../controllers/mainDataControllers.js";
 import MainData from "../models/MainData.js";
 
@@ -74,11 +75,9 @@ router.get("/main", async (req, res) => {
 router.route("/upload").post(upload.single("file"), uploadMainData);
 router.route("/getData").get(isAuthenticatedUser, getData);
 router.route("/deleteData").patch(changeAcceptance);
-// router.route("/getDataList").get(getDataList);
+router.route("/deleteMany").patch(changeAcceptanceBulk);
 router.route("/export").get(exportFile);
-
 router.route("/backup").post(backupData);
-
 router.route("/getSingleData/:id").get(getSingleData);
 
 export default router;
