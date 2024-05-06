@@ -18,6 +18,8 @@ import AdminPop from "./AdminPop";
 import TableContentWithChange from "./TableContentWithChange";
 import VarTimeLiner from "./VarTimeLiner";
 import ExeTimeLiner from "./ExeTime";
+import DeletePopup from "./DeletePopup";
+import EditablePopup from "./EditablePopup";
 
 export {
   IP,
@@ -40,4 +42,6 @@ export {
   EditExeData,
   VarTimeLiner,
   ExeTimeLiner,
+  DeletePopup,
+  EditablePopup,
 };

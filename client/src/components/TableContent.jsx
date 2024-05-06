@@ -9,11 +9,17 @@ import { useAppContext } from "../context/appContext";
 dayjs.extend(localizedFormat);
 // 0604A002255
 const TableContent = ({ data, role, dataType, showForm }) => {
-
-  const { makeEditable ,page} = useAppContext();
-  const handleEditable=(id)=>{
+  const {
+    makeEditable,
+    page,
+    selectedData,
+    mainData,
+    unselectData,
+    selectData,
+  } = useAppContext();
+  const handleEditable = (id) => {
     makeEditable(id);
-  }
+  };
   const color = (cl) => {
     if (cl === "unchanged") return;
     if (cl == "pending") return "text-yellow-500";
@@ -24,7 +30,7 @@ const TableContent = ({ data, role, dataType, showForm }) => {
   return (
     <tbody>
       {data &&
-        data.map((obj,index) => {
+        data.map((obj, index) => {
           const yearsCountTillNow =
             new Date().getFullYear() - parseInt(obj?.date?.split("-")[0]);
           const afterFeesDeduction_99 = Math.round(
@@ -34,9 +40,30 @@ const TableContent = ({ data, role, dataType, showForm }) => {
           const afterFeesDeduction_33 = Math.round(
             obj?.deposit - (obj?.deposit / 33) * yearsCountTillNow
           );
-          const serialNum=(page-1)*8 +(index+1);
+          const serialNum = (page - 1) * 8 + (index + 1);
           return (
             <tr key={obj._id} className="bg-white border-b dark:bg-gray-100 ">
+              {role === "admin" && (
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  <input
+                    id="row-checkbox"
+                    type="checkbox"
+                    value={obj._id.toString()}
+                    checked={selectedData.some((el) => el._id === obj._id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        selectData(obj);
+                      } else {
+                        unselectData(obj._id);
+                      }
+                    }}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </th>
+              )}
               <td className="px-6 py-2">{serialNum}</td>
               <td
                 scope="row"
@@ -73,6 +100,8 @@ const TableContent = ({ data, role, dataType, showForm }) => {
 
               <td className="px-6 py-2">{obj.CSV - obj.deposit}</td>
               <td className="px-6 py-2">{yearsCountTillNow || "-"}</td>
+              <td className="px-6 py-2">{obj.amcLetterStatus || "-"}</td>
+              <td className="px-6 py-2">{obj.membershipStatus || "-"}</td>
               <td className="px-6 py-2">
                 {obj.afterFeesDeduction99based || "-"}
               </td>
@@ -104,8 +133,12 @@ const TableContent = ({ data, role, dataType, showForm }) => {
               {(role === "executive" || role === "admin") && (
                 <td className="px-6 py-[1.1rem] capitalize flex gap-2">
                   <p className={color(obj.editStatus)}>{obj.editStatus}</p>
-                  {(role === "admin" && obj.editStatus==="approved") && (
-                    <button onClick={()=>handleEditable(obj._id)} data-tip={`Editable`} className={`${toolTipClass}`} >
+                  {role === "admin" && obj.editStatus === "approved" && (
+                    <button
+                      onClick={() => handleEditable(obj._id)}
+                      data-tip={`Editable`}
+                      className={`${toolTipClass}`}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -130,6 +163,5 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     </tbody>
   );
 };
-
 
 export default TableContent;

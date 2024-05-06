@@ -383,6 +383,42 @@ const TableContentWithChange = ({
               <td className="px-6 py-2 text-center">
                 {yearsCountTillNow || "-"}
               </td>
+              <td className="px-6 py-2">
+                <p
+                  className={`${
+                    hasKey(obj.dataToUpdate, "amcLetterStatus") &&
+                    obj.editStatus === "approved"
+                      ? "hidden"
+                      : hasKey(obj.dataToUpdate, "amcLetterStatus") &&
+                        "text-red-500 line-through"
+                  }`}
+                >
+                  {obj.amcLetterStatus}
+                </p>
+                {hasKey(obj.dataToUpdate, "amcLetterStatus") && (
+                  <p className="text-blue-600">
+                    {obj.dataToUpdate.amcLetterStatus}
+                  </p>
+                )}
+              </td>
+              <td className="px-6 py-2">
+                <p
+                  className={`${
+                    hasKey(obj.dataToUpdate, "membershipStatus") &&
+                    obj.editStatus === "approved"
+                      ? "hidden"
+                      : hasKey(obj.dataToUpdate, "membershipStatus") &&
+                        "text-red-500 line-through"
+                  }`}
+                >
+                  {obj.membershipStatus}
+                </p>
+                {hasKey(obj.dataToUpdate, "membershipStatus") && (
+                  <p className="text-blue-600">
+                    {obj.dataToUpdate.membershipStatus}
+                  </p>
+                )}
+              </td>
               {/* <td className="px-6 py-2 text-center">{afterFeesDeduction__99based || "-"}</td> */}
               {/* <td className="px-6 py-2 text-center">{afterFeesDeduction__33based || "-"}</td> */}
               <td className="px-6 py-2">

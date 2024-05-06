@@ -10,6 +10,8 @@ function EditForm({ setShow, dataId, varData }) {
     amcOptions,
     statusOptions,
     memberOptions,
+    memberStatusOptions,
+    amcStatusOptions,
     editData,
     makeActivity,
     user,
@@ -29,7 +31,7 @@ function EditForm({ setShow, dataId, varData }) {
     amc: data?.amc || "",
     customerName: data?.customerName || "",
     CSV: data?.CSV || "",
-    lastCommunication: "",
+    lastCommunication: data?.lastCommunication || "",
     deposit: data?.deposit || "",
     status: data?.status || "",
     dri_id: data?.dri_id || "",
@@ -38,7 +40,9 @@ function EditForm({ setShow, dataId, varData }) {
     residentialPhone: data?.residentialPhone || "",
     officePhone: data?.officePhone || "",
     profession: data?.profession || "",
-    adlf: "",
+    adlf: data?.adlf || "",
+    amcLetterStatus: data?.amcLetterStatus || "",
+    membershipStatus: data?.membershipStatus || "",
   });
 
   const handleInputChange = (e) => {
@@ -347,6 +351,48 @@ function EditForm({ setShow, dataId, varData }) {
                       option.toLowerCase() !== data.status.toLowerCase()
                   ),
                 ].map((data) => {
+                  return (
+                    <option key={data} value={data}>
+                      {data}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            {/*amc letter status */}
+            <div className="flex flex-col mb-4">
+              <label htmlFor="status" className="text-xs mb-1 ">
+                AMC Letter Status:
+              </label>
+              <select
+                id="amcLetterStatus"
+                name="amcLetterStatus"
+                value={form.amcLetterStatus}
+                onChange={handleInputChange}
+                className="border border-gray-400 p-1 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {["Select", ...amcStatusOptions].map((data) => {
+                  return (
+                    <option key={data} value={data}>
+                      {data}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            {/*membership status */}
+            <div className="flex flex-col mb-4">
+              <label htmlFor="status" className="text-xs mb-1 ">
+                Membership Status:
+              </label>
+              <select
+                id="membershipStatus"
+                name="membershipStatus"
+                value={form.membershipStatus}
+                onChange={handleInputChange}
+                className="border border-gray-400 p-1 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {["Select", ...memberStatusOptions].map((data) => {
                   return (
                     <option key={data} value={data}>
                       {data}

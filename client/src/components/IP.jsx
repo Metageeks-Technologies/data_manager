@@ -18,7 +18,11 @@ const OptionList = ({ items, fun, isForIP, submitFun, forOption }) => {
     else if (forOption === "Status") submitFun({ status: inputValue });
     else if (forOption === "Membership Type")
       submitFun({ membership_type: inputValue });
-    else if (forOption === "amc") submitFun({ amc: inputValue });
+    else if (forOption === "Amc") submitFun({ amc: inputValue });
+    else if (forOption === "Amc letter status")
+      submitFun({ amcLetterStatus: inputValue });
+    else if (forOption === "Member ship status")
+      submitFun({ membershipStatus: inputValue });
 
     setInputValue("");
   };
@@ -120,6 +124,8 @@ const Sidebar = () => {
     statusOptions,
     placeOptions,
     memberOptions,
+    memberStatusOptions,
+    amcStatusOptions,
   } = useAppContext();
   useEffect(() => {
     getAllIPs();
@@ -161,7 +167,9 @@ const Sidebar = () => {
     "Place",
     "Status",
     "Membership Type",
-    "amc",
+    "Amc",
+    "Amc letter status",
+    "Member ship status",
   ];
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
@@ -201,6 +209,18 @@ const Sidebar = () => {
       PropsForOption.fun = deleteOption;
       PropsForOption.submitFun = addOption;
       PropsForOption.forOption = options[5];
+    } else if (selectedOption === options[6]) {
+      PropsForOption.items = amcStatusOptions;
+      PropsForOption.isForIP = false;
+      PropsForOption.fun = deleteOption;
+      PropsForOption.submitFun = addOption;
+      PropsForOption.forOption = options[6];
+    } else if (selectedOption === options[7]) {
+      PropsForOption.items = memberStatusOptions;
+      PropsForOption.isForIP = false;
+      PropsForOption.fun = deleteOption;
+      PropsForOption.submitFun = addOption;
+      PropsForOption.forOption = options[7];
     }
   }
 

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useAppContext } from "../context/appContext";
+import Loader from "./Loader";
 
 function containsOnlyNumbers(inputString) {
   const regex = /^[0-9]+$/;
   return regex.test(inputString);
 }
 
-
-const PaginationAndExport = ({ form, fun }) => {
+const PaginationAndExport = ({ form, fun, role }) => {
   const {
     page,
     numOfPages,
@@ -16,9 +16,13 @@ const PaginationAndExport = ({ form, fun }) => {
     lastFilterQuery,
     exportData,
     showAlert,
-    setPage
+    setPage,
+    setShowDeletePopup,
+    setShowEditPopup,
+    mainData,
+    selectedData,
   } = useAppContext();
-  const [customPage,setCustomPage]=useState("");
+  const [customPage, setCustomPage] = useState("");
   const [exporting, setExporting] = useState(false);
   const handleExport = async () => {
     setExporting(true);
@@ -36,28 +40,26 @@ const PaginationAndExport = ({ form, fun }) => {
     fun({ ...form, page: page - 1 });
   };
   const handleCustom = () => {
-   console.log( customPage);
-   if(!containsOnlyNumbers(customPage)){
-    showAlert("warn","Invalid Page")
-    return;
-   }
-   const page=Number(customPage);
-   if(page<=0 || page>numOfPages){
-    showAlert("warn","Given page is out of range")
-    return;
-   }
-   setPage(page);
-   fun({...form,page:page}) 
-   setCustomPage("");  
+    console.log(customPage);
+    if (!containsOnlyNumbers(customPage)) {
+      showAlert("warn", "Invalid Page");
+      return;
+    }
+    const page = Number(customPage);
+    if (page <= 0 || page > numOfPages) {
+      showAlert("warn", "Given page is out of range");
+      return;
+    }
+    setPage(page);
+    fun({ ...form, page: page });
+    setCustomPage("");
   };
-  
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleCustom();
     }
   };
-
 
   return (
     <div className="flex justify-between items-center gap-[4rem] ">
@@ -118,7 +120,7 @@ const PaginationAndExport = ({ form, fun }) => {
             placeholder="Enter page"
             value={customPage}
             onKeyDown={handleKeyDown}
-            onChange={(e)=>setCustomPage(e.target.value)}
+            onChange={(e) => setCustomPage(e.target.value)}
           />
           <button onClick={handleCustom}>
             <svg
@@ -137,6 +139,25 @@ const PaginationAndExport = ({ form, fun }) => {
             </svg>
           </button>
         </div>
+        {role === "admin" && mainData.length > 0 && selectedData.length > 0 ? (
+          <button
+            onClick={() => setShowDeletePopup(true)}
+            className=" text-white bg-red-500 whitespace-nowrap font-medium rounded-md text-sm w-full block px-3 mb-2 ml-2 py-2.5 text-center"
+          >
+            {"Delete Selected"}
+          </button>
+        ) : null}
+        {role === "admin" &&
+        lastFilterQuery?.editStatus === "approved" &&
+        mainData.length > 0 &&
+        selectedData.length > 0 ? (
+          <button
+            onClick={() => setShowEditPopup(true)}
+            className=" text-white bg-blue-500 whitespace-nowrap font-medium rounded-md text-sm w-full block px-3 mb-2 ml-2 py-2.5 text-center"
+          >
+            {"Edit Selection"}
+          </button>
+        ) : null}
       </div>
       <p>
         {numOfPages

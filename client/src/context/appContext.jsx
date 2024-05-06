@@ -59,6 +59,9 @@ import {
   GET_ALL_ACTIVITY_SUCCESS_VAR,
   MAKE_DATA_EDITABLE,
   IS_FILTER_APPLIED,
+  SELECT_ALL_DATA,
+  SELECT_DATA,
+  UNSELECT_DATA,
 } from "./action";
 import React, { useReducer, useContext, useEffect, useState } from "react";
 
@@ -103,12 +106,15 @@ export const initialState = {
   placeOptions: [],
   memberOptions: [],
   amcOptions: [],
+  amcStatusOptions: [],
+  memberStatusOptions: [],
   adminPopup: false,
   varAdminPopup: false,
   activityNumOfPageVar: 1,
   activityNumOfPage: 1,
   isPageServed: {},
   isFiltered: false,
+  selectedData: [],
 };
 export const showAlert = (type, text) => {
   if (type === "warn") {
@@ -165,11 +171,14 @@ const AppProvider = ({ children }) => {
   const instance = axios.create({
     // to get cookies in browser during development
 
-    // baseURL: "call/api/v1",
+    baseURL: "call/api/v1",
 
     // production
-    baseURL: "/api/v1",
+    // baseURL: "/api/v1",
   });
+
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
 
   useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
@@ -178,6 +187,18 @@ const AppProvider = ({ children }) => {
     dispatch({ type: SET_FILE, payload: file });
   };
 
+  const selectData = (id) => {
+    dispatch({ type: SELECT_DATA, payload: id });
+  };
+  const unselectData = (id) => {
+    dispatch({ type: UNSELECT_DATA, payload: id });
+  };
+  const selectAllData = (dataArr) => {
+    dispatch({ type: SELECT_ALL_DATA, payload: dataArr });
+  };
+  const unselectAllData = () => {
+    dispatch({ type: SELECT_ALL_DATA, payload: [] });
+  };
   const setInitialPag = () => {
     dispatch({ type: INITIAL_PAGINATION });
   };
@@ -234,6 +255,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const { data } = await instance.post(`/option/addOption`, obj);
+      console.log(data, "options");
 
       dispatch({
         type: ADD_OPTION,
@@ -460,6 +482,19 @@ const AppProvider = ({ children }) => {
       console.log(data);
 
       dispatch({ type: GET_ALL_DATA_SUCCESS, payload: { data, queryObject } });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+      console.log(error);
+    }
+  };
+  const deleteInBulk = async (ids) => {
+    dispatch({ type: API_CALL_BEGIN });
+
+    try {
+      const { data } = await instance.patch(`/deleteMany`, { ids });
+
+      dispatch({ type: EDIT_DATA_SUCCESS });
+      unselectAllData();
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
       console.log(error);
@@ -749,6 +784,16 @@ const AppProvider = ({ children }) => {
       dispatch({ type: API_CALL_FAIL });
     }
   };
+  const makeEditableInBulk = async (ids) => {
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance.patch(`/edit/editable/many`, { ids });
+
+      dispatch({ type: MAKE_DATA_EDITABLE });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+    }
+  };
   const rejectEditRequest = async (id) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
@@ -811,6 +856,16 @@ const AppProvider = ({ children }) => {
         setVarAdminPopup,
         makeEditable,
         handleFilterApplied,
+        selectData,
+        selectAllData,
+        unselectData,
+        unselectAllData,
+        deleteInBulk,
+        makeEditableInBulk,
+        showDeletePopup,
+        setShowDeletePopup,
+        showEditPopup,
+        setShowEditPopup,
       }}
     >
       {children}
