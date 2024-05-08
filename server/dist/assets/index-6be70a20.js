@@ -23397,7 +23397,7 @@ const TableHeaders = ({ role, dataType, action }) => {
       {
         scope: "col",
         className: "px-6 py-3 text-gray-200 whitespace-nowrap font-semibold",
-        children: "Membership Status"
+        children: "Membership Agreement Status"
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -23432,7 +23432,7 @@ const TableHeaders = ({ role, dataType, action }) => {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "Last Communication" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "REMARKS" }),
-    role !== "popup" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: role === "admin" ? dataType === "accepted" ? "DELETE" : "RESTORE" : "ACTION" }),
+    role !== "popup" && role === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: dataType === "deleted" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "RESTORE" }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "ACTION" }),
     role === "popup" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "ACTION" }),
     (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsxs("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: [
       "ACTION ",
@@ -23713,9 +23713,6 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     unselectData,
     selectData
   } = useAppContext();
-  const handleEditable = (id2) => {
-    makeEditable(id2);
-  };
   const color = (cl2) => {
     if (cl2 === "unchanged")
       return;
@@ -23790,13 +23787,13 @@ const TableContent = ({ data, role, dataType, showForm }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33based || "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.lastCommunication || "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 whitespace-nowrap ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "data-tip": `${obj.remarks}`, className: `${toolTipClass}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: `${obj.remarks.slice(0, 10)}...` }) }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: role === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      role === "admin" ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: dataType === "deleted" && /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         DeleteAdminData,
         {
           id: obj._id,
           isTrash: dataType === "deleted"
         }
-      ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         EditExeData,
         {
           id: obj._id,
@@ -23804,36 +23801,7 @@ const TableContent = ({ data, role, dataType, showForm }) => {
           dri_id: obj.dri_id
         }
       ) }),
-      (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-[1.1rem] capitalize flex gap-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }),
-        role === "admin" && obj.editStatus === "approved" && /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => handleEditable(obj._id),
-            "data-tip": `Editable`,
-            className: `${toolTipClass}`,
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "svg",
-              {
-                xmlns: "http://www.w3.org/2000/svg",
-                fill: "none",
-                viewBox: "0 0 24 24",
-                strokeWidth: 1.5,
-                stroke: "currentColor",
-                className: "w-5 h-5",
-                children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "path",
-                  {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    d: "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                  }
-                )
-              }
-            )
-          }
-        )
-      ] })
+      (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-[1.1rem] capitalize flex gap-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }) })
     ] }, obj._id);
   }) });
 };
@@ -24032,9 +24000,9 @@ const OptionList = ({ items, fun, isForIP, submitFun, forOption }) => {
       submitFun({ membership_type: inputValue });
     else if (forOption === "Amc")
       submitFun({ amc: inputValue });
-    else if (forOption === "Amc letter status")
+    else if (forOption === "Amc Letter Status")
       submitFun({ amcLetterStatus: inputValue });
-    else if (forOption === "Member ship status")
+    else if (forOption === "Agreement Status")
       submitFun({ membershipStatus: inputValue });
     setInputValue("");
   };
@@ -24157,8 +24125,8 @@ const Sidebar = () => {
     "Status",
     "Membership Type",
     "Amc",
-    "Amc letter status",
-    "Member ship status"
+    "Amc Letter Status",
+    "Agreement Status"
   ];
   const [selectedOption, setSelectedOption] = reactExports.useState(options[0]);
   const handleOptionChange = (event) => {
