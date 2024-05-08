@@ -94,10 +94,9 @@ const TableHeaders = ({ role, dataType, action }) => {
         </th>
         <th
           scope="col"
-          data-tip={"Membership Agreement Status"}
-          className={`${toolTipClass}`}
+          className="px-6 py-3 text-gray-200 whitespace-nowrap font-semibold"
         >
-          Agreement Status
+          Membership Agreement Status
         </th>
         <th
           scope="col"

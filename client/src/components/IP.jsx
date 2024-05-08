@@ -19,9 +19,9 @@ const OptionList = ({ items, fun, isForIP, submitFun, forOption }) => {
     else if (forOption === "Membership Type")
       submitFun({ membership_type: inputValue });
     else if (forOption === "Amc") submitFun({ amc: inputValue });
-    else if (forOption === "Amc letter status")
+    else if (forOption === "Amc Letter Status")
       submitFun({ amcLetterStatus: inputValue });
-    else if (forOption === "Member ship status")
+    else if (forOption === "Agreement Status")
       submitFun({ membershipStatus: inputValue });
 
     setInputValue("");
@@ -169,7 +169,7 @@ const Sidebar = () => {
     "Membership Type",
     "Amc",
     "Amc Letter Status",
-    "Agreement status",
+    "Agreement Status",
   ];
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
