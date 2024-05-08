@@ -9051,6 +9051,9 @@ const VAR_ADMIN_POPUP = "VAR_ADMIN_POPUP";
 const MAKE_DATA_EDITABLE = "MAKE_DATA_EDITABLE";
 const GET_SINGLE_DATA_SUCCESS = "GET_SINGLE_DATA_SUCCESS";
 const GET_ALL_ACTIVITY_SUCCESS_VAR = "GET_ALL_ACTIVITY_SUCCESS_VAR";
+const SELECT_DATA = "SELECT_DATA";
+const UNSELECT_DATA = "UNSELECT_DATA";
+const SELECT_ALL_DATA = "SELECT_ALL_DATA";
 const reducer$1 = (state, action) => {
   var _a, _b, _c;
   if (action.type === INITIAL_PAGINATION) {
@@ -9086,8 +9089,10 @@ const reducer$1 = (state, action) => {
       statusOptions: action.payload.data.status,
       placeOptions: action.payload.data.place,
       amcOptions: action.payload.data.amc,
-      memberOptions: action.payload.data.membership_type
-      // toggleExeData:!state.toggleExeData      
+      memberOptions: action.payload.data.membership_type,
+      memberStatusOptions: action.payload.data.membershipStatus,
+      amcStatusOptions: action.payload.data.amcLetterStatus
+      // toggleExeData:!state.toggleExeData
     };
   }
   if (action.type === ADD_OPTION) {
@@ -9097,8 +9102,10 @@ const reducer$1 = (state, action) => {
       statusOptions: action.payload.data.status,
       placeOptions: action.payload.data.place,
       amcOptions: action.payload.data.amc,
-      memberOptions: action.payload.data.membership_type
-      // toggleExeData:!state.toggleExeData,      
+      memberOptions: action.payload.data.membership_type,
+      memberStatusOptions: action.payload.data.membershipStatus,
+      amcStatusOptions: action.payload.data.amcLetterStatus
+      // toggleExeData:!state.toggleExeData,
     };
   }
   if (action.type === DELETE_OPTION) {
@@ -9108,8 +9115,10 @@ const reducer$1 = (state, action) => {
       statusOptions: action.payload.data.status,
       placeOptions: action.payload.data.place,
       amcOptions: action.payload.data.amc,
-      memberOptions: action.payload.data.membership_type
-      // toggleExeData:!state.toggleExeData,      
+      memberOptions: action.payload.data.membership_type,
+      memberStatusOptions: action.payload.data.membershipStatus,
+      amcStatusOptions: action.payload.data.amcLetterStatus
+      // toggleExeData:!state.toggleExeData,
     };
   }
   if (action.type === GET_ALL_IPS) {
@@ -9162,7 +9171,10 @@ const reducer$1 = (state, action) => {
       ...state,
       isLoading: false,
       activityNumOfPage: action.payload.numOfPages,
-      allActivityByExe: [...state.allActivityByExe, ...action.payload.activities]
+      allActivityByExe: [
+        ...state.allActivityByExe,
+        ...action.payload.activities
+      ]
     };
   }
   if (action.type === GET_ALL_ACTIVITY_SUCCESS_VAR) {
@@ -9170,7 +9182,10 @@ const reducer$1 = (state, action) => {
       ...state,
       isLoading: false,
       activityNumOfPageVar: action.payload.numOfPages,
-      allActivityByVar: [...state.allActivityByVar, ...action.payload.activities]
+      allActivityByVar: [
+        ...state.allActivityByVar,
+        ...action.payload.activities
+      ]
     };
   }
   if (action.type === GET_USER_SUCCESS) {
@@ -9386,6 +9401,26 @@ const reducer$1 = (state, action) => {
   if (action.type === CHANGE_PASSWORD_SUCCESS) {
     return {
       ...state
+    };
+  }
+  if (action.type === SELECT_DATA) {
+    return {
+      ...state,
+      selectedData: [...state.selectedData, action.payload]
+    };
+  }
+  if (action.type === UNSELECT_DATA) {
+    return {
+      ...state,
+      selectedData: state.selectedData.filter(
+        (data) => data._id !== action.payload
+      )
+    };
+  }
+  if (action.type === SELECT_ALL_DATA) {
+    return {
+      ...state,
+      selectedData: action.payload
     };
   }
   throw new Error(`no such action : ${action.type}`);
@@ -11739,12 +11774,15 @@ const initialState$1 = {
   placeOptions: [],
   memberOptions: [],
   amcOptions: [],
+  amcStatusOptions: [],
+  memberStatusOptions: [],
   adminPopup: false,
   varAdminPopup: false,
   activityNumOfPageVar: 1,
   activityNumOfPage: 1,
   isPageServed: {},
-  isFiltered: false
+  isFiltered: false,
+  selectedData: []
 };
 const showAlert = (type, text) => {
   if (type === "warn") {
@@ -11802,11 +11840,25 @@ const AppProvider = ({ children }) => {
     // production
     baseURL: "/api/v1"
   });
+  const [showDeletePopup, setShowDeletePopup] = reactExports.useState(false);
+  const [showEditPopup, setShowEditPopup] = reactExports.useState(false);
   reactExports.useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
   }, [instance, state.isAuthenticated]);
   const setFile = (file) => {
     dispatch({ type: SET_FILE, payload: file });
+  };
+  const selectData = (id2) => {
+    dispatch({ type: SELECT_DATA, payload: id2 });
+  };
+  const unselectData = (id2) => {
+    dispatch({ type: UNSELECT_DATA, payload: id2 });
+  };
+  const selectAllData = (dataArr) => {
+    dispatch({ type: SELECT_ALL_DATA, payload: dataArr });
+  };
+  const unselectAllData = () => {
+    dispatch({ type: SELECT_ALL_DATA, payload: [] });
   };
   const setInitialPag = () => {
     dispatch({ type: INITIAL_PAGINATION });
@@ -11862,6 +11914,7 @@ const AppProvider = ({ children }) => {
     console.log(obj);
     try {
       const { data } = await instance.post(`/option/addOption`, obj);
+      console.log(data, "options");
       dispatch({
         type: ADD_OPTION,
         payload: data
@@ -12057,6 +12110,17 @@ const AppProvider = ({ children }) => {
       );
       console.log(data);
       dispatch({ type: GET_ALL_DATA_SUCCESS, payload: { data, queryObject } });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+      console.log(error);
+    }
+  };
+  const deleteInBulk = async (ids) => {
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance.patch(`/deleteMany`, { ids });
+      dispatch({ type: EDIT_DATA_SUCCESS });
+      unselectAllData();
     } catch (error) {
       dispatch({ type: API_CALL_FAIL });
       console.log(error);
@@ -12305,6 +12369,15 @@ const AppProvider = ({ children }) => {
       dispatch({ type: API_CALL_FAIL });
     }
   };
+  const makeEditableInBulk = async (ids) => {
+    dispatch({ type: API_CALL_BEGIN });
+    try {
+      const { data } = await instance.patch(`/edit/editable/many`, { ids });
+      dispatch({ type: MAKE_DATA_EDITABLE });
+    } catch (error) {
+      dispatch({ type: API_CALL_FAIL });
+    }
+  };
   const rejectEditRequest = async (id2) => {
     dispatch({ type: API_CALL_BEGIN });
     try {
@@ -12365,7 +12438,17 @@ const AppProvider = ({ children }) => {
         getAllActivityVar,
         setVarAdminPopup,
         makeEditable,
-        handleFilterApplied
+        handleFilterApplied,
+        selectData,
+        selectAllData,
+        unselectData,
+        unselectAllData,
+        deleteInBulk,
+        makeEditableInBulk,
+        showDeletePopup,
+        setShowDeletePopup,
+        showEditPopup,
+        setShowEditPopup
       },
       children
     }
@@ -12890,6 +12973,8 @@ function EditForm({ setShow, dataId, varData }) {
     amcOptions,
     statusOptions,
     memberOptions,
+    memberStatusOptions,
+    amcStatusOptions,
     editData,
     makeActivity,
     user,
@@ -12910,7 +12995,7 @@ function EditForm({ setShow, dataId, varData }) {
     amc: (data == null ? void 0 : data.amc) || "",
     customerName: (data == null ? void 0 : data.customerName) || "",
     CSV: (data == null ? void 0 : data.CSV) || "",
-    lastCommunication: "",
+    lastCommunication: (data == null ? void 0 : data.lastCommunication) || "",
     deposit: (data == null ? void 0 : data.deposit) || "",
     status: (data == null ? void 0 : data.status) || "",
     dri_id: (data == null ? void 0 : data.dri_id) || "",
@@ -12919,7 +13004,9 @@ function EditForm({ setShow, dataId, varData }) {
     residentialPhone: (data == null ? void 0 : data.residentialPhone) || "",
     officePhone: (data == null ? void 0 : data.officePhone) || "",
     profession: (data == null ? void 0 : data.profession) || "",
-    adlf: ""
+    adlf: (data == null ? void 0 : data.adlf) || "",
+    amcLetterStatus: (data == null ? void 0 : data.amcLetterStatus) || "",
+    membershipStatus: (data == null ? void 0 : data.membershipStatus) || ""
   });
   const handleInputChange = (e) => {
     if (!changed)
@@ -13152,6 +13239,38 @@ function EditForm({ setShow, dataId, varData }) {
                     (option) => option.toLowerCase() !== data.status.toLowerCase()
                   )
                 ].map((data2) => {
+                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data2, children: data2 }, data2);
+                })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-1 ", children: "AMC Letter Status:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                id: "amcLetterStatus",
+                name: "amcLetterStatus",
+                value: form.amcLetterStatus,
+                onChange: handleInputChange,
+                className: "border border-gray-400 p-1 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                children: ["Select", ...amcStatusOptions].map((data2) => {
+                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data2, children: data2 }, data2);
+                })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-1 ", children: "Membership Status:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "select",
+              {
+                id: "membershipStatus",
+                name: "membershipStatus",
+                value: form.membershipStatus,
+                onChange: handleInputChange,
+                className: "border border-gray-400 p-1 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                children: ["Select", ...memberStatusOptions].map((data2) => {
                   return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data2, children: data2 }, data2);
                 })
               }
@@ -23220,7 +23339,25 @@ const LoginSwiper = () => {
 };
 const toolTipClass = "hover:before:opacity-100 before:absolute relative before:content-[attr(data-tip)] before:whitespace-normal before:px-3 before:py-2 before:left-1 before:top-[3px] before:w-max before:max-w-xs before:-translate-x-1/2 before:-translate-y-full before:bg-gray-700 before:text-white before:rounded-md before:opacity-0 before:transition-all ";
 const TableHeaders = ({ role, dataType, action }) => {
+  const { selectedData, mainData, unselectAllData, selectAllData } = useAppContext();
   return /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { className: "text-xs sticky  top-0  uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+    role === "admin" && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        id: "col-checkbox",
+        type: "checkbox",
+        value: "all",
+        checked: selectedData.length === mainData.length,
+        onChange: (e) => {
+          if (e.target.checked) {
+            selectAllData(mainData);
+          } else {
+            unselectAllData();
+          }
+        },
+        className: "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      }
+    ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "Serial No." }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "DRI-ID" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("th", { scope: "col", className: "px-6 py-3 text-gray-200 font-semibold", children: "PLACE" }),
@@ -23245,6 +23382,22 @@ const TableHeaders = ({ role, dataType, action }) => {
         scope: "col",
         className: "px-6 py-3 text-gray-200 whitespace-nowrap font-semibold",
         children: "YEAR TILL NOW"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "th",
+      {
+        scope: "col",
+        className: "px-6 py-3 text-gray-200 whitespace-nowrap font-semibold",
+        children: "AMC Letter Status"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "th",
+      {
+        scope: "col",
+        className: "px-6 py-3 text-gray-200 whitespace-nowrap font-semibold",
+        children: "Membership Status"
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -23552,7 +23705,14 @@ const EditExeData = ({ showForm, id: id2, dri_id }) => {
 };
 dayjs.extend(localizedFormat);
 const TableContent = ({ data, role, dataType, showForm }) => {
-  const { makeEditable, page } = useAppContext();
+  const {
+    makeEditable,
+    page,
+    selectedData,
+    mainData,
+    unselectData,
+    selectData
+  } = useAppContext();
   const handleEditable = (id2) => {
     makeEditable(id2);
   };
@@ -23577,6 +23737,30 @@ const TableContent = ({ data, role, dataType, showForm }) => {
     );
     const serialNum = (page - 1) * 8 + (index2 + 1);
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-white border-b dark:bg-gray-100 ", children: [
+      role === "admin" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "th",
+        {
+          scope: "row",
+          className: "px-6 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              id: "row-checkbox",
+              type: "checkbox",
+              value: obj._id.toString(),
+              checked: selectedData.some((el2) => el2._id === obj._id),
+              onChange: (e) => {
+                if (e.target.checked) {
+                  selectData(obj);
+                } else {
+                  unselectData(obj._id);
+                }
+              },
+              className: "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            }
+          )
+        }
+      ),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: serialNum }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "td",
@@ -23600,6 +23784,8 @@ const TableContent = ({ data, role, dataType, showForm }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.status || "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.CSV - obj.deposit }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: yearsCountTillNow || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.amcLetterStatus || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.membershipStatus || "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction99based || "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.afterFeesDeduction33based || "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2", children: obj.lastCommunication || "-" }),
@@ -23620,25 +23806,33 @@ const TableContent = ({ data, role, dataType, showForm }) => {
       ) }),
       (role === "executive" || role === "admin") && /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-[1.1rem] capitalize flex gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: color(obj.editStatus), children: obj.editStatus }),
-        role === "admin" && obj.editStatus === "approved" && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => handleEditable(obj._id), "data-tip": `Editable`, className: `${toolTipClass}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "svg",
+        role === "admin" && obj.editStatus === "approved" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
           {
-            xmlns: "http://www.w3.org/2000/svg",
-            fill: "none",
-            viewBox: "0 0 24 24",
-            strokeWidth: 1.5,
-            stroke: "currentColor",
-            className: "w-5 h-5",
+            onClick: () => handleEditable(obj._id),
+            "data-tip": `Editable`,
+            className: `${toolTipClass}`,
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "path",
+              "svg",
               {
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                d: "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                xmlns: "http://www.w3.org/2000/svg",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                strokeWidth: 1.5,
+                stroke: "currentColor",
+                className: "w-5 h-5",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "path",
+                  {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    d: "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  }
+                )
               }
             )
           }
-        ) })
+        )
       ] })
     ] }, obj._id);
   }) });
@@ -23647,7 +23841,7 @@ function containsOnlyNumbers(inputString) {
   const regex = /^[0-9]+$/;
   return regex.test(inputString);
 }
-const PaginationAndExport = ({ form, fun }) => {
+const PaginationAndExport = ({ form, fun, role }) => {
   const {
     page,
     numOfPages,
@@ -23656,7 +23850,11 @@ const PaginationAndExport = ({ form, fun }) => {
     lastFilterQuery,
     exportData,
     showAlert: showAlert2,
-    setPage
+    setPage,
+    setShowDeletePopup,
+    setShowEditPopup,
+    mainData,
+    selectedData
   } = useAppContext();
   const [customPage, setCustomPage] = reactExports.useState("");
   const [exporting, setExporting] = reactExports.useState(false);
@@ -23782,7 +23980,23 @@ const PaginationAndExport = ({ form, fun }) => {
             )
           }
         ) })
-      ] })
+      ] }),
+      role === "admin" && mainData.length > 0 && selectedData.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setShowDeletePopup(true),
+          className: " text-white bg-red-500 whitespace-nowrap font-medium rounded-md text-sm w-full block px-3 mb-2 ml-2 py-2.5 text-center",
+          children: "Delete Selected"
+        }
+      ) : null,
+      role === "admin" && (lastFilterQuery == null ? void 0 : lastFilterQuery.editStatus) === "approved" && mainData.length > 0 && selectedData.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setShowEditPopup(true),
+          className: " text-white bg-blue-500 whitespace-nowrap font-medium rounded-md text-sm w-full block px-3 mb-2 ml-2 py-2.5 text-center",
+          children: "Edit Selection"
+        }
+      ) : null
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
       numOfPages ? `${page} of Total ${numOfPages} pages` : `No data found with applied filter`,
@@ -23816,8 +24030,12 @@ const OptionList = ({ items, fun, isForIP, submitFun, forOption }) => {
       submitFun({ status: inputValue });
     else if (forOption === "Membership Type")
       submitFun({ membership_type: inputValue });
-    else if (forOption === "amc")
+    else if (forOption === "Amc")
       submitFun({ amc: inputValue });
+    else if (forOption === "Amc letter status")
+      submitFun({ amcLetterStatus: inputValue });
+    else if (forOption === "Member ship status")
+      submitFun({ membershipStatus: inputValue });
     setInputValue("");
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -23916,7 +24134,9 @@ const Sidebar = () => {
     toggleAction,
     statusOptions,
     placeOptions,
-    memberOptions
+    memberOptions,
+    memberStatusOptions,
+    amcStatusOptions
   } = useAppContext();
   reactExports.useEffect(() => {
     getAllIPs();
@@ -23936,7 +24156,9 @@ const Sidebar = () => {
     "Place",
     "Status",
     "Membership Type",
-    "amc"
+    "Amc",
+    "Amc letter status",
+    "Member ship status"
   ];
   const [selectedOption, setSelectedOption] = reactExports.useState(options[0]);
   const handleOptionChange = (event) => {
@@ -23974,6 +24196,18 @@ const Sidebar = () => {
       PropsForOption.fun = deleteOption;
       PropsForOption.submitFun = addOption;
       PropsForOption.forOption = options[5];
+    } else if (selectedOption === options[6]) {
+      PropsForOption.items = amcStatusOptions;
+      PropsForOption.isForIP = false;
+      PropsForOption.fun = deleteOption;
+      PropsForOption.submitFun = addOption;
+      PropsForOption.forOption = options[6];
+    } else if (selectedOption === options[7]) {
+      PropsForOption.items = memberStatusOptions;
+      PropsForOption.isForIP = false;
+      PropsForOption.fun = deleteOption;
+      PropsForOption.submitFun = addOption;
+      PropsForOption.forOption = options[7];
     }
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -24356,6 +24590,26 @@ const TableContentWithChange = ({
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6  py-2 text-center", children: obj.CSV - obj.deposit }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-6 py-2 text-center", children: yearsCountTillNow || "-" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "p",
+          {
+            className: `${hasKey(obj.dataToUpdate, "amcLetterStatus") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "amcLetterStatus") && "text-red-500 line-through"}`,
+            children: obj.amcLetterStatus
+          }
+        ),
+        hasKey(obj.dataToUpdate, "amcLetterStatus") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.amcLetterStatus })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "p",
+          {
+            className: `${hasKey(obj.dataToUpdate, "membershipStatus") && obj.editStatus === "approved" ? "hidden" : hasKey(obj.dataToUpdate, "membershipStatus") && "text-red-500 line-through"}`,
+            children: obj.membershipStatus
+          }
+        ),
+        hasKey(obj.dataToUpdate, "membershipStatus") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-600", children: obj.dataToUpdate.membershipStatus })
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-6 py-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "p",
@@ -30892,6 +31146,158 @@ const UserActivityTimeline = ({ data }) => {
     ] })
   ] });
 };
+const DeletePopup = () => {
+  const [loading, setLoading] = reactExports.useState(false);
+  const [input, setInput] = reactExports.useState("");
+  const [isDeleteTyped, setIsDeleteTyped] = reactExports.useState(false);
+  const { selectedData, deleteInBulk, showDeletePopup, setShowDeletePopup } = useAppContext();
+  const handleDeleteMany = async () => {
+    const ids = selectedData.map((el2) => el2._id);
+    setLoading(true);
+    await deleteInBulk(ids);
+    setLoading(false);
+    setShowDeletePopup(false);
+    showAlert("succ", "Data Deleted Successfully");
+  };
+  const handleOnChange = (e) => {
+    if (e.target.value === "delete") {
+      setIsDeleteTyped(true);
+    } else {
+      setIsDeleteTyped(false);
+    }
+    setInput(e.target.value);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-md shadow-md px-16 py-10 w-[30%] ", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end mb-4 items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowDeletePopup(false), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "svg",
+      {
+        xmlns: "http://www.w3.org/2000/svg",
+        fill: "none",
+        viewBox: "0 0 24 24",
+        strokeWidth: 1.5,
+        stroke: "currentColor",
+        className: "w-6 h-6",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "path",
+          {
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            d: "M6 18L18 6M6 6l12 12"
+          }
+        )
+      }
+    ) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-lg font-semibold text-center mb-4", children: "Delete the Selected data?" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex mb-2 ml-2 w-full px-2 justify-between items-center py-1 border-2 bg-white border-blue-200 rounded-md", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        value: input,
+        onChange: handleOnChange,
+        type: "text",
+        className: "border-none focus:border-none  rounded-sm bg-white py-1 px-1 placeholder-gray-400 appearance-none focus:outline-none",
+        placeholder: "Type 'delete' to confirm"
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mt-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setShowDeletePopup(false),
+          className: " text-black px-4 py-2 rounded-md",
+          children: "Cancel"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          disabled: !isDeleteTyped || loading,
+          onClick: handleDeleteMany,
+          className: `${isDeleteTyped ? "bg-red-500" : "bg-gray-300"} text-white px-4 py-2 rounded-md`,
+          children: loading ? "Deleting..." : "Delete"
+        }
+      )
+    ] })
+  ] });
+};
+const EditablePopup = () => {
+  const [loading, setLoading] = reactExports.useState(false);
+  const [input, setInput] = reactExports.useState("");
+  const [isEditTyped, setIsEditTyped] = reactExports.useState(false);
+  const {
+    selectedData,
+    makeEditableInBulk,
+    setShowEditPopup,
+    unselectAllData
+  } = useAppContext();
+  const handleEditMany = async () => {
+    const ids = selectedData.map((el2) => el2._id);
+    setLoading(true);
+    await makeEditableInBulk(ids);
+    setLoading(false);
+    setShowEditPopup(false);
+    showAlert("succ", "Data Edited Successfully");
+    unselectAllData();
+  };
+  const handleOnChange = (e) => {
+    if (e.target.value === "edit") {
+      setIsEditTyped(true);
+    } else {
+      setIsEditTyped(false);
+    }
+    setInput(e.target.value);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-md shadow-md px-16 py-10 w-[30%] ", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-end mb-4 items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowEditPopup(false), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "svg",
+      {
+        xmlns: "http://www.w3.org/2000/svg",
+        fill: "none",
+        viewBox: "0 0 24 24",
+        strokeWidth: 1.5,
+        stroke: "currentColor",
+        className: "w-6 h-6",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "path",
+          {
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            d: "M6 18L18 6M6 6l12 12"
+          }
+        )
+      }
+    ) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-lg font-semibold text-center mb-4", children: "Make Selected data Editable?" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex mb-2 ml-2 w-full px-2 justify-between items-center py-1 border-2 bg-white border-blue-200 rounded-md", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        value: input,
+        onChange: handleOnChange,
+        type: "text",
+        className: "border-none focus:border-none  rounded-sm bg-white py-1 px-1 placeholder-gray-400 appearance-none focus:outline-none",
+        placeholder: "Type 'edit' to confirm"
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mt-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setShowEditPopup(false),
+          className: " text-black px-4 py-2 rounded-md",
+          children: "Cancel"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          disabled: !isEditTyped || loading,
+          onClick: handleEditMany,
+          className: `${isEditTyped ? "bg-blue-500" : "bg-gray-300"} text-white px-4 py-2 rounded-md`,
+          children: loading ? "Editing..." : "Edit"
+        }
+      )
+    ] })
+  ] });
+};
 const AdminDash = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Dashboard, { links: AdminLinks, homeRoute: "/", admin: true });
 };
@@ -31133,7 +31539,7 @@ const TimeLine = () => {
 };
 function Items$2({ currentItems, form, fun }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(PaginationAndExport, { form, fun }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(PaginationAndExport, { role: "admin", form, fun }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "custom-scrollbar  h-fit relative overflow-x-auto shadow-md sm:rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full  text-sm text-center ", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeaders, { role: "admin", dataType: "accepted" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -31160,7 +31566,9 @@ const Data$3 = () => {
     isSearchedHandler,
     user,
     showTable,
-    lastFilterQuery
+    showEditPopup,
+    lastFilterQuery,
+    showDeletePopup
   } = useAppContext();
   const [form, setForm] = reactExports.useState({
     status: "All",
@@ -31182,7 +31590,7 @@ const Data$3 = () => {
   }, []);
   reactExports.useEffect(() => {
     getAllData({ acceptance: "accepted", page });
-  }, []);
+  }, [toggleAction]);
   reactExports.useEffect(() => {
     if (isSearched) {
       console.log("here is initial render");
@@ -31193,6 +31601,8 @@ const Data$3 = () => {
     " ",
     /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, {}),
     openSearchBar && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SearchContainer, { form, role: "admin", setForm }) }) }),
+    showDeletePopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeletePopup, {}) }) }),
+    showEditPopup && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative top-0 z-10 w-full  bg-[#F0F4F8] shadow ", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditablePopup, {}) }) }),
     showTable ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
@@ -56989,12 +57399,24 @@ const mainDataSchema = new mongoose.Schema({
   currentValue: { type: String },
   remarks: { type: String, default: "", trim: true },
   lastCommunication: { type: String, default: "" },
+  membershipStatus: { type: String, default: "" },
+  amcLetterStatus: { type: String, default: "" },
   address: { type: String, default: "", trim: true },
   profession: { type: String, default: "" },
   residentialPhone: { type: String, default: "" },
   officePhone: { type: String, default: "" },
-  acceptance: { type: String, enum: ["accepted", "deleted"], default: "accepted", required: true },
-  editStatus: { type: String, enum: ["approved", "rejected", "pending", "unchanged"], default: "unchanged", required: true },
+  acceptance: {
+    type: String,
+    enum: ["accepted", "deleted"],
+    default: "accepted",
+    required: true
+  },
+  editStatus: {
+    type: String,
+    enum: ["approved", "rejected", "pending", "unchanged"],
+    default: "unchanged",
+    required: true
+  },
   dataToUpdate: { type: Object }
 });
 mongoose.model("MainData", mainDataSchema);
