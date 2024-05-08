@@ -168,8 +168,8 @@ const Sidebar = () => {
     "Status",
     "Membership Type",
     "Amc",
-    "Amc letter status",
-    "Member ship status",
+    "Amc Letter Status",
+    "Agreement status",
   ];
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
