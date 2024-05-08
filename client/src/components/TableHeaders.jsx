@@ -129,7 +129,7 @@ const TableHeaders = ({ role, dataType, action }) => {
           REMARKS
         </th>
 
-        {role !== "popup" && (
+        {/* {role !== "popup" && (
           <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
             {role === "admin"
               ? dataType === "accepted"
@@ -137,7 +137,21 @@ const TableHeaders = ({ role, dataType, action }) => {
                 : "RESTORE"
               : "ACTION"}
           </th>
+        )} */}
+        {role !== "popup" && role === "admin" ? (
+          <>
+            {dataType === "deleted" && (
+              <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
+                RESTORE
+              </th>
+            )}
+          </>
+        ) : (
+          <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
+            ACTION
+          </th>
         )}
+
         {role === "popup" && (
           <th scope="col" className="px-6 py-3 text-gray-200 font-semibold">
             ACTION

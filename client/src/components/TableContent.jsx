@@ -116,7 +116,7 @@ const TableContent = ({ data, role, dataType, showForm }) => {
                   <p>{`${obj.remarks.slice(0, 10)}...`}</p>
                 </div>
               </td>
-              <td className="px-6 py-2">
+              {/* <td className="px-6 py-2">
                 {role === "admin" ? (
                   <DeleteAdminData
                     id={obj._id}
@@ -129,11 +129,31 @@ const TableContent = ({ data, role, dataType, showForm }) => {
                     dri_id={obj.dri_id}
                   />
                 )}
-              </td>
+              </td> */}
+              {role === "admin" ? (
+                <>
+                  {dataType === "deleted" && (
+                    <td className="px-6 py-2">
+                      <DeleteAdminData
+                        id={obj._id}
+                        isTrash={dataType === "deleted"}
+                      />
+                    </td>
+                  )}
+                </>
+              ) : (
+                <td className="px-6 py-2">
+                  <EditExeData
+                    id={obj._id}
+                    showForm={showForm}
+                    dri_id={obj.dri_id}
+                  />
+                </td>
+              )}
               {(role === "executive" || role === "admin") && (
                 <td className="px-6 py-[1.1rem] capitalize flex gap-2">
                   <p className={color(obj.editStatus)}>{obj.editStatus}</p>
-                  {role === "admin" && obj.editStatus === "approved" && (
+                  {/* {role === "admin" && obj.editStatus === "approved" && (
                     <button
                       onClick={() => handleEditable(obj._id)}
                       data-tip={`Editable`}
@@ -154,7 +174,7 @@ const TableContent = ({ data, role, dataType, showForm }) => {
                         />
                       </svg>
                     </button>
-                  )}
+                  )} */}
                 </td>
               )}
             </tr>
