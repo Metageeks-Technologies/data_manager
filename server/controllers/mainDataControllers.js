@@ -547,6 +547,8 @@ const getData = catchAsyncError(async (req, res, next) => {
     company,
     membership_type,
     page,
+    amcLetterStatus,
+    membershipStatus,
   } = req.query;
   // console.log(req.query);
   const queryObject = {};
@@ -575,6 +577,12 @@ const getData = catchAsyncError(async (req, res, next) => {
   if (date && date !== "All") {
     // queryObject.date = { $regex: date + "-", $options: "i" };
     queryObject.date = date;
+  }
+  if (amcLetterStatus && amcLetterStatus !== "All") {
+    queryObject.amcLetterStatus = { $regex: amcLetterStatus, $options: "i" };
+  }
+  if (membershipStatus && membershipStatus !== "All") {
+    queryObject.membershipStatus = { $regex: membershipStatus, $options: "i" };
   }
   if (amc && amc !== "All") {
     queryObject.amc = { $regex: amc, $options: "i" };
