@@ -383,7 +383,7 @@ function EditForm({ setShow, dataId, varData }) {
             {/*membership status */}
             <div className="flex flex-col mb-4">
               <label htmlFor="status" className="text-xs mb-1 ">
-                Membership Status:
+                Agreement Status:
               </label>
               <select
                 id="membershipStatus"

@@ -16,6 +16,8 @@ const SearchContainer = ({ form, setForm, role }) => {
     memberOptions,
     setShowTable,
     searchBar,
+    memberStatusOptions,
+    amcStatusOptions,
   } = useAppContext();
   const [exporting, setExporting] = useState(false);
   const handleSubmit = (e) => {
@@ -96,7 +98,7 @@ const SearchContainer = ({ form, setForm, role }) => {
         </div>
         <div className="flex justify-evenly  flex-wrap gap-3">
           {/* DRI_ID */}
-          <div className="flex flex-col mb-4 flex-1">
+          <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="status" className="text-xs">
               DRI-ID:
             </label>
@@ -111,7 +113,7 @@ const SearchContainer = ({ form, setForm, role }) => {
           </div>
 
           {/* App NUMBER */}
-          <div className="flex flex-col mb-4 flex-1">
+          <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="status" className="text-xs">
               APP NUMBER:
             </label>
@@ -124,7 +126,7 @@ const SearchContainer = ({ form, setForm, role }) => {
               className="border border-gray-400 py-1 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex flex-col mb-4 flex-1">
+          <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="customerName" className="text-xs">
               CUSTOMER NAME:
             </label>
@@ -139,7 +141,7 @@ const SearchContainer = ({ form, setForm, role }) => {
             />
           </div>
           {/* status */}
-          <div className="flex flex-col mb-4 flex-1">
+          <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="status" className="text-xs">
               STATUS:
             </label>
@@ -160,7 +162,7 @@ const SearchContainer = ({ form, setForm, role }) => {
             </select>
           </div>
           {/* place */}
-          <div className="flex flex-col mb-4 flex-1">
+          <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="place" className="text-xs">
               PLACE:
             </label>
@@ -181,7 +183,7 @@ const SearchContainer = ({ form, setForm, role }) => {
             </select>
           </div>
           {/* member Type */}
-          <div className="flex flex-col uppercase mb-4 flex-1">
+          <div className="flex flex-col uppercase w-[22%] mb-4 flex-1">
             <label htmlFor="place" className="text-xs">
               Member Type:
             </label>
@@ -201,8 +203,9 @@ const SearchContainer = ({ form, setForm, role }) => {
               })}
             </select>
           </div>
+
           {/* company */}
-          {/* <div className="flex flex-col mb-4 flex-1">
+          {/* <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="company" className="text-xs">
             company:
             </label>
@@ -223,8 +226,8 @@ const SearchContainer = ({ form, setForm, role }) => {
             </select>
           </div> */}
           {/* Date */}
-          <div className="text-bold flex flex-col mb-4 flex-1">
-            <label htmlFor="date" className="text-xs">
+          <div className="text-bold flex flex-col mb-4 flex-1 w-[22%]">
+            <label htmlFor="date" className="text-xs whitespace-nowrap">
               YEAR OF PURCHASE
             </label>
             <select
@@ -244,7 +247,7 @@ const SearchContainer = ({ form, setForm, role }) => {
               })}
             </select>
           </div>
-          <div className="flex flex-col mb-4">
+          <div className="flex flex-col w-[22%] mb-4">
             <label htmlFor="lastCommunication" className="text-xs">
               Amc
             </label>
@@ -265,9 +268,51 @@ const SearchContainer = ({ form, setForm, role }) => {
               })}
             </select>
           </div>
+          {/* Amc Letter Status */}
+          <div className="flex flex-col w-[22%] uppercase mb-4 flex-1">
+            <label htmlFor="place" className="text-xs whitespace-nowrap">
+              Amc Letter Status:
+            </label>
+            <select
+              id="amcLetterStatus"
+              name="amcLetterStatus"
+              value={form.amcLetterStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["All", ...amcStatusOptions].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          {/* Agreement Status */}
+          <div className="flex flex-col w-[22%] uppercase mb-4 flex-1">
+            <label htmlFor="place" className="text-xs whitespace-nowrap">
+              Agreement Status:
+            </label>
+            <select
+              id="membershipStatus"
+              name="membershipStatus"
+              value={form.membershipStatus}
+              onChange={handleInputChange}
+              className="border border-gray-400 py-1 px-2 w-full capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {["All", ...memberStatusOptions].map((data) => {
+                return (
+                  <option key={data} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           {/* edit Status */}
           {role && role === "varData" && (
-            <div className="flex flex-col mb-4 flex-1">
+            <div className="flex flex-col w-[22%] mb-4 flex-1">
               <label htmlFor="editStatus" className="text-xs">
                 Action:
               </label>
@@ -292,7 +337,7 @@ const SearchContainer = ({ form, setForm, role }) => {
             </div>
           )}
           {role && role === "VarEX" && (
-            <div className="flex flex-col mb-4 flex-1">
+            <div className="flex flex-col mb-4 flex-1 w-[22%]">
               <label htmlFor="editStatus" className="text-xs">
                 Action:
               </label>
@@ -314,7 +359,7 @@ const SearchContainer = ({ form, setForm, role }) => {
             </div>
           )}
           {role && role === "admin" && (
-            <div className="flex flex-col mb-4 flex-1">
+            <div className="flex flex-col mb-4 flex-1 w-[22%]">
               <label htmlFor="editStatus" className="text-xs">
                 Action:
               </label>

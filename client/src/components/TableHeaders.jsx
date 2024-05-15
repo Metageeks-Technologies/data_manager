@@ -96,7 +96,7 @@ const TableHeaders = ({ role, dataType, action }) => {
           scope="col"
           className="px-6 py-3 text-gray-200 whitespace-nowrap font-semibold"
         >
-          Membership Agreement Status
+          Agreement Status
         </th>
         <th
           scope="col"

@@ -471,13 +471,15 @@ const AppProvider = ({ children }) => {
       acceptance = "accepted",
       editStatus = "All",
       page = 1,
+      amcLetterStatus = "All",
+      membershipStatus = "All",
     } = queryObject;
     console.log(page);
     customerName = customerName?.toUpperCase();
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(
-        `/getData?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
+        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
       );
       console.log(data);
 
@@ -528,12 +530,14 @@ const AppProvider = ({ children }) => {
       acceptance = "accepted",
       editStatus = "pending",
       page = 1,
+      amcLetterStatus = "All",
+      membershipStatus = "All",
     } = queryObject;
     customerName = customerName?.toUpperCase();
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(
-        `/getData?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
+        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
       );
       dispatch({
         type: GET_ALL_VAR_DATA_SUCCESS,
@@ -559,13 +563,15 @@ const AppProvider = ({ children }) => {
       membership_type = "All",
       acceptance = "deleted",
       page = 1,
+      amcLetterStatus = "All",
+      membershipStatus = "All",
     } = queryObject;
 
     customerName = customerName?.toUpperCase();
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(
-        `/getData?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
+        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
       );
       console.log(data);
 

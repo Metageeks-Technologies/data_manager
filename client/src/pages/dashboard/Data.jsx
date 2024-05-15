@@ -58,6 +58,8 @@ const Data = () => {
     membership_type: "All",
     acceptance: "accepted",
     amc: "All",
+    amcLetterStatus: "All",
+    membershipStatus: "All",
   });
 
   useEffect(() => {

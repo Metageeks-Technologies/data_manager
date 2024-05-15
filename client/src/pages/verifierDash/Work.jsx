@@ -39,6 +39,8 @@ const Work = () => {
     acceptance: "accepted",
     editStatus: "var",
     page: 1,
+    amcLetterStatus: "All",
+    membershipStatus: "All",
   });
   useEffect(() => {
     return () => {

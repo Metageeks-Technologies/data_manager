@@ -61,6 +61,8 @@ const EData = () => {
     acceptance: "accepted",
     page: 1,
     editStatus: "unchanged",
+    amcLetterStatus: "All",
+    membershipStatus: "All",
   });
   useEffect(() => {
     return () => {

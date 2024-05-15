@@ -40,6 +40,8 @@ const Data = () => {
     membership_type: "All",
     acceptance: "accepted",
     editStatus: "pending",
+    amcLetterStatus: "All",
+    membershipStatus: "All",
     page: 1,
   });
   useEffect(() => {
