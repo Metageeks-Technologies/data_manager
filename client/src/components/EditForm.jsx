@@ -40,7 +40,11 @@ function EditForm({ setShow, dataId, varData }) {
     residentialPhone: data?.residentialPhone || "",
     officePhone: data?.officePhone || "",
     profession: data?.profession || "",
-    adlf: data?.adlf || "",
+    adlf: data?.afterFeesDeduction33based
+      ? "33 Based"
+      : data?.afterFeesDeduction99based
+      ? "99 Based"
+      : "",
     amcLetterStatus: data?.amcLetterStatus || "",
     membershipStatus: data?.membershipStatus || "",
   });
