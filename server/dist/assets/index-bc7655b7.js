@@ -13044,7 +13044,7 @@ function EditForm({ setShow, dataId, varData }) {
     residentialPhone: (data == null ? void 0 : data.residentialPhone) || "",
     officePhone: (data == null ? void 0 : data.officePhone) || "",
     profession: (data == null ? void 0 : data.profession) || "",
-    adlf: (data == null ? void 0 : data.adlf) || "",
+    adlf: (data == null ? void 0 : data.afterFeesDeduction33based) ? "33 Based" : (data == null ? void 0 : data.afterFeesDeduction99based) ? "99 Based" : "",
     amcLetterStatus: (data == null ? void 0 : data.amcLetterStatus) || "",
     membershipStatus: (data == null ? void 0 : data.membershipStatus) || ""
   });

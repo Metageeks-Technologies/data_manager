@@ -142,6 +142,16 @@ const approveEdit = catchAsyncError(async (req, res, next) => {
   const dataToUpdate = data.dataToUpdate;
   dataToUpdate.editStatus = "approved";
 
+  if ("afterFeesDeduction99based" in data.dataToUpdate) {
+    dataToUpdate.afterFeesDeduction33based = 0;
+  } else if ("afterFeesDeduction33based" in data.dataToUpdate) {
+    dataToUpdate.afterFeesDeduction99based = 0;
+  }
+  console.log(dataToUpdate);
+  // return res.status(200).json({
+  //   success: true,
+  //   dataToUpdate,
+  // });
   const updatedData = await MainData.findOneAndUpdate(
     { _id: id },
     dataToUpdate,
