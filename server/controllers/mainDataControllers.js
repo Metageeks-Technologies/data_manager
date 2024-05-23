@@ -27,6 +27,10 @@ const upload = catchAsyncError(async (req, res, next) => {
 
       return uploadExtension(req, res, next);
     }
+    if (file.originalname.startsWith("Export")) {
+      console.log("yes exported");
+      return uploadExported(req, res, next);
+    }
 
     // console.log("Converting to json!", req.file);
 
@@ -354,6 +358,107 @@ const uploadExtension = catchAsyncError(async (req, res, next) => {
   }
 });
 
+const uploadExported = catchAsyncError(async (req, res, next) => {
+  try {
+    const file = req.file;
+    const workbook = XLSX.readFile(file.path);
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+    const batchSize = 500;
+    let batchData = [];
+    let insertedCount = 0;
+    let temp = 0;
+    if (jsonData) {
+      for (const row of jsonData) {
+        console.log(row);
+        if (row.hasOwnProperty("APP No.")) {
+          row["DRI-ID"] = row["DRI-ID"].replace(/\s/g, "");
+
+          if (row["APP No."])
+            row["APP No."] = row["APP No."].toString().replace(/\s/g, "");
+          if (typeof row["Deposit"] === "string") {
+            row["Deposit"] = Number(row["Deposit"]);
+          }
+          if (typeof row["CSV"] === "string") {
+            row["CSV"] = Number(row["CSV"]);
+          }
+
+          temp += 1;
+
+          const documentData = {
+            dri_id: row["DRI-ID"],
+            place: row["Place"],
+            appNumber: row["APP No."],
+            company: row["Company"],
+            membership_type: row["Membership Type"],
+            amc: row["AMC"],
+            customerName: row["Customer Name"],
+            CSV: row["CSV"],
+            address: row["Address"],
+            residentialPhone: row["Res Phone"],
+            officePhone: row["Office Phone"],
+            amcLetterStatus: row["AMC LETTER STATUS"],
+            membershipStatus: row["AGREEMENT STATUS"],
+            deposit: row["Deposit"],
+            status: row["Status"],
+            currentValue: row["Current Value"],
+            date: row["Year of purchase"],
+            afterFeesDeduction99based:
+              row["After Deducting License Fees (99 based)"],
+            afterFeesDeduction33based:
+              row["After Deducting License Fees (33 based)"],
+            lastCommunication: row["Last Communication"],
+            remarks: row["Remarks"],
+          };
+
+          batchData.push(documentData);
+
+          if (batchData.length === batchSize) {
+            console.log("Inserting batch!");
+
+            await Promise.all(
+              batchData.map((documentData) =>
+                MainData.updateOne(
+                  { dri_id: documentData.dri_id },
+                  documentData
+                )
+              )
+            );
+            console.log(" batch inserted");
+            insertedCount += batchData.length;
+            batchData = [];
+          }
+        }
+      }
+
+      // Insert any remaining documents in the batch
+      if (batchData.length > 0) {
+        await Promise.all(
+          batchData.map((documentData) =>
+            MainData.updateOne({ dri_id: documentData.dri_id }, documentData)
+          )
+        );
+        insertedCount += batchData.length;
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "File uploaded successfully! Data will be updated shortly",
+    });
+
+    // Update the documents in the collection
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error occurred while uploading the file",
+    });
+  }
+});
+
 const changeAcceptance = catchAsyncError(async (req, res, next) => {
   const { id } = req.body;
   console.log(req.body);
@@ -374,7 +479,6 @@ const changeAcceptance = catchAsyncError(async (req, res, next) => {
 });
 
 const exportFile = catchAsyncError(async (req, res, next) => {
-  console.log("called");
   const {
     status,
     place,
@@ -387,6 +491,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     company,
     editStatus,
     membership_type,
+    amcLetterStatus,
+    membershipStatus,
   } = req.query;
   console.log(req.query);
   const queryObject = {};
@@ -413,6 +519,12 @@ const exportFile = catchAsyncError(async (req, res, next) => {
   if (date && date !== "All") {
     // queryObject.date = { $regex: date + "-", $options: "i" };
     queryObject.date = date;
+  }
+  if (amcLetterStatus && amcLetterStatus !== "All") {
+    queryObject.amcLetterStatus = { $regex: amcLetterStatus, $options: "i" };
+  }
+  if (membershipStatus && membershipStatus !== "All") {
+    queryObject.membershipStatus = { $regex: membershipStatus, $options: "i" };
   }
   if (amc && amc !== "All") {
     queryObject.amc = { $regex: amc, $options: "i" };
@@ -459,6 +571,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
 
       { fontWeight: "bold", value: "Outstanding" },
       { fontWeight: "bold", value: "Year Till Now" },
+      { fontWeight: "bold", value: "AMC LETTER STATUS" },
+      { fontWeight: "bold", value: "AGREEMENT STATUS" },
       { fontWeight: "bold", value: "After Deducting License Fees (99 based)" },
       { fontWeight: "bold", value: "After Deducting License Fees (33 based)" },
 
@@ -487,6 +601,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       afterFeesDeduction33based = "",
       lastCommunication = "",
       remarks = "",
+      amcLetterStatus = "",
+      membershipStatus = "",
 
       date,
     } = doc;
@@ -514,6 +630,8 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       { value: status },
       { value: CSV - deposit },
       { value: yearsTillNow },
+      { value: amcLetterStatus },
+      { value: membershipStatus },
       { value: afterFeesDeduction99based },
       { value: afterFeesDeduction33based },
       { value: lastCommunication },
@@ -618,6 +736,7 @@ const getData = catchAsyncError(async (req, res, next) => {
     result,
   });
 });
+
 const getSingleData = catchAsyncError(async (req, res, next) => {
   console.log("single data");
   const { id } = req.params;
