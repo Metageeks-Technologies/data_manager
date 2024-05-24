@@ -13070,7 +13070,7 @@ function EditForm({ setShow, dataId, varData }) {
     }
     if (form.adlf) {
       const yearsCountTillNow = (/* @__PURE__ */ new Date()).getFullYear() - Number(data.date.split("-")[0]);
-      const deposit = data.deposit;
+      const deposit = form.deposit;
       if (form.adlf === "99 Based") {
         const afterFeesDeduction99based = Math.round(
           deposit - deposit / 99 * yearsCountTillNow
