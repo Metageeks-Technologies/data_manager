@@ -74,7 +74,9 @@ function EditForm({ setShow, dataId, varData }) {
     if (form.adlf) {
       const yearsCountTillNow =
         new Date().getFullYear() - Number(data.date.split("-")[0]);
-      const deposit = data.deposit;
+      const deposit = form.deposit;
+      // const deposit = data.deposit;
+
       if (form.adlf === "99 Based") {
         const afterFeesDeduction99based = Math.round(
           deposit - (deposit / 99) * yearsCountTillNow
