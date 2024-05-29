@@ -31,6 +31,10 @@ const upload = catchAsyncError(async (req, res, next) => {
       console.log("yes exported");
       return uploadExported(req, res, next);
     }
+    if (file.originalname.startsWith("FULL_DATA")) {
+      console.log("yes exported");
+      return uploadFullData(req, res, next);
+    }
 
     // console.log("Converting to json!", req.file);
 
@@ -440,6 +444,96 @@ const uploadExported = catchAsyncError(async (req, res, next) => {
             MainData.updateOne({ dri_id: documentData.dri_id }, documentData)
           )
         );
+        insertedCount += batchData.length;
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "File uploaded successfully! Data will be updated shortly",
+    });
+
+    // Update the documents in the collection
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error occurred while uploading the file",
+    });
+  }
+});
+
+const uploadFullData = catchAsyncError(async (req, res, next) => {
+  try {
+    const file = req.file;
+    const workbook = XLSX.readFile(file.path);
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+    const batchSize = 500;
+    let batchData = [];
+    let insertedCount = 0;
+    let temp = 0;
+    if (jsonData) {
+      for (const row of jsonData) {
+        console.log(row);
+        if (row.hasOwnProperty("APP No.")) {
+          row["DRI-ID"] = row["DRI-ID"].toString().replace(/\s/g, "");
+
+          if (row["APP No."])
+            row["APP No."] = row["APP No."].toString().replace(/\s/g, "");
+          if (typeof row["Deposit"] === "string") {
+            row["Deposit"] = Number(row["Deposit"]);
+          }
+          if (typeof row["CSV"] === "string") {
+            row["CSV"] = Number(row["CSV"]);
+          }
+
+          temp += 1;
+
+          const documentData = {
+            dri_id: row["DRI-ID"],
+            place: row["Place"],
+            appNumber: row["APP No."],
+            company: row["Company"],
+            membership_type: row["Membership Type"],
+            amc: row["AMC"],
+            customerName: row["Customer Name"],
+            CSV: row["CSV"],
+            address: row["Address"],
+            residentialPhone: row["Res Phone"],
+            officePhone: row["Office Phone"],
+            amcLetterStatus: row["AMC LETTER STATUS"],
+            membershipStatus: row["AGREEMENT STATUS"],
+            deposit: row["Deposit"],
+            status: row["Status"],
+            currentValue: row["Current Value"],
+            date: row["Year of purchase"],
+            afterFeesDeduction99based:
+              row["After Deducting License Fees (99 based)"],
+            afterFeesDeduction33based:
+              row["After Deducting License Fees (33 based)"],
+            lastCommunication: row["Last Communication"],
+            remarks: row["Remarks"],
+          };
+
+          batchData.push(documentData);
+
+          if (batchData.length === batchSize) {
+            console.log("Inserting batch!");
+
+            await MainData.insertMany(batchData);
+            console.log(" batch inserted");
+            insertedCount += batchData.length;
+            batchData = [];
+          }
+        }
+      }
+
+      // Insert any remaining documents in the batch
+      if (batchData.length > 0) {
+        await MainData.insertMany(batchData);
         insertedCount += batchData.length;
       }
     }
