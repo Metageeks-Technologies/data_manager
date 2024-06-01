@@ -73,7 +73,7 @@ router.get("/main", async (req, res) => {
 //   next();
 // }
 router.route("/upload").post(upload.single("file"), uploadMainData);
-router.route("/getData").get(isAuthenticatedUser, getData);
+router.route("/getData").get(getData);
 router.route("/deleteData").patch(changeAcceptance);
 router.route("/deleteMany").patch(changeAcceptanceBulk);
 router.route("/export").get(exportFile);

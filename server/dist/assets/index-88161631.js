@@ -11782,7 +11782,8 @@ const initialState$1 = {
   activityNumOfPage: 1,
   isPageServed: {},
   isFiltered: false,
-  selectedData: []
+  selectedData: [],
+  isDuplicate: false
 };
 const showAlert = (type, text) => {
   if (type === "warn") {
@@ -11842,6 +11843,7 @@ const AppProvider = ({ children }) => {
   });
   const [showDeletePopup, setShowDeletePopup] = reactExports.useState(false);
   const [showEditPopup, setShowEditPopup] = reactExports.useState(false);
+  const [isDuplicate, setDuplicate] = reactExports.useState(false);
   reactExports.useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
   }, [instance, state.isAuthenticated]);
@@ -12101,14 +12103,15 @@ const AppProvider = ({ children }) => {
       editStatus = "All",
       page = 1,
       amcLetterStatus = "All",
-      membershipStatus = "All"
+      membershipStatus = "All",
+      isDuplicate: isDuplicate2 = ""
     } = queryObject;
     console.log(page);
     customerName = customerName == null ? void 0 : customerName.toUpperCase();
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(
-        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
+        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${isDuplicate2 ? "true" : ""}`
       );
       console.log(data);
       dispatch({ type: GET_ALL_DATA_SUCCESS, payload: { data, queryObject } });
@@ -12454,7 +12457,9 @@ const AppProvider = ({ children }) => {
         showDeletePopup,
         setShowDeletePopup,
         showEditPopup,
-        setShowEditPopup
+        setShowEditPopup,
+        isDuplicate,
+        setDuplicate
       },
       children
     }
@@ -12503,7 +12508,9 @@ const SearchContainer = ({ form, setForm, role }) => {
     setShowTable,
     searchBar,
     memberStatusOptions,
-    amcStatusOptions
+    amcStatusOptions,
+    isDuplicate,
+    setDuplicate
   } = useAppContext();
   reactExports.useState(false);
   const handleSubmit = (e) => {
@@ -12534,10 +12541,10 @@ const SearchContainer = ({ form, setForm, role }) => {
     }
   };
   const handleInputChange = (event) => {
-    const { name, value: value2 } = event.target;
+    const { name, value: value2, type, checked } = event.target;
     setForm((prevState) => ({
       ...prevState,
-      [name]: value2
+      [name]: type === "checkbox" ? checked : value2
     }));
     console.log(form);
   };
@@ -12778,14 +12785,30 @@ const SearchContainer = ({ form, setForm, role }) => {
             )
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            type: "submit",
-            className: "w-3/12 mt-6 mx-auto bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ",
-            children: "Apply filters"
-          }
-        )
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex  justify-between items-center mt-6 ", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "submit",
+              className: "w-3/12  bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ",
+              children: "Apply filters"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                name: "isDuplicate",
+                value: form.isDuplicate,
+                checked: form.isDuplicate,
+                onChange: handleInputChange,
+                className: "toggle-checkbox",
+                type: "checkbox"
+              }
+            ),
+            "Get Duplicate"
+          ] }) })
+        ] })
       ]
     }
   ) });
@@ -31590,7 +31613,8 @@ const Data$3 = () => {
     acceptance: "accepted",
     amc: "All",
     amcLetterStatus: "All",
-    membershipStatus: "All"
+    membershipStatus: "All",
+    isDuplicate: false
   });
   reactExports.useEffect(() => {
     return () => {

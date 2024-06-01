@@ -761,8 +761,12 @@ const getData = catchAsyncError(async (req, res, next) => {
     page,
     amcLetterStatus,
     membershipStatus,
+    isDuplicate,
   } = req.query;
-  // console.log(req.query);
+
+  if (isDuplicate) {
+    return getDuplicateData(req, res, next);
+  }
   const queryObject = {};
   if (appNumber) {
     queryObject.appNumber = appNumber;
@@ -774,7 +778,7 @@ const getData = catchAsyncError(async (req, res, next) => {
   }
   if (status && status !== "All") {
     // queryObject.status = status;
-    queryObject.status = { $regex: status, $options: "i" };
+    queryObject.status = { $regex: `^${status}$`, $options: "i" };
   }
   if (place && place !== "All") {
     // queryObject.place = place;
@@ -791,7 +795,10 @@ const getData = catchAsyncError(async (req, res, next) => {
     queryObject.date = date;
   }
   if (amcLetterStatus && amcLetterStatus !== "All") {
-    queryObject.amcLetterStatus = { $regex: amcLetterStatus, $options: "i" };
+    queryObject.amcLetterStatus = {
+      $regex: `^${amcLetterStatus}$`,
+      $options: "i",
+    };
   }
   if (membershipStatus && membershipStatus !== "All") {
     queryObject.membershipStatus = { $regex: membershipStatus, $options: "i" };
@@ -828,6 +835,56 @@ const getData = catchAsyncError(async (req, res, next) => {
     numOfPages,
     totalData,
     result,
+  });
+});
+
+const getDuplicateData = catchAsyncError(async (req, res, next) => {
+  const { page } = req.query;
+  const p = Number(page) || 1;
+  const limit = 8;
+  const skip = (p - 1) * limit;
+
+  const aggregationPipeline = [
+    {
+      $match: {
+        acceptance: "accepted",
+      },
+    },
+    {
+      $group: {
+        _id: "$appNumber",
+        count: { $sum: 1 },
+        documents: { $push: "$$ROOT" }, // Store all documents with the same app_number
+      },
+    },
+    {
+      $match: {
+        count: { $gt: 1 },
+      },
+    },
+    {
+      $unwind: "$documents", // Unwind to flatten the array of documents
+    },
+    {
+      $replaceRoot: { newRoot: "$documents" }, // Replace the root with the unwound documents
+    },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [{ $skip: skip }, { $limit: limit }], // Apply pagination
+      },
+    },
+  ];
+
+  const [result] = await MainData.aggregate(aggregationPipeline);
+  const totalData = result.metadata[0] ? result.metadata[0].total : 0;
+  const numOfPages = Math.ceil(totalData / limit);
+
+  res.status(200).json({
+    success: true,
+    numOfPages,
+    totalData,
+    result: result.data,
   });
 });
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');:root {
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");:root {
   --toastify-color-light: #fff;
   --toastify-color-dark: #121212;
   --toastify-color-info: #3498db;
@@ -1477,6 +1477,176 @@ video {
 [hidden] {
   display: none;
 }
+label{
+  position: relative;
+  display: inline-block;
+  height: 1.5rem;
+}
+.toggle-checkbox{
+  display: inline-block;
+  height: 0px;
+  width: 2.75rem;
+  cursor: pointer;
+}
+.toggle-checkbox:focus{
+  outline-width: 0px;
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox:focus{
+    outline-width: 0px;
+  }
+}
+.toggle-checkbox{
+  border-width: 0px;
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox{
+    border-width: 0px;
+  }
+}
+.toggle-checkbox:focus{
+  --tw-ring-offset-color: transparent;
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox:focus{
+    --tw-ring-offset-color: transparent;
+  }
+}
+.toggle-checkbox:focus{
+  --tw-ring-color: transparent;
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox:focus{
+    --tw-ring-color: transparent;
+  }
+}
+.toggle-checkbox:focus-within{
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox:focus-within{
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  }
+}
+.toggle-checkbox:focus{
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox:focus{
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+}
+.toggle-checkbox::before{
+  content: var(--tw-content);
+  position: absolute;
+}
+.toggle-checkbox::after{
+  content: var(--tw-content);
+  position: absolute;
+}
+.toggle-checkbox::before{
+  content: var(--tw-content);
+  top: 0px;
+}
+.toggle-checkbox::after{
+  content: var(--tw-content);
+  top: 0px;
+}
+.toggle-checkbox::before{
+  content: var(--tw-content);
+  display: inline-block;
+}
+.toggle-checkbox::after{
+  content: var(--tw-content);
+  display: block;
+}
+.toggle-checkbox::before{
+  content: var(--tw-content);
+  border-radius: 9999px;
+}
+.toggle-checkbox::after{
+  border-radius: 9999px;
+  margin-top: 0.125rem;
+  margin-left: 0.125rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  --tw-content: '';
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  content: var(--tw-content);
+  transition-duration: 100ms;
+}
+.toggle-checkbox::before{
+  height: 100%;
+  width: 2.5rem;
+  --tw-content: '';
+  content: var(--tw-content);
+  --tw-shadow: inset 0 0 #000;
+  --tw-shadow-colored: inset 0 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.toggle-checkbox::after{
+  content: var(--tw-content);
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox::after{
+    content: var(--tw-content);
+    --tw-bg-opacity: 1;
+    background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  }
+}
+.toggle-checkbox::before{
+  content: var(--tw-content);
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox::before{
+    content: var(--tw-content);
+    --tw-bg-opacity: 1;
+    background-color: rgb(75 85 99 / var(--tw-bg-opacity));
+  }
+}
+.toggle-checkbox:checked::before{
+  content: var(--tw-content);
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+@media (prefers-color-scheme: dark){
+  .toggle-checkbox:checked::before{
+    content: var(--tw-content);
+    --tw-bg-opacity: 1;
+    background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+  }
+}
+.toggle-checkbox:checked::after{
+  --tw-translate-x: 1rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  content: var(--tw-content);
+  transition-duration: 300ms;
+}
+.toggle-checkbox:disabled{
+  cursor: not-allowed;
+}
+.toggle-checkbox:disabled::after{
+  content: var(--tw-content);
+  --tw-bg-opacity: 0.75;
+}
+.toggle-checkbox:checked:disabled::before{
+  content: var(--tw-content);
+  --tw-bg-opacity: 0.4;
+}
 *, ::before, ::after{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -2523,55 +2693,55 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 * {
-    font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
-.pagination{
-    padding: 22px;
+.pagination {
+  padding: 22px;
 }
 .pagination > li {
-    display: inline-block;
-    padding-left: 0;
-    list-style: none;
-    border:2 solid;
-  }
+  display: inline-block;
+  padding-left: 0;
+  list-style: none;
+  border: 2 solid;
+}
 .pagination > li > a,
-  .pagination > li > span {
-    position: relative;
-    float: left;
-    padding: 6px 12px;
-    line-height: 1.42857143;
-    text-decoration: none;
-    color: #3b82f6;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    margin-left: -1px;
-  }
-.pagination>li.active>a {
-    color: #fff;
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-  }
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  text-decoration: none;
+  color: #3b82f6;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-left: -1px;
+}
+.pagination > li.active > a {
+  color: #fff;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
 /* Style the active class (and buttons on mouse-over) */
 .pagination > li > a:hover {
-    background-color:  #3b82f6;
-    color: white;
-  }
+  background-color: #3b82f6;
+  color: white;
+}
 .pagination > li:first-child > a,
-  .pagination > li:first-child > span {
-    margin-left: 0;
-    padding: 0px;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 4px;
-    display: none!important;
-  }
+.pagination > li:first-child > span {
+  margin-left: 0;
+  padding: 0px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  display: none !important;
+}
 .pagination > li:last-child > a,
-  .pagination > li:last-child > span {
-    border-bottom-right-radius: 4px;
-    margin-right: 0;
-    padding: 0px!important;
-    border-top-right-radius: 4px;
-    display: none!important;
-  }
+.pagination > li:last-child > span {
+  border-bottom-right-radius: 4px;
+  margin-right: 0;
+  padding: 0px !important;
+  border-top-right-radius: 4px;
+  display: none !important;
+}
 /* date select  */
 .custom-select {
   /* position: relative;
@@ -2598,7 +2768,8 @@ select-selected.select-arrow-active:after {
   top: 7px;
 }
 /* style the items (options), including the selected item: */
-.select-items div,.select-selected {
+.select-items div,
+.select-selected {
   color: #ffffff;
   padding: 8px 16px;
   border: 1px solid transparent;
@@ -2618,44 +2789,44 @@ select-selected.select-arrow-active:after {
 .select-hide {
   display: none;
 }
-.select-items div:hover, .same-as-selected {
+.select-items div:hover,
+.same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
 }
 /* time liner */
 .vertical-timeline-element-content p {
   margin: 0 0;
-  
 }
-.vertical-timeline--animate .vertical-timeline-element-content.bounce-in{
+.vertical-timeline--animate .vertical-timeline-element-content.bounce-in {
   padding: 0.4rem 0.6rem;
 }
 .vertical-timeline-element-content .vertical-timeline-element-date {
-  padding: 0;;
+  padding: 0;
 }
 .vertical-timeline::before {
   /* background-color: #d6d4d4;
   width: 1px; */
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 50%;
   width: 2px;
-  height: calc(100% - 50px); /* Adjust the height to leave space at the bottom */
+  height: calc(
+    100% - 50px
+  ); /* Adjust the height to leave space at the bottom */
   background-color: #ccc; /* Replace with your desired color */
   transform: translateX(-50%);
-  z-index: -1; 
+  z-index: -1;
 }
-.vertical-timeline-element-content .vertical-timeline-element-date, .vertical-timeline-element-content p {
-  
-  font-size: .8125rem;
-  
+.vertical-timeline-element-content .vertical-timeline-element-date,
+.vertical-timeline-element-content p {
+  font-size: 0.8125rem;
 }
 /* scroll bar */
 .custom-scrollbar {
- 
   /* Set scrollbar color */
-  
-  scrollbar-color: #3B82F6 lightblue;
+
+  scrollbar-color: #3b82f6 lightblue;
 }
 /* For WebKit based browsers (like Chrome, Edge) */
 .custom-scrollbar::-webkit-scrollbar {
@@ -2664,8 +2835,7 @@ select-selected.select-arrow-active:after {
   border-radius: 8px; /* Rounded corners */
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  
-  background-color: #3B82F6; /* Color of the scrollbar thumb */
+  background-color: #3b82f6; /* Color of the scrollbar thumb */
   border-radius: 8px; /* Rounded corners */
 }
 /* For Firefox */
@@ -2673,7 +2843,7 @@ select-selected.select-arrow-active:after {
   scrollbar-width: thin; /* Width of the scrollbar */
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #3B82F6; /* Color of the scrollbar thumb */
+  background-color: #3b82f6; /* Color of the scrollbar thumb */
   border-radius: 8px; /* Rounded corners */
 }
 .before\:absolute::before{
@@ -2922,4 +3092,3 @@ select-selected.select-arrow-active:after {
     width: 8rem;
   }
 }
-
