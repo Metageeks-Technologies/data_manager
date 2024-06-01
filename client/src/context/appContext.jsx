@@ -115,6 +115,7 @@ export const initialState = {
   isPageServed: {},
   isFiltered: false,
   selectedData: [],
+  isDuplicate: false,
 };
 export const showAlert = (type, text) => {
   if (type === "warn") {
@@ -179,6 +180,7 @@ const AppProvider = ({ children }) => {
 
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
+  const [isDuplicate, setDuplicate] = useState(false);
 
   useEffect(() => {
     instance.defaults.headers["token"] = localStorage.getItem("token");
@@ -190,6 +192,7 @@ const AppProvider = ({ children }) => {
   const selectData = (id) => {
     dispatch({ type: SELECT_DATA, payload: id });
   };
+
   const unselectData = (id) => {
     dispatch({ type: UNSELECT_DATA, payload: id });
   };
@@ -473,13 +476,16 @@ const AppProvider = ({ children }) => {
       page = 1,
       amcLetterStatus = "All",
       membershipStatus = "All",
+      isDuplicate = "",
     } = queryObject;
     console.log(page);
     customerName = customerName?.toUpperCase();
     dispatch({ type: API_CALL_BEGIN });
     try {
       const { data } = await instance(
-        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`
+        `/getData?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&page=${page}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${
+          isDuplicate ? "true" : ""
+        }`
       );
       console.log(data);
 
@@ -872,6 +878,8 @@ const AppProvider = ({ children }) => {
         setShowDeletePopup,
         showEditPopup,
         setShowEditPopup,
+        isDuplicate,
+        setDuplicate,
       }}
     >
       {children}

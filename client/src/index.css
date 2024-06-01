@@ -1,65 +1,100 @@
 /* Poppins font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
 
 /* tailwind imports */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-    font-family: 'Poppins', sans-serif;
+@layer base {
+  label {
+    @apply h-6 relative inline-block;
+  }
+
+  .toggle-checkbox {
+    @apply w-11 h-0 cursor-pointer inline-block;
+    @apply focus:outline-0 dark:focus:outline-0;
+    @apply border-0 dark:border-0;
+    @apply focus:ring-offset-transparent dark:focus:ring-offset-transparent;
+    @apply focus:ring-transparent dark:focus:ring-transparent;
+    @apply focus-within:ring-0 dark:focus-within:ring-0;
+    @apply focus:shadow-none dark:focus:shadow-none;
+
+    @apply after:absolute before:absolute;
+    @apply after:top-0 before:top-0;
+    @apply after:block before:inline-block;
+    @apply before:rounded-full after:rounded-full;
+
+    @apply after:content-[''] after:w-5 after:h-5 after:mt-0.5 after:ml-0.5;
+    @apply after:shadow-md after:duration-100;
+
+    @apply before:content-[''] before:w-10 before:h-full;
+    @apply before:shadow-[inset_0_0_#000];
+
+    @apply after:bg-white dark:after:bg-gray-50;
+    @apply before:bg-gray-300 dark:before:bg-gray-600;
+    @apply before:checked:bg-blue-500 dark:before:checked:bg-blue-500;
+    @apply checked:after:duration-300 checked:after:translate-x-4;
+
+    @apply disabled:after:bg-opacity-75 disabled:cursor-not-allowed;
+    @apply disabled:checked:before:bg-opacity-40;
+  }
 }
-.pagination{
-    padding: 22px;
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+.pagination {
+  padding: 22px;
 }
 .pagination > li {
-    display: inline-block;
-    padding-left: 0;
-  }
-  .pagination > li {
-    list-style: none;
-    border:2 solid;
-  }
-  .pagination > li > a,
-  .pagination > li > span {
-    position: relative;
-    float: left;
-    padding: 6px 12px;
-    line-height: 1.42857143;
-    text-decoration: none;
-    color: #3b82f6;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    margin-left: -1px;
-  }
-  
-  .pagination>li.active>a {
-    color: #fff;
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-  }
-  
+  display: inline-block;
+  padding-left: 0;
+}
+.pagination > li {
+  list-style: none;
+  border: 2 solid;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  text-decoration: none;
+  color: #3b82f6;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-left: -1px;
+}
+
+.pagination > li.active > a {
+  color: #fff;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
 /* Style the active class (and buttons on mouse-over) */
 .pagination > li > a:hover {
-    background-color:  #3b82f6;
-    color: white;
-  }
-  .pagination > li:first-child > a,
-  .pagination > li:first-child > span {
-    margin-left: 0;
-    padding: 0px;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 4px;
-    display: none!important;
-  }
-  .pagination > li:last-child > a,
-  .pagination > li:last-child > span {
-    border-bottom-right-radius: 4px;
-    margin-right: 0;
-    padding: 0px!important;
-    border-top-right-radius: 4px;
-    display: none!important;
-  }
+  background-color: #3b82f6;
+  color: white;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  padding: 0px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  display: none !important;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-bottom-right-radius: 4px;
+  margin-right: 0;
+  padding: 0px !important;
+  border-top-right-radius: 4px;
+  display: none !important;
+}
 /* date select  */
 .custom-select {
   /* position: relative;
@@ -71,7 +106,7 @@
 .select-selected {
   background-color: rgb(21, 74, 127);
 }
-  
+
 .select-selected:after {
   position: absolute;
   content: "";
@@ -88,7 +123,8 @@ select-selected.select-arrow-active:after {
 }
 
 /* style the items (options), including the selected item: */
-.select-items div,.select-selected {
+.select-items div,
+.select-selected {
   color: #ffffff;
   padding: 8px 16px;
   border: 1px solid transparent;
@@ -111,45 +147,45 @@ select-selected.select-arrow-active:after {
   display: none;
 }
 
-.select-items div:hover, .same-as-selected {
+.select-items div:hover,
+.same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* time liner */
 .vertical-timeline-element-content p {
   margin: 0 0;
-  
 }
-.vertical-timeline--animate .vertical-timeline-element-content.bounce-in{
+.vertical-timeline--animate .vertical-timeline-element-content.bounce-in {
   padding: 0.4rem 0.6rem;
 }
 .vertical-timeline-element-content .vertical-timeline-element-date {
-  padding: 0;;
+  padding: 0;
 }
 .vertical-timeline::before {
   /* background-color: #d6d4d4;
   width: 1px; */
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 50%;
   width: 2px;
-  height: calc(100% - 50px); /* Adjust the height to leave space at the bottom */
+  height: calc(
+    100% - 50px
+  ); /* Adjust the height to leave space at the bottom */
   background-color: #ccc; /* Replace with your desired color */
   transform: translateX(-50%);
-  z-index: -1; 
+  z-index: -1;
 }
-.vertical-timeline-element-content .vertical-timeline-element-date, .vertical-timeline-element-content p {
-  
-  font-size: .8125rem;
-  
+.vertical-timeline-element-content .vertical-timeline-element-date,
+.vertical-timeline-element-content p {
+  font-size: 0.8125rem;
 }
 /* scroll bar */
 .custom-scrollbar {
- 
   /* Set scrollbar color */
-  
-  scrollbar-color: #3B82F6 lightblue;
+
+  scrollbar-color: #3b82f6 lightblue;
 }
 
 /* For WebKit based browsers (like Chrome, Edge) */
@@ -160,8 +196,7 @@ select-selected.select-arrow-active:after {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  
-  background-color: #3B82F6; /* Color of the scrollbar thumb */
+  background-color: #3b82f6; /* Color of the scrollbar thumb */
   border-radius: 8px; /* Rounded corners */
 }
 
@@ -171,7 +206,6 @@ select-selected.select-arrow-active:after {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #3B82F6; /* Color of the scrollbar thumb */
+  background-color: #3b82f6; /* Color of the scrollbar thumb */
   border-radius: 8px; /* Rounded corners */
 }
-

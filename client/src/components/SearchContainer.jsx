@@ -18,6 +18,8 @@ const SearchContainer = ({ form, setForm, role }) => {
     searchBar,
     memberStatusOptions,
     amcStatusOptions,
+    isDuplicate,
+    setDuplicate,
   } = useAppContext();
   const [exporting, setExporting] = useState(false);
   const handleSubmit = (e) => {
@@ -60,11 +62,11 @@ const SearchContainer = ({ form, setForm, role }) => {
   };
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, type, checked } = event.target;
 
     setForm((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
     console.log(form);
   };
@@ -382,12 +384,27 @@ const SearchContainer = ({ form, setForm, role }) => {
           )}
         </div>
 
-        <button
-          type="submit"
-          className="w-3/12 mt-6 mx-auto bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 "
-        >
-          Apply filters
-        </button>
+        <div className="flex  justify-between items-center mt-6 ">
+          <button
+            type="submit"
+            className="w-3/12  bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 "
+          >
+            Apply filters
+          </button>
+          <div>
+            <label>
+              <input
+                name="isDuplicate"
+                value={form.isDuplicate}
+                checked={form.isDuplicate}
+                onChange={handleInputChange}
+                className="toggle-checkbox"
+                type="checkbox"
+              />
+              Get Duplicate
+            </label>
+          </div>
+        </div>
       </form>
     </div>
   );
