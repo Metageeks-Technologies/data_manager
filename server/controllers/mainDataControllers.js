@@ -587,9 +587,14 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     membership_type,
     amcLetterStatus,
     membershipStatus,
+    isDuplicate,
   } = req.query;
   console.log(req.query);
+  if (isDuplicate) {
+    return exportWithDuplicate(req, res, next);
+  }
   const queryObject = {};
+  console.log(isDuplicate, "in export file");
   if (appNumber) {
     queryObject.appNumber = appNumber;
   }
@@ -676,6 +681,152 @@ const exportFile = catchAsyncError(async (req, res, next) => {
   ];
 
   result.forEach((doc, i) => {
+    const {
+      dri_id,
+      place = "",
+      appNumber = "",
+      company = "",
+      membership_type = "",
+      amc = "",
+      customerName = "",
+      GSV = "",
+      address = "",
+      residentialPhone = "",
+      officePhone = "",
+      CSV = "",
+      deposit = "",
+      status = "",
+      afterFeesDeduction99based = "",
+      afterFeesDeduction33based = "",
+      lastCommunication = "",
+      remarks = "",
+      amcLetterStatus = "",
+      membershipStatus = "",
+
+      date,
+    } = doc;
+    if (!dri_id) return;
+    const dateArr = date.split("-");
+    const yearsTillNow = new Date().getFullYear() - dateArr[0];
+    // const outstanding = {CSV - deposit};
+    fileData.push([
+      { value: i + 1 },
+      { value: dri_id },
+      { value: place },
+      { value: appNumber },
+      { value: company },
+      { value: membership_type },
+      { value: date },
+
+      { value: amc },
+      { value: customerName },
+      // { value:GSV },
+      { value: address },
+      { value: residentialPhone },
+      { value: officePhone },
+      { value: CSV },
+      { value: deposit },
+      { value: status },
+      { value: CSV - deposit },
+      { value: yearsTillNow },
+      { value: amcLetterStatus },
+      { value: membershipStatus },
+      { value: afterFeesDeduction99based },
+      { value: afterFeesDeduction33based },
+      { value: lastCommunication },
+      { value: remarks },
+    ]);
+  });
+
+  const fileName = "DRI" + "_Export" + new Date().getDate() + ".xlsx";
+
+  const buffer = await writeXlsxFile(fileData, { buffer: true });
+
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+  res.send(buffer);
+});
+
+const exportWithDuplicate = catchAsyncError(async (req, res, next) => {
+  const { place, isDuplicate } = req.query;
+
+  const queryObject = {
+    acceptance: "accepted",
+  };
+
+  if (place && place !== "All") {
+    queryObject.place = { $regex: place, $options: "i" };
+  }
+
+  const aggregationPipeline = [
+    {
+      $match: queryObject,
+    },
+    {
+      $group: {
+        _id: "$appNumber",
+        count: { $sum: 1 },
+        documents: { $push: "$$ROOT" }, // Store all documents with the same app_number
+      },
+    },
+    {
+      $match: {
+        count: { $gt: 1 },
+      },
+    },
+    {
+      $unwind: "$documents", // Unwind to flatten the array of documents
+    },
+    {
+      $replaceRoot: { newRoot: "$documents" }, // Replace the root with the unwound documents
+    },
+    {
+      $facet: {
+        metadata: [{ $count: "total" }],
+        data: [], // Apply pagination
+      },
+    },
+  ];
+
+  const [result] = await MainData.aggregate(aggregationPipeline);
+
+  const fileData = [
+    [
+      { fontWeight: "bold", value: "S No." },
+      { fontWeight: "bold", value: "DRI-ID" },
+      { fontWeight: "bold", value: "Place" },
+      { fontWeight: "bold", value: "APP No." },
+      { fontWeight: "bold", value: "Company" },
+      { fontWeight: "bold", value: "Membership Type" },
+      // {fontWeight:"bold", value: "Date of Purchase" },
+      // {fontWeight:"bold", value: "PP D" },
+      { fontWeight: "bold", value: "Year of purchase" },
+      { fontWeight: "bold", value: "AMC" },
+      { fontWeight: "bold", value: "Customer Name" },
+      { fontWeight: "bold", value: "Address" },
+      { fontWeight: "bold", value: "Res Phone" },
+      { fontWeight: "bold", value: "Office Phone" },
+
+      { fontWeight: "bold", value: "CSV" },
+      { fontWeight: "bold", value: "Deposit" },
+      { fontWeight: "bold", value: "Status" },
+
+      { fontWeight: "bold", value: "Outstanding" },
+      { fontWeight: "bold", value: "Year Till Now" },
+      { fontWeight: "bold", value: "AMC LETTER STATUS" },
+      { fontWeight: "bold", value: "AGREEMENT STATUS" },
+      { fontWeight: "bold", value: "After Deducting License Fees (99 based)" },
+      { fontWeight: "bold", value: "After Deducting License Fees (33 based)" },
+
+      { fontWeight: "bold", value: "Last Communication" },
+      { fontWeight: "bold", value: "Remarks" },
+    ],
+  ];
+
+  result.data.forEach((doc, i) => {
     const {
       dri_id,
       place = "",
@@ -839,16 +990,22 @@ const getData = catchAsyncError(async (req, res, next) => {
 });
 
 const getDuplicateData = catchAsyncError(async (req, res, next) => {
-  const { page } = req.query;
+  const { page, place } = req.query;
   const p = Number(page) || 1;
   const limit = 8;
   const skip = (p - 1) * limit;
 
+  const queryObject = {
+    acceptance: "accepted",
+  };
+
+  if (place && place !== "All") {
+    queryObject.place = { $regex: place, $options: "i" };
+  }
+
   const aggregationPipeline = [
     {
-      $match: {
-        acceptance: "accepted",
-      },
+      $match: queryObject,
     },
     {
       $group: {

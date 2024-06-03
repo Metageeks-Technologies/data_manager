@@ -12220,12 +12220,13 @@ const AppProvider = ({ children }) => {
       company = "All",
       amc = "All",
       membership_type = "All",
+      isDuplicate: isDuplicate2 = "",
       acceptance
     } = queryObject;
     customerName = customerName.toUpperCase();
     try {
       const response = await instance(
-        `/export?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}`,
+        `/export?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${isDuplicate2}`,
         {
           responseType: "blob"
         }
