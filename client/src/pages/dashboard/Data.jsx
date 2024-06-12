@@ -60,7 +60,7 @@ const Data = () => {
     amc: "All",
     amcLetterStatus: "All",
     membershipStatus: "All",
-    isDuplicate: false,
+    isDuplicate: "",
   });
 
   useEffect(() => {
