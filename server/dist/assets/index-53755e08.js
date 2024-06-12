@@ -31615,7 +31615,7 @@ const Data$3 = () => {
     amc: "All",
     amcLetterStatus: "All",
     membershipStatus: "All",
-    isDuplicate: false
+    isDuplicate: ""
   });
   reactExports.useEffect(() => {
     return () => {

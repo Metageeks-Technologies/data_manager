@@ -5,7 +5,6 @@ import fs from "fs";
 import { exec } from "child_process";
 
 import writeXlsxFile from "write-excel-file/node";
-import { type } from "os";
 
 async function isDriIdExists(dri_id) {
   const existingDocument = await MainData.findOne({ dri_id });
@@ -641,12 +640,15 @@ const exportFile = catchAsyncError(async (req, res, next) => {
   }
 
   let result = await MainData.find(queryObject);
+  const totalData = await MainData.countDocuments(queryObject);
+
   if (acceptance) {
     if (acceptance === "accepted")
       result = result.filter((obj) => obj.acceptance === "accepted");
     else result = result.filter((obj) => obj.acceptance === "deleted");
     // console.log(result);
   }
+  console.log(totalData);
   const fileData = [
     [
       { fontWeight: "bold", value: "S No." },
