@@ -588,12 +588,12 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     membershipStatus,
     isDuplicate,
   } = req.query;
-  console.log(req.query);
+  // console.log(req.query);
   if (isDuplicate) {
     return exportWithDuplicate(req, res, next);
   }
   const queryObject = {};
-  console.log(isDuplicate, "in export file");
+  // console.log(isDuplicate, "in export file");
   if (appNumber) {
     queryObject.appNumber = appNumber;
   }
@@ -638,6 +638,7 @@ const exportFile = catchAsyncError(async (req, res, next) => {
       queryObject.editStatus = { $ne: "unchanged" };
     } else queryObject.editStatus = editStatus;
   }
+  console.log(queryObject, "from export file");
 
   let result = await MainData.find(queryObject);
   const totalData = await MainData.countDocuments(queryObject);
@@ -931,7 +932,7 @@ const getData = catchAsyncError(async (req, res, next) => {
   }
   if (status && status !== "All") {
     // queryObject.status = status;
-    queryObject.status = { $regex: `^${status}$`, $options: "i" };
+    queryObject.status = { $regex: status, $options: "i" };
   }
   if (place && place !== "All") {
     // queryObject.place = place;
@@ -973,7 +974,7 @@ const getData = catchAsyncError(async (req, res, next) => {
       queryObject.editStatus = { $in: ["rejected", "approved"] };
     } else queryObject.editStatus = editStatus;
   }
-  console.log(queryObject, "page number is", page);
+  // console.log(queryObject, "page number is", page);
   const p = Number(page) || 1;
   const limit = 8;
   const skip = (p - 1) * limit;
