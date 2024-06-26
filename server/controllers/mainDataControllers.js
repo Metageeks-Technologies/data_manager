@@ -572,6 +572,7 @@ const changeAcceptance = catchAsyncError(async (req, res, next) => {
 });
 
 const exportFile = catchAsyncError(async (req, res, next) => {
+  
   const {
     status,
     place,
@@ -588,7 +589,7 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     membershipStatus,
     isDuplicate,
   } = req.query;
-  // console.log(req.query);
+  console.log("export file =>>",req.query);
   if (isDuplicate) {
     return exportWithDuplicate(req, res, next);
   }
@@ -602,27 +603,35 @@ const exportFile = catchAsyncError(async (req, res, next) => {
   }
   if (status && status !== "All") {
     // queryObject.status = status;
-    queryObject.status = { $regex: status, $options: "i" };
+    const statusArray =status.split(',').map(val => val.trim());
+    queryObject["status"] = { $in: statusArray.map(val => new RegExp(`^${val}$`, "i")) };
+    // queryObject.status = { $regex: status, $options: "i" };
   }
   if (place && place !== "All") {
     // queryObject.place = place;
-    queryObject.place = { $regex: place, $options: "i" };
+    const placeArray =place.split(',').map(val => val.trim());
+    queryObject["place"] = { $in: placeArray.map(val => new RegExp(val, "i")) };
+    // queryObject.place = { $regex: place, $options: "i" };
   }
   if (company && company !== "All") {
     queryObject.company = company;
   }
   if (membership_type && membership_type !== "All") {
-    queryObject.membership_type = { $regex: membership_type, $options: "i" };
+    const membership_typeArray =membership_type.split(',').map(val => val.trim());
+    queryObject["membership_type"] = { $in: membership_typeArray.map(val => new RegExp(`^${val}$`, "i")) };
+    // queryObject.membership_type = { $regex: membership_type, $options: "i" };
   }
   if (date && date !== "All") {
     // queryObject.date = { $regex: date + "-", $options: "i" };
-    queryObject.date = date;
+    const dateArray =date.split(',').map(val => val.trim());
+    queryObject["date"] = { $in: dateArray.map(val => new RegExp(val, "i")) };
+    // queryObject.date = date;
   }
   if (amcLetterStatus && amcLetterStatus !== "All") {
-    queryObject.amcLetterStatus = { $regex: amcLetterStatus, $options: "i" };
+    queryObject.amcLetterStatus = { $regex: `^${amcLetterStatus}$`, $options: "i" };
   }
   if (membershipStatus && membershipStatus !== "All") {
-    queryObject.membershipStatus = { $regex: membershipStatus, $options: "i" };
+    queryObject.membershipStatus = { $regex: `^${membershipStatus}$`, $options: "i" };
   }
   if (amc && amc !== "All") {
     queryObject.amc = { $regex: amc, $options: "i" };
@@ -900,6 +909,7 @@ const exportWithDuplicate = catchAsyncError(async (req, res, next) => {
 });
 
 const getData = catchAsyncError(async (req, res, next) => {
+
   const {
     status,
     place,
@@ -932,21 +942,30 @@ const getData = catchAsyncError(async (req, res, next) => {
   }
   if (status && status !== "All") {
     // queryObject.status = status;
-    queryObject.status = { $regex: status, $options: "i" };
+    const statusArray =status.split(',').map(val => val.trim());
+    queryObject["status"] = { $in: statusArray.map(val => new RegExp(`^${val}$`, "i")) };
+
+    // queryObject.amcLetterStatus = {
+    //   $regex: `^${amcLetterStatus}$`,
+    //   $options: "i",
+    // };
   }
   if (place && place !== "All") {
     // queryObject.place = place;
-    queryObject.place = { $regex: place, $options: "i" };
+    const placeArray =place.split(',').map(val => val.trim());
+    queryObject["place"] = { $in: placeArray.map(val => new RegExp(val, "i")) };
   }
   if (company && company !== "All") {
     queryObject.company = company;
   }
   if (membership_type && membership_type !== "All") {
-    queryObject.membership_type = { $regex: membership_type, $options: "i" };
+    const membership_typeArray =membership_type.split(',').map(val => val.trim());
+    queryObject["membership_type"] = { $in: membership_typeArray.map(val => new RegExp(`^${val}$`, "i")) };
   }
   if (date && date !== "All") {
     // queryObject.date = { $regex: date + "-", $options: "i" };
-    queryObject.date = date;
+    const dateArray =date.split(',').map(val => val.trim());
+    queryObject["date"] = { $in: dateArray.map(val => new RegExp(val, "i")) };
   }
   if (amcLetterStatus && amcLetterStatus !== "All") {
     queryObject.amcLetterStatus = {
@@ -955,7 +974,7 @@ const getData = catchAsyncError(async (req, res, next) => {
     };
   }
   if (membershipStatus && membershipStatus !== "All") {
-    queryObject.membershipStatus = { $regex: membershipStatus, $options: "i" };
+    queryObject.membershipStatus = { $regex: `^${membershipStatus}$`, $options: "i" };
   }
   if (amc && amc !== "All") {
     queryObject.amc = { $regex: amc, $options: "i" };
@@ -974,7 +993,8 @@ const getData = catchAsyncError(async (req, res, next) => {
       queryObject.editStatus = { $in: ["rejected", "approved"] };
     } else queryObject.editStatus = editStatus;
   }
-  // console.log(queryObject, "page number is", page);
+  console.log(queryObject, "page number is", page);
+
   const p = Number(page) || 1;
   const limit = 8;
   const skip = (p - 1) * limit;

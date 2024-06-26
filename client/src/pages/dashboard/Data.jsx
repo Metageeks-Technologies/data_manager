@@ -48,14 +48,14 @@ const Data = () => {
     showDeletePopup,
   } = useAppContext();
   const [form, setForm] = useState({
-    status: "All",
-    place: "All",
+    status: [],
+    place: [],
     dri_id: "",
-    date: "All",
+    date: [],
     customerName: "",
     appNumber: "",
     company: "All",
-    membership_type: "All",
+    membership_type: [],
     acceptance: "accepted",
     amc: "All",
     amcLetterStatus: "All",

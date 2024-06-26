@@ -29,15 +29,15 @@ const Data = () => {
   } = useAppContext();
 
   const [form, setForm] = useState({
-    status: "All",
-    place: "All",
+    status: [],
+    place: [],
     dri_id: "",
-    date: "All",
+    date: [],
     customerName: "",
     amc: "All",
     appNumber: "",
     company: "All",
-    membership_type: "All",
+    membership_type: [],
     acceptance: "accepted",
     editStatus: "pending",
     amcLetterStatus: "All",

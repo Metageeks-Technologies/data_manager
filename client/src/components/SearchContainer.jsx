@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
-
+import Multiselect from "multiselect-react-dropdown";
 import { editStatusOption, yearsOption } from "../utils/options";
 const SearchContainer = ({ form, setForm, role }) => {
   const {
@@ -26,6 +26,8 @@ const SearchContainer = ({ form, setForm, role }) => {
     e.preventDefault();
     isSearchedHandler(true);
     searchBar(false);
+
+    console.log("form",form);
 
     // if (page === 1) return getAllData({ ...form });
     if (form.acceptance === "deleted") {
@@ -62,14 +64,52 @@ const SearchContainer = ({ form, setForm, role }) => {
   };
 
   const handleInputChange = (event) => {
-    const { name, value, type, checked } = event.target;
+      const { name, value, type, checked } = event.target;
+      console.log(name,value,type,checked);
+      setForm((prevState) => ({
+        ...prevState,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+      console.log(form);
+  };
+  const transformedPlace = ["All",...placeOptions].map(item => ({
+    key: item,
+    value: item
+  }));
+  const transformedMembership = ["All",...memberOptions].map(item => ({
+    key: item,
+    value: item
+  }));
+  const transformedYearOptions=["All",...yearsOption].map(item => ({
+    key: item,
+    value: item
+  }));
+  const transformedStatusOptions=["All",...statusOptions].map(item => ({
+    key: item,
+    value: item
+  }));
 
-    setForm((prevState) => ({
-      ...prevState,
-      [name]: type === "checkbox" ? checked : value,
+  
+
+  const handleSelect = (field, selectedList) => {
+    const selectedValues = selectedList.map((item) => item.key);
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: selectedValues,
     }));
     console.log(form);
   };
+
+  const handleRemove = (field, selectedList) => {
+    const selectedValues = selectedList.map((item) => item.key);
+    setForm((prevForm) => ({
+      ...prevForm,
+      [field]: selectedValues,
+    }));
+    console.log(form);
+  };
+
+  
 
   return (
     <div>
@@ -147,63 +187,57 @@ const SearchContainer = ({ form, setForm, role }) => {
             <label htmlFor="status" className="text-xs">
               STATUS:
             </label>
-            <select
+            <Multiselect
               id="status"
+              displayValue="key"
               name="status"
-              value={form.status}
-              onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {["All", ...statusOptions].map((data) => {
-                return (
-                  <option key={data} value={data}>
-                    {data}
-                  </option>
-                );
-              })}
-            </select>
+              onKeyPressFn={function noRefCheck(){}}
+              onRemove={(selectedList) => handleRemove('status', selectedList)}
+              onSelect={(selectedList) => handleSelect('status', selectedList)}
+              selectedValues={transformedStatusOptions.filter(option => form.status.includes(option.key))}
+              onSearch={function noRefCheck(){}}
+              options={transformedStatusOptions}
+              showCheckbox
+              placeholder="search"
+          />
           </div>
           {/* place */}
           <div className="flex flex-col mb-4 flex-1 w-[22%]">
             <label htmlFor="place" className="text-xs">
               PLACE:
             </label>
-            <select
-              id="place"
-              name="place"
-              value={form.place}
-              onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {["All", ...placeOptions].map((data) => {
-                return (
-                  <option key={data} value={data}>
-                    {data}
-                  </option>
-                );
-              })}
-            </select>
+            <Multiselect
+            id="place"
+            displayValue="key"
+            name="place"
+            onKeyPressFn={function noRefCheck(){}}
+            onRemove={(selectedList) => handleRemove('place', selectedList)}
+            onSelect={(selectedList) => handleSelect('place', selectedList)}
+            onSearch={function noRefCheck(){}}
+            selectedValues={transformedPlace.filter(option => form.place.includes(option.key))}
+            options={transformedPlace}
+            showCheckbox
+            placeholder="search"
+          />
           </div>
           {/* member Type */}
           <div className="flex flex-col uppercase w-[22%] mb-4 flex-1">
             <label htmlFor="place" className="text-xs">
               Member Type:
             </label>
-            <select
+            <Multiselect
+              displayValue="key"
               id="membership_type"
               name="membership_type"
-              value={form.membership_type}
-              onChange={handleInputChange}
-              className="border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {["All", ...memberOptions].map((data) => {
-                return (
-                  <option key={data} value={data}>
-                    {data}
-                  </option>
-                );
-              })}
-            </select>
+              onKeyPressFn={function noRefCheck(){}}
+              onRemove={(selectedList) => handleRemove('membership_type', selectedList)}
+              onSelect={(selectedList) => handleSelect('membership_type', selectedList)}
+              onSearch={function noRefCheck(){}}
+              selectedValues={transformedMembership.filter(option => form.membership_type.includes(option.key))}
+              options={transformedMembership}
+              showCheckbox
+              placeholder="search"
+          />
           </div>
 
           {/* company */}
@@ -232,22 +266,19 @@ const SearchContainer = ({ form, setForm, role }) => {
             <label htmlFor="date" className="text-xs whitespace-nowrap">
               YEAR OF PURCHASE
             </label>
-            <select
-              size={1}
+            <Multiselect
               id="date"
+              displayValue="key"
               name="date"
-              value={form.date}
-              onChange={handleInputChange}
-              className="border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {["All", ...yearsOption].map((data) => {
-                return (
-                  <option key={data} value={data}>
-                    {data}
-                  </option>
-                );
-              })}
-            </select>
+              onKeyPressFn={function noRefCheck(){}}
+              onRemove={(selectedList) => handleRemove('date', selectedList)}
+              onSelect={(selectedList) => handleSelect('date', selectedList)}
+              onSearch={function noRefCheck(){}}
+              selectedValues={transformedYearOptions.filter(option => form.date.includes(option.key))}
+              options={transformedYearOptions}
+              showCheckbox
+              placeholder="search"
+          />
           </div>
           <div className="flex flex-col w-[22%] mb-4">
             <label htmlFor="lastCommunication" className="text-xs">
