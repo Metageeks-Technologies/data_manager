@@ -2846,6 +2846,13 @@ select-selected.select-arrow-active:after {
   background-color: #3b82f6; /* Color of the scrollbar thumb */
   border-radius: 8px; /* Rounded corners */
 }
+.searchWrapper {
+  border: 1px solid #9ca3af;
+  border-radius: 0.375rem;
+  min-height: 22px;
+  padding: 5px;
+  position: relative;
+}
 .before\:absolute::before{
   content: var(--tw-content);
   position: absolute;
