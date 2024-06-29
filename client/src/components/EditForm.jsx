@@ -97,7 +97,7 @@ function EditForm({ setShow, dataId, varData }) {
       dataId: dri_idOnWhichActionPerformed,
       actionType: "edited",
     };
-    // makeActivity(obj);
+    makeActivity(obj);
   };
 
   return (
