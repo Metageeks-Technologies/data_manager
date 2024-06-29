@@ -13384,12 +13384,13 @@ function EditForm({ setShow, dataId, varData }) {
       }
     }
     editData(dataId, changedData);
-    ({
+    const obj = {
       userName: user == null ? void 0 : user.name,
       userRole: user == null ? void 0 : user.role,
       dataId: dri_idOnWhichActionPerformed,
       actionType: "edited"
-    });
+    };
+    makeActivity(obj);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 z-20  right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "  bg-[#dff9fb]  border-blue-500 rounded-md border-t-4 w-full max-w-[1200px] overflow-scroll", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "form",
