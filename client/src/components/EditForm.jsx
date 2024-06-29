@@ -101,13 +101,13 @@ function EditForm({ setShow, dataId, varData }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 z-20  right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-      <div className="  bg-[#dff9fb]  border-blue-500 rounded-md border-t-4 w-full max-w-[1200px] overflow-scroll">
+    <div className="fixed top-0 left-0 z-20  right-0 bottom-0 bg-gray-800 bg-opacity-50 py-4 overflow-y-scroll flex items-center justify-center">
+      <div className="  bg-[#dff9fb]  border-blue-500 rounded-md border-t-4 w-full max-w-[1200px] ">
         <form
           onSubmit={handleSubmit}
-          className="bg-gray-50 w-full mx-auto rounded p-7  shadow-md hover:shadow-lg transition duration-400 ease-in-out"
+          className="bg-gray-50  w-full mx-auto rounded p-7 shadow-md hover:shadow-lg transition duration-400 ease-in-out"
         >
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center justify-between mb-2">
             <h1 className="text-[2rem] mb">Edit Data </h1>
             <button onClick={() => setShow(false)}>
               <svg
@@ -126,10 +126,10 @@ function EditForm({ setShow, dataId, varData }) {
               </svg>
             </button>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2">
             {/* Customer Name */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="customerName" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="customerName" className="text-xs mb-0">
                 Customer Name:
               </label>
               <input
@@ -142,8 +142,8 @@ function EditForm({ setShow, dataId, varData }) {
               />
             </div>
             {/* driid */}
-            {/* <div className="flex flex-col mb-4">
-            <label htmlFor="dri_id" className="text-xs mb-1">
+            {/* <div className="flex flex-col mb-2">
+            <label htmlFor="dri_id" className="text-xs mb-0">
               DRI ID:
             </label>
             <input
@@ -156,8 +156,8 @@ function EditForm({ setShow, dataId, varData }) {
             />
           </div> */}
             {/* appNumber */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="appNumber" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="appNumber" className="text-xs mb-0">
                 App Number:
               </label>
               <input
@@ -170,8 +170,8 @@ function EditForm({ setShow, dataId, varData }) {
               />
             </div>
             {/* residentialPhone */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="residentialPhone" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="residentialPhone" className="text-xs mb-0">
                 Residential Phone:
               </label>
               <input
@@ -184,8 +184,8 @@ function EditForm({ setShow, dataId, varData }) {
               />
             </div>
             {/* officePhone */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="officePhone" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="officePhone" className="text-xs mb-0">
                 Office Phone:
               </label>
               <input
@@ -198,8 +198,8 @@ function EditForm({ setShow, dataId, varData }) {
               />
             </div>
             {/* profession */}
-            {/* <div className="flex flex-col mb-4">
-            <label htmlFor="profession" className="text-xs mb-1">
+            {/* <div className="flex flex-col mb-2">
+            <label htmlFor="profession" className="text-xs mb-0">
               Profession:
             </label>
             <input
@@ -212,7 +212,7 @@ function EditForm({ setShow, dataId, varData }) {
             />
           </div> */}
             {/* company */}
-            {/* <div className="flex flex-col mb-4">
+            {/* <div className="flex flex-col mb-2">
           <label htmlFor="company" className="text-xs">
             company:
             </label>
@@ -233,7 +233,7 @@ function EditForm({ setShow, dataId, varData }) {
             </select>
           </div> */}
             {/* membership_type */}
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col mb-2">
               <label htmlFor="membership_type" className="text-xs capitalize">
                 Member Type:
               </label>
@@ -261,7 +261,7 @@ function EditForm({ setShow, dataId, varData }) {
               </select>
             </div>
             {/* date */}
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col mb-2">
               <label htmlFor="date" className="text-xs">
                 YEAR OF PURCHASE
               </label>
@@ -283,8 +283,8 @@ function EditForm({ setShow, dataId, varData }) {
               </select>
             </div>
             {/*  CSV */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor=" CSV" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor=" CSV" className="text-xs mb-0">
                 CSV:
               </label>
               <input
@@ -298,8 +298,8 @@ function EditForm({ setShow, dataId, varData }) {
             </div>
 
             {/* deposit */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="deposit" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="deposit" className="text-xs mb-0">
                 Deposit:
               </label>
               <input
@@ -312,8 +312,8 @@ function EditForm({ setShow, dataId, varData }) {
               />
             </div>
             {/* place */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="place" className="text-xs mb-1 capitalize">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="place" className="text-xs mb-0 capitalize">
                 Place:
               </label>
               <select
@@ -339,8 +339,8 @@ function EditForm({ setShow, dataId, varData }) {
               </select>
             </div>
             {/* status */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="status" className="text-xs mb-1 ">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="status" className="text-xs mb-0 ">
                 Status:
               </label>
               <select
@@ -366,8 +366,8 @@ function EditForm({ setShow, dataId, varData }) {
               </select>
             </div>
             {/*amc letter status */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="status" className="text-xs mb-1 ">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="status" className="text-xs mb-0 ">
                 AMC Letter Status:
               </label>
               <select
@@ -387,8 +387,8 @@ function EditForm({ setShow, dataId, varData }) {
               </select>
             </div>
             {/*membership status */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="status" className="text-xs mb-1 ">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="status" className="text-xs mb-0 ">
                 Agreement Status:
               </label>
               <select
@@ -408,8 +408,8 @@ function EditForm({ setShow, dataId, varData }) {
               </select>
             </div>
             {/* address */}
-            <div className="flex flex-col mb-4">
-              <label htmlFor="address" className="text-xs mb-1">
+            <div className="flex flex-col mb-2">
+              <label htmlFor="address" className="text-xs mb-0">
                 Address:
               </label>
               <textarea
@@ -422,7 +422,7 @@ function EditForm({ setShow, dataId, varData }) {
               />
             </div>
             {/*lastCommunication date */}
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col mb-2">
               <label htmlFor="lastCommunication" className="text-xs">
                 Last Communication
               </label>
@@ -443,7 +443,7 @@ function EditForm({ setShow, dataId, varData }) {
                 })}
               </select>
             </div>
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col mb-2">
               <label htmlFor="lastCommunication" className="text-xs">
                 Amc
               </label>
@@ -464,7 +464,7 @@ function EditForm({ setShow, dataId, varData }) {
                 })}
               </select>
             </div>
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col mb-2">
               <label htmlFor="adlf" className="text-xs">
                 After Deducting License Fee
               </label>
@@ -487,8 +487,8 @@ function EditForm({ setShow, dataId, varData }) {
             </div>
 
             {/* remarks */}
-            <div className="flex flex-col mb-4 ">
-              <label htmlFor="remarks" className="text-xs mb-1">
+            <div className="flex flex-col mb-2 ">
+              <label htmlFor="remarks" className="text-xs mb-0">
                 Remarks:
               </label>
               <textarea
