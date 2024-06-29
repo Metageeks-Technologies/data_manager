@@ -13392,13 +13392,13 @@ function EditForm({ setShow, dataId, varData }) {
     };
     makeActivity(obj);
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 z-20  right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "  bg-[#dff9fb]  border-blue-500 rounded-md border-t-4 w-full max-w-[1200px] overflow-scroll", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed top-0 left-0 z-20  right-0 bottom-0 bg-gray-800 bg-opacity-50 py-4 overflow-y-scroll flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "  bg-[#dff9fb]  border-blue-500 rounded-md border-t-4 w-full max-w-[1200px] ", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "form",
     {
       onSubmit: handleSubmit,
-      className: "bg-gray-50 w-full mx-auto rounded p-7  shadow-md hover:shadow-lg transition duration-400 ease-in-out",
+      className: "bg-gray-50  w-full mx-auto rounded p-7 shadow-md hover:shadow-lg transition duration-400 ease-in-out",
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[2rem] mb", children: "Edit Data " }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShow(false), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "svg",
@@ -13420,9 +13420,9 @@ function EditForm({ setShow, dataId, varData }) {
             }
           ) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-3 gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "customerName", className: "text-xs mb-1", children: "Customer Name:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-3 gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "customerName", className: "text-xs mb-0", children: "Customer Name:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "input",
               {
@@ -13435,8 +13435,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "appNumber", className: "text-xs mb-1", children: "App Number:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "appNumber", className: "text-xs mb-0", children: "App Number:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "input",
               {
@@ -13449,8 +13449,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "residentialPhone", className: "text-xs mb-1", children: "Residential Phone:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "residentialPhone", className: "text-xs mb-0", children: "Residential Phone:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "input",
               {
@@ -13463,8 +13463,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "officePhone", className: "text-xs mb-1", children: "Office Phone:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "officePhone", className: "text-xs mb-0", children: "Office Phone:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "input",
               {
@@ -13477,7 +13477,7 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "membership_type", className: "text-xs capitalize", children: "Member Type:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
@@ -13498,7 +13498,7 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "date", className: "text-xs", children: "YEAR OF PURCHASE" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
@@ -13515,8 +13515,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: " CSV", className: "text-xs mb-1", children: "CSV:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: " CSV", className: "text-xs mb-0", children: "CSV:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "input",
               {
@@ -13529,8 +13529,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "deposit", className: "text-xs mb-1", children: "Deposit:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "deposit", className: "text-xs mb-0", children: "Deposit:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "input",
               {
@@ -13543,8 +13543,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "place", className: "text-xs mb-1 capitalize", children: "Place:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "place", className: "text-xs mb-0 capitalize", children: "Place:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
@@ -13564,8 +13564,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-1 ", children: "Status:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-0 ", children: "Status:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
@@ -13585,8 +13585,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-1 ", children: "AMC Letter Status:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-0 ", children: "AMC Letter Status:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
@@ -13601,8 +13601,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-1 ", children: "Agreement Status:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "status", className: "text-xs mb-0 ", children: "Agreement Status:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
               {
@@ -13617,8 +13617,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "address", className: "text-xs mb-1", children: "Address:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "address", className: "text-xs mb-0", children: "Address:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "textarea",
               {
@@ -13631,7 +13631,7 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lastCommunication", className: "text-xs", children: "Last Communication" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
@@ -13648,7 +13648,7 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lastCommunication", className: "text-xs", children: "Amc" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
@@ -13665,7 +13665,7 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "adlf", className: "text-xs", children: "After Deducting License Fee" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "select",
@@ -13682,8 +13682,8 @@ function EditForm({ setShow, dataId, varData }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-4 ", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "remarks", className: "text-xs mb-1", children: "Remarks:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col mb-2 ", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "remarks", className: "text-xs mb-0", children: "Remarks:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "textarea",
               {

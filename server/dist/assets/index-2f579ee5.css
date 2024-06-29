@@ -1822,6 +1822,9 @@ label{
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+.mb-0{
+  margin-bottom: 0px;
+}
 .mb-1{
   margin-bottom: 0.25rem;
 }
@@ -2136,9 +2139,6 @@ label{
 }
 .overflow-hidden{
   overflow: hidden;
-}
-.overflow-scroll{
-  overflow: scroll;
 }
 .overflow-x-auto{
   overflow-x: auto;
