@@ -172,10 +172,10 @@ const AppProvider = ({ children }) => {
   const instance = axios.create({
     // to get cookies in browser during development
 
-    // baseURL: "call/api/v1",
+    baseURL: "call/api/v1",
 
     // production
-    baseURL: "/api/v1",
+    // baseURL: "/api/v1",
   });
 
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -601,9 +601,10 @@ const AppProvider = ({ children }) => {
       appNumber = "",
       company = "All",
       amc = "All",
+      amcLetterStatus = "All",
       membership_type = "All",
       isDuplicate = "",
-      amcLetterStatus = "All",
+      
       membershipStatus = "All",
       acceptance,
     } = queryObject;

@@ -55,14 +55,14 @@ const EData = () => {
     date: [],
     customerName: "",
     appNumber: "",
-    amc: "All",
+    amc: [],
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     page: 1,
     editStatus: "unchanged",
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amcLetterStatus: [],
+    membershipStatus: [],
   });
   useEffect(() => {
     return () => {

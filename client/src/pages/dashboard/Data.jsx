@@ -57,9 +57,9 @@ const Data = () => {
     company: "All",
     membership_type: [],
     acceptance: "accepted",
-    amc: "All",
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amc: [],
+    amcLetterStatus: [],
+    membershipStatus: [],
     isDuplicate: "",
   });
 

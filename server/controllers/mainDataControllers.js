@@ -572,7 +572,7 @@ const changeAcceptance = catchAsyncError(async (req, res, next) => {
 });
 
 const exportFile = catchAsyncError(async (req, res, next) => {
-  
+  console.log("req query",req.query);
   const {
     status,
     place,
@@ -628,13 +628,19 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     // queryObject.date = date;
   }
   if (amcLetterStatus && amcLetterStatus !== "All") {
-    queryObject.amcLetterStatus = { $regex: `^${amcLetterStatus}$`, $options: "i" };
+    // queryObject.amcLetterStatus = { $regex: `^${amcLetterStatus}$`, $options: "i" };
+    const amcLetterStatusArray =amcLetterStatus.split(',').map(val => val.trim());
+    queryObject["amcLetterStatus"] = { $in: amcLetterStatusArray.map(val => new RegExp(`^${val}$`, "i")) };
   }
   if (membershipStatus && membershipStatus !== "All") {
-    queryObject.membershipStatus = { $regex: `^${membershipStatus}$`, $options: "i" };
+    // queryObject.membershipStatus = { $regex: `^${membershipStatus}$`, $options: "i" };
+    const membershipStatusArray =membershipStatus.split(',').map(val => val.trim());
+    queryObject["membershipStatus"] = { $in: membershipStatusArray.map(val => new RegExp(`^${val}$`, "i")) };
   }
   if (amc && amc !== "All") {
-    queryObject.amc = { $regex: amc, $options: "i" };
+    // queryObject.amc = { $regex: amc, $options: "i" };
+    const amcArray =amc.split(',').map(val => val.trim());
+    queryObject["amc"] = { $in: amcArray.map(val => new RegExp(val, "i")) };
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };
@@ -648,6 +654,7 @@ const exportFile = catchAsyncError(async (req, res, next) => {
     } else queryObject.editStatus = editStatus;
   }
   console.log(queryObject, "from export file");
+
 
   let result = await MainData.find(queryObject);
   const totalData = await MainData.countDocuments(queryObject);
@@ -909,7 +916,7 @@ const exportWithDuplicate = catchAsyncError(async (req, res, next) => {
 });
 
 const getData = catchAsyncError(async (req, res, next) => {
-
+  // console.log(req.query);
   const {
     status,
     place,
@@ -968,16 +975,23 @@ const getData = catchAsyncError(async (req, res, next) => {
     queryObject["date"] = { $in: dateArray.map(val => new RegExp(val, "i")) };
   }
   if (amcLetterStatus && amcLetterStatus !== "All") {
-    queryObject.amcLetterStatus = {
-      $regex: `^${amcLetterStatus}$`,
-      $options: "i",
-    };
+    // queryObject.amcLetterStatus = {
+    //   $regex: `^${amcLetterStatus}$`,
+    //   $options: "i",
+    // };
+    const amcLetterStatusArray =amcLetterStatus.split(',').map(val => val.trim());
+    queryObject["amcLetterStatus"] = { $in: amcLetterStatusArray.map(val => new RegExp(`^${val}$`, "i")) };
+
   }
   if (membershipStatus && membershipStatus !== "All") {
-    queryObject.membershipStatus = { $regex: `^${membershipStatus}$`, $options: "i" };
+    // queryObject.membershipStatus = { $regex: `^${membershipStatus}$`, $options: "i" };
+    const membershipStatusArray =membershipStatus.split(',').map(val => val.trim());
+    queryObject["membershipStatus"] = { $in: membershipStatusArray.map(val => new RegExp(`^${val}$`, "i")) };
   }
   if (amc && amc !== "All") {
-    queryObject.amc = { $regex: amc, $options: "i" };
+    // queryObject.amc = { $regex: amc, $options: "i" };
+    const amcArray =amc.split(',').map(val => val.trim());
+    queryObject["amc"] = { $in: amcArray.map(val => new RegExp(`^${val}$`, "i")) };
   }
   if (customerName) {
     queryObject.customerName = { $regex: customerName, $options: "i" };

@@ -32,15 +32,15 @@ const Work = () => {
     dri_id: "",
     date: [],
     customerName: "",
-    amc: "All",
+    amc: [],
     appNumber: "",
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     editStatus: "!unchanged",
     page: 1,
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amcLetterStatus: [],
+    membershipStatus: [],
   });
   useEffect(() => {
     return () => {

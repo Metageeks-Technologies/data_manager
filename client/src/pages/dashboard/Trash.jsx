@@ -52,9 +52,9 @@ const Trash = () => {
     company: "All",
     membership_type: [],
     acceptance: "deleted",
-    amc: "All",
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amc: [],
+    amcLetterStatus: [],
+    membershipStatus: [],
     // page:1
   });
   useEffect(() => {

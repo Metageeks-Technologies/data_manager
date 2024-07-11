@@ -88,6 +88,18 @@ const SearchContainer = ({ form, setForm, role }) => {
     key: item,
     value: item
   }));
+  const transformedAmcOptions=["All",...amcOptions].map(item => ({
+    key: item,
+    value: item
+  }));
+  const transformedAmcLetterStatusOptions=["All",...amcStatusOptions].map(item => ({
+    key: item,
+    value: item
+  }));
+  const transformedMemberStatusOptions=["All",...memberStatusOptions].map(item => ({
+    key: item,
+    value: item
+  }));
 
   
 
@@ -109,7 +121,7 @@ const SearchContainer = ({ form, setForm, role }) => {
     console.log(form);
   };
 
-  
+  console.log("form",form);
 
   return (
     <div>
@@ -284,7 +296,20 @@ const SearchContainer = ({ form, setForm, role }) => {
             <label htmlFor="lastCommunication" className="text-xs">
               Amc
             </label>
-            <select
+            <Multiselect
+              id="amc"
+              displayValue="key"
+              name="amc"
+              onKeyPressFn={function noRefCheck(){}}
+              onRemove={(selectedList) => handleRemove('amc', selectedList)}
+              onSelect={(selectedList) => handleSelect('amc', selectedList)}
+              onSearch={function noRefCheck(){}}
+              selectedValues={transformedAmcOptions.filter(option => form.amc.includes(option.key))}
+              options={transformedAmcOptions}
+              showCheckbox
+              placeholder="search"
+          />
+            {/* <select
               size={1}
               id="amc"
               name="amc"
@@ -299,14 +324,27 @@ const SearchContainer = ({ form, setForm, role }) => {
                   </option>
                 );
               })}
-            </select>
+            </select> */}
           </div>
           {/* Amc Letter Status */}
           <div className="flex flex-col w-[22%] uppercase mb-4 flex-1">
             <label htmlFor="place" className="text-xs whitespace-nowrap">
               Amc Letter Status:
             </label>
-            <select
+            <Multiselect
+              id="amcLetterStatus"
+              displayValue="key"
+              name="amcLetterStatus"
+              onKeyPressFn={function noRefCheck(){}}
+              onRemove={(selectedList) => handleRemove('amcLetterStatus', selectedList)}
+              onSelect={(selectedList) => handleSelect('amcLetterStatus', selectedList)}
+              onSearch={function noRefCheck(){}}
+              selectedValues={transformedAmcLetterStatusOptions.filter(option => form.amcLetterStatus.includes(option.key))}
+              options={transformedAmcLetterStatusOptions}
+              showCheckbox
+              placeholder="search"
+          />
+            {/* <select
               id="amcLetterStatus"
               name="amcLetterStatus"
               value={form.amcLetterStatus}
@@ -320,14 +358,27 @@ const SearchContainer = ({ form, setForm, role }) => {
                   </option>
                 );
               })}
-            </select>
+            </select> */}
           </div>
           {/* Agreement Status */}
           <div className="flex flex-col w-[22%] uppercase mb-4 flex-1">
             <label htmlFor="place" className="text-xs whitespace-nowrap">
               Agreement Status:
             </label>
-            <select
+            <Multiselect
+              id="membershipStatus"
+              displayValue="key"
+              name="membershipStatus"
+              onKeyPressFn={function noRefCheck(){}}
+              onRemove={(selectedList) => handleRemove('membershipStatus', selectedList)}
+              onSelect={(selectedList) => handleSelect('membershipStatus', selectedList)}
+              onSearch={function noRefCheck(){}}
+              selectedValues={transformedMemberStatusOptions.filter(option => form.membershipStatus.includes(option.key))}
+              options={transformedMemberStatusOptions}
+              showCheckbox
+              placeholder="search"
+          />
+            {/* <select
               id="membershipStatus"
               name="membershipStatus"
               value={form.membershipStatus}
@@ -341,7 +392,7 @@ const SearchContainer = ({ form, setForm, role }) => {
                   </option>
                 );
               })}
-            </select>
+            </select> */}
           </div>
           {/* edit Status */}
           {role && role === "varData" && (
