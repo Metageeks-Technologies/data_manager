@@ -172,10 +172,10 @@ const AppProvider = ({ children }) => {
   const instance = axios.create({
     // to get cookies in browser during development
 
-    // baseURL: "call/api/v1",
+    baseURL: "call/api/v1",
 
     // production
-    baseURL: "/api/v1",
+    // baseURL: "/api/v1",
   });
 
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -601,6 +601,7 @@ const AppProvider = ({ children }) => {
       appNumber = "",
       company = "All",
       amc = "All",
+      amcLetterStatus = "All",
       membership_type = "All",
       isDuplicate = "",
       acceptance,
@@ -608,7 +609,7 @@ const AppProvider = ({ children }) => {
     customerName = customerName.toUpperCase();
     try {
       const response = await instance(
-        `/export?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${isDuplicate}`,
+        `/export?dri_id=${dri_id}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&amcLetterStatus=${amcLetterStatus}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${isDuplicate}`,
         {
           responseType: "blob",
         }

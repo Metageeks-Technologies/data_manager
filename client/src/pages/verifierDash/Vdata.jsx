@@ -34,14 +34,14 @@ const Data = () => {
     dri_id: "",
     date: [],
     customerName: "",
-    amc: "All",
+    amc: [],
     appNumber: "",
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     editStatus: "pending",
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amcLetterStatus: [],
+    membershipStatus: [],
     page: 1,
   });
   useEffect(() => {
