@@ -12228,7 +12228,7 @@ const AppProvider = ({ children }) => {
     customerName = customerName.toUpperCase();
     try {
       const response = await instance(
-        `/export?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${isDuplicate2}`,
+        `/export?dri_id=${dri_id}&amcLetterStatus=${amcLetterStatus}&membershipStatus=${membershipStatus}&appNumber=${appNumber}&date=${date}&status=${status}&place=${place}&customerName=${customerName}&editStatus=${editStatus}&amc=${amc}&acceptance=${acceptance}&company=${company}&membership_type=${membership_type}&isDuplicate=${isDuplicate2 ? "true" : ""}`,
         {
           responseType: "blob"
         }
@@ -12792,6 +12792,18 @@ const SearchContainer = ({ form, setForm, role }) => {
     key: item,
     value: item
   }));
+  const transformedAmcOptions = ["All", ...amcOptions].map((item) => ({
+    key: item,
+    value: item
+  }));
+  const transformedAmcLetterStatusOptions = ["All", ...amcStatusOptions].map((item) => ({
+    key: item,
+    value: item
+  }));
+  const transformedMemberStatusOptions = ["All", ...memberStatusOptions].map((item) => ({
+    key: item,
+    value: item
+  }));
   const handleSelect = (field, selectedList) => {
     const selectedValues = selectedList.map((item) => item.key);
     setForm((prevForm) => ({
@@ -12808,6 +12820,7 @@ const SearchContainer = ({ form, setForm, role }) => {
     }));
     console.log(form);
   };
+  console.log("form", form);
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "form",
     {
@@ -12966,49 +12979,63 @@ const SearchContainer = ({ form, setForm, role }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col w-[22%] mb-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "lastCommunication", className: "text-xs", children: "Amc" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "select",
+              Multiselect,
               {
-                size: 1,
                 id: "amc",
+                displayValue: "key",
                 name: "amc",
-                value: form.amc,
-                onChange: handleInputChange,
-                className: "border  border-gray-400 py-1 px-3 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["All", ...amcOptions].map((data) => {
-                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
-                })
+                onKeyPressFn: function noRefCheck() {
+                },
+                onRemove: (selectedList) => handleRemove("amc", selectedList),
+                onSelect: (selectedList) => handleSelect("amc", selectedList),
+                onSearch: function noRefCheck() {
+                },
+                selectedValues: transformedAmcOptions.filter((option) => form.amc.includes(option.key)),
+                options: transformedAmcOptions,
+                showCheckbox: true,
+                placeholder: "search"
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col w-[22%] uppercase mb-4 flex-1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "place", className: "text-xs whitespace-nowrap", children: "Amc Letter Status:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "select",
+              Multiselect,
               {
                 id: "amcLetterStatus",
+                displayValue: "key",
                 name: "amcLetterStatus",
-                value: form.amcLetterStatus,
-                onChange: handleInputChange,
-                className: "border border-gray-400 py-1 px-2 capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["All", ...amcStatusOptions].map((data) => {
-                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
-                })
+                onKeyPressFn: function noRefCheck() {
+                },
+                onRemove: (selectedList) => handleRemove("amcLetterStatus", selectedList),
+                onSelect: (selectedList) => handleSelect("amcLetterStatus", selectedList),
+                onSearch: function noRefCheck() {
+                },
+                selectedValues: transformedAmcLetterStatusOptions.filter((option) => form.amcLetterStatus.includes(option.key)),
+                options: transformedAmcLetterStatusOptions,
+                showCheckbox: true,
+                placeholder: "search"
               }
             )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col w-[22%] uppercase mb-4 flex-1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "place", className: "text-xs whitespace-nowrap", children: "Agreement Status:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "select",
+              Multiselect,
               {
                 id: "membershipStatus",
+                displayValue: "key",
                 name: "membershipStatus",
-                value: form.membershipStatus,
-                onChange: handleInputChange,
-                className: "border border-gray-400 py-1 px-2 w-full capitalize rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                children: ["All", ...memberStatusOptions].map((data) => {
-                  return /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: data, children: data }, data);
-                })
+                onKeyPressFn: function noRefCheck() {
+                },
+                onRemove: (selectedList) => handleRemove("membershipStatus", selectedList),
+                onSelect: (selectedList) => handleSelect("membershipStatus", selectedList),
+                onSearch: function noRefCheck() {
+                },
+                selectedValues: transformedMemberStatusOptions.filter((option) => form.membershipStatus.includes(option.key)),
+                options: transformedMemberStatusOptions,
+                showCheckbox: true,
+                placeholder: "search"
               }
             )
           ] }),
@@ -31891,9 +31918,9 @@ const Data$3 = () => {
     company: "All",
     membership_type: [],
     acceptance: "accepted",
-    amc: "All",
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amc: [],
+    amcLetterStatus: [],
+    membershipStatus: [],
     isDuplicate: ""
   });
   reactExports.useEffect(() => {
@@ -33692,9 +33719,9 @@ const Trash = () => {
     company: "All",
     membership_type: [],
     acceptance: "deleted",
-    amc: "All",
-    amcLetterStatus: "All",
-    membershipStatus: "All"
+    amc: [],
+    amcLetterStatus: [],
+    membershipStatus: []
     // page:1
   });
   reactExports.useEffect(() => {
@@ -57785,15 +57812,15 @@ const Work$1 = () => {
     dri_id: "",
     date: [],
     customerName: "",
-    amc: "All",
+    amc: [],
     appNumber: "",
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     editStatus: "!unchanged",
     page: 1,
-    amcLetterStatus: "All",
-    membershipStatus: "All"
+    amcLetterStatus: [],
+    membershipStatus: []
   });
   reactExports.useEffect(() => {
     return () => {
@@ -57906,14 +57933,14 @@ const EData = () => {
     date: [],
     customerName: "",
     appNumber: "",
-    amc: "All",
+    amc: [],
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     page: 1,
     editStatus: "unchanged",
-    amcLetterStatus: "All",
-    membershipStatus: "All"
+    amcLetterStatus: [],
+    membershipStatus: []
   });
   reactExports.useEffect(() => {
     return () => {
@@ -58003,15 +58030,15 @@ const Work = () => {
     dri_id: "",
     date: [],
     customerName: "",
-    amc: "All",
+    amc: [],
     appNumber: "",
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     editStatus: "var",
     page: 1,
-    amcLetterStatus: "All",
-    membershipStatus: "All"
+    amcLetterStatus: [],
+    membershipStatus: []
   });
   reactExports.useEffect(() => {
     return () => {
@@ -58103,14 +58130,14 @@ const Data$1 = () => {
     dri_id: "",
     date: [],
     customerName: "",
-    amc: "All",
+    amc: [],
     appNumber: "",
     company: "All",
     membership_type: [],
     acceptance: "accepted",
     editStatus: "pending",
-    amcLetterStatus: "All",
-    membershipStatus: "All",
+    amcLetterStatus: [],
+    membershipStatus: [],
     page: 1
   });
   reactExports.useEffect(() => {
